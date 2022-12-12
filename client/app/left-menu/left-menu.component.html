@@ -1,0 +1,15 @@
+<div
+  class="sidenav_container"
+  [@onSideNavChange]="sideNavState ? 'open' : 'close'"
+>
+      <mat-nav-list>
+        <button mat-button routerLink="/reports">
+          <mat-icon class="menu-item-icon">library_add_check</mat-icon>
+          <span [@animateText]="linkText ? 'show' : 'hide'" >{{'LEFT_MENU.REPORTS' | translate }}</span>
+        </button>
+        <button mat-button routerLink="/configuration">
+          <mat-icon class="menu-item-icon">settings</mat-icon>
+          <span [@animateText]="linkText ? 'show' : 'hide'" >{{'LEFT_MENU.CONFIGURATION' | translate }}</span>
+        </button>
+      </mat-nav-list>
+</div>

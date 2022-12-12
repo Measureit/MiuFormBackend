@@ -1,0 +1,23 @@
+<div style="display: flex; flex-direction: row; gap: 5px">
+    <button mat-fab (click)="fileInput.click()" color="primary" >
+        <mat-icon>library_add</mat-icon>
+        <input #fileInput type="file" (change)="onFileInput($event)" style="display:none;"
+            accept="image/x-png,image/jpeg,image/gif" multiple="multiple" />
+    </button>
+    <button mat-fab (click)="deleteSelected()" [disabled]="selectedImages.length === 0" color="warn" >
+        <mat-icon>delete</mat-icon>
+    </button>
+</div>
+
+<div style="display: flex; flex-direction: row; flex-flow: wrap; " [formGroup]="parentImagesFormGroup">
+    <div style="margin: 3px; border: 1px solid black" 
+    [ngStyle]="{'border-width': image.get('selected')?.value===true ? '4px' : '1px'}"
+    [formArrayName]="imagesFormArrayName" 
+        *ngFor="let image of imagesFormArray?.controls; let i = index">
+        <div [formGroupName]="i" style="width: 200px; height: 200px; display: flex;  justify-content: center;"
+        (click)="selectImage(image)">
+            <img [src]="image.get('base64').value"
+                style="display: block; max-width: 200px; max-height: 200px; width: auto; height: auto; margin: auto" />
+        </div>
+    </div>
+</div>

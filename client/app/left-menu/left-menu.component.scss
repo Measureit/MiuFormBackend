@@ -1,0 +1,42 @@
+@use '../../variables' as v;
+.sidenav_container {
+  min-width: 50px;
+  height: calc(100vh - 200px);
+}
+
+.avatar {
+  width: 30px;
+  height: 30px;
+  object-fit: cover;
+  border-radius: 50%;
+  padding-right:5px;
+}
+
+mat-nav-list {
+  display: flex; 
+  flex-direction: column; 
+  height: 100%;
+
+  > button {
+    display: flex;
+    flex-direction: row;
+    justify-content: flex-start;
+    padding: 0 4;
+    margin: 5px 0px 5px 3px;  
+    min-width: 25px !important;   
+
+    > mat-icon {
+      transform: scale(1.2);
+    }
+
+    > span {
+      font-weight: 200;
+    }
+  }
+}
+
+mat-icon.menu-item-icon{
+  padding: 2px;
+  color: v.$base-color;
+  align-self: center;
+}

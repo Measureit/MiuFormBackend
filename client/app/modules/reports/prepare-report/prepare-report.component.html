@@ -1,0 +1,55 @@
+<h1>{{ 'PREPARE_REPORT.TITLE' | translate }}</h1>
+<mat-spinner *ngIf="loading"></mat-spinner>
+<div *ngIf="!loading && item && itemForm">
+    <!-- <p>{{item._id}}</p> -->
+    <form [formGroup]="itemForm" class="an-flex an-flex-direction-column">
+        <mat-form-field>
+            <mat-label>{{ 'ITEM.REPORT.PRODUCT_NAME' | translate}}</mat-label>
+            <input matInput placeholder="{{ 'ITEM.REPORT.PRODUCT_NAME' | translate}}" formControlName="productName">
+        </mat-form-field>
+        <mat-form-field>
+            <mat-label>{{ 'ITEM.REPORT.PRODUCT_COLOR' | translate}}</mat-label>
+            <input matInput placeholder="{{ 'ITEM.REPORT.PRODUCT_COLOR' | translate}}" formControlName="productColor">
+        </mat-form-field>
+        <mat-form-field>
+            <mat-label>{{ 'ITEM.REPORT.PRODUCT_ID' | translate}}</mat-label>
+            <input matInput placeholder="{{ 'ITEM.REPORT.PRODUCT_ID' | translate}}" formControlName="productId">
+        </mat-form-field>
+        <mat-form-field>
+            <mat-select formControlName="factoryInfoId" placeholder="{{ 'ITEM.REPORT.FACTORY' | translate }}">
+                <mat-option *ngFor="let factory of factoryItems" [value]="factory._id">
+                    {{factory.shortName}}</mat-option>
+            </mat-select>
+        </mat-form-field>
+
+        <div style="display: flex; flex-direction: column; gap: 5px" [formGroup]="itemForm">
+            <div  *ngFor="let checklistItemFormGroup of checklistItemFormGroups">
+                <app-checklist-item [checklistItemFormGroup]="checklistItemFormGroup"></app-checklist-item>
+            </div>
+        </div>
+
+        <mat-card style="margin-top: 5px">
+            <mat-card-header>
+                {{ 'PREPARE_REPORT.SUMMARY' | translate}}
+            </mat-card-header>
+            <mat-card-content>
+                <app-images-selector [imagesFormArray]="images" imagesFormArrayName="images"
+                    [parentImagesFormGroup]="itemForm"></app-images-selector>
+                <mat-form-field style="width: 100%">
+                    <mat-label>{{ 'ITEM.REPORT.COMMENT' | translate}}</mat-label>
+                    <input matInput placeholder="{{ 'ITEM.REPORT.COMMENT' | translate}}" formControlName="comment">
+                </mat-form-field>
+            </mat-card-content>
+        </mat-card>
+    </form>
+
+    <button mat-fab color="primary" [disabled]="!itemForm.valid" class="mat-fab-bottom-right-second" (click)="saveReport()">
+        <mat-icon>save</mat-icon>
+    </button>
+    <button mat-fab color="primary" [disabled]="!itemForm.valid" class="mat-fab-bottom-right" (click)="preview()">
+        <mat-icon>rebase_edit</mat-icon>
+    </button>
+</div>
+<div *ngIf="!item && !loading">
+    <p>Raport nie istnieje.</p>
+</div>

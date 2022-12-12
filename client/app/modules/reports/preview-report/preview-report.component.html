@@ -1,0 +1,20 @@
+<h1>{{ 'PREVIEW_REPORT.TITLE' | translate }}</h1>
+<div >
+    <div>
+        <button [disabled]="genereting" style="margin-bottom: 5px" mat-raised-button color="primary" (click)="send()"><mat-icon>email</mat-icon>{{ 'PREVIEW_REPORT.SEND_BY_EMAIL' | translate }}</button>
+        <button style="margin-left: 5px; margin-bottom: 5px" mat-raised-button color="primary" (click)="editReport()"><mat-icon>edit</mat-icon>{{ 'PREVIEW_REPORT.EDIT_REPORT' | translate }}</button>
+    </div>
+    <mat-spinner *ngIf="genereting"></mat-spinner>
+    <ngx-extended-pdf-viewer *ngIf="!genereting"
+        [src]="reportBlob"
+        (currentZoomFactor)="updateZoomFactor($event)"
+        [height]="'80vh'"
+        [useBrowserLocale]="true"
+        [(zoom)]="zoomSetting"
+        [showZoomButtons]="true"
+        [minZoom]="minZoom"
+        [maxZoom]="maxZoom"
+        [zoomLevels]="zoomLevels"
+        [enablePinchOnMobile]="enablePinchOnMobile">
+    </ngx-extended-pdf-viewer>
+</div>

@@ -1,0 +1,105 @@
+{
+	"COMMON": {
+		"CREATE": "Utwórz",
+		"UPDATE": "Zaktualizuj",
+		"DELETE": "Usuń",
+		"CANCEL": "Anuluj",
+		"ACTIVATE": "Przywróć",
+		"SAVE": "Zapisz",
+		"FILTER": "Filtruj",
+		"CLEAR_FILTER": "Wyczyść",
+		"YES": "Tak",
+		"NO": "Nie"
+	},
+	"FIELD_ERRORS": {
+		"REQUIRED": "Pole jest wymagane.",
+		"REQUIRED_MINLENGTH": "Pole musi zawierać conajmniej {{requiredLength}} znaki."
+	},
+	"REPORTS": {
+		"TITLE": "Raporty",
+		"FILTER": "Filtr",
+		"FILTER_BY_FACTORIES": "Filtruj po fabryce",
+		"LOAD_NOACTIVE_FACTORIES": "Pokaż rónież nieaktywne"
+	},
+	"PREVIEW_REPORT": {
+		"TITLE": "Podgląd raportu",
+		"SEND_BY_EMAIL": "Wyślij wiadomość email",
+		"EDIT_REPORT": "Edytuj"
+	},
+	"PREPARE_REPORT": {
+		"TITLE": "Przygotowanie raportu",
+		"SUMMARY": "Podsumowanie",
+		"UPDATE_CHECKLIST_QUESTION_TITLE": "Update checklisty",
+		"UPDATE_CHECKLIST_QUESTION": "Checklista się zmieniła, chcesz ją uaktualnić?"
+	},
+	"ITEM": {
+		"FACTORY": {
+			"NAME": "Nazwa",
+			"SHORTNAME": "Nazwa skrócona",
+			"ADDRESS": "Adres"
+		},
+		"CHECKLISTITEM": {
+			"COMMENT": "Komentarz"
+		},
+		"REPORT": {
+			"PRODUCT_NAME": "Nazwa Produktu",
+			"PRODUCT_COLOR": "Kolor Produktu",
+			"PRODUCT_ID": "Id Produktu",
+			"FACTORY": "Fabryka",
+			"COMMENT": "Komentarz"
+		},		
+		"DELIVERY": {
+			"FROM_USER": "Nadawca",
+			"EMAIL_SERVER_SECRET_CODE": "Kod serwera email",
+			"EMAIL_SERVER_URL": "Adres serwera email"
+		},
+		"INSPECTION_DATA": {
+			"COMPANY_NAME": "Nazwa Firmy",
+			"COMPANY_ADDRESS": "Adres Firmy",
+			"INSPECTION_SIGN": "Podpis"
+		}
+	},
+	"CONFIG": {
+		"TITLE": "Konfiguracja",
+		"FACTORIES": {
+			"TITLE": "Fabryki",
+			"LOAD_NOACTIVE": "Wyświetl również nieaktywne",
+			"EDITOR": {
+				"CREATE": "Utwórz dane fabryki",
+				"UPDATE": "Zaktualizuj dane fabryki",
+				"DELETE": "Usuń dane fabryki"
+			}
+		},
+		"CHECKLIST": {
+			"TITLE": "Check lista",
+			"LOAD_NOACTIVE": "Wyświetl również nieaktywne"
+		},
+		"GENERAL": {
+			"TITLE": "Ogólne",
+			"DELIVERY": {
+				"TITLE": "Dostarczanie"
+			},
+			"INSPECTION_DATA": {
+				"TITLE": "Dane inspektora"
+			},			
+			"PERSIST": {
+				"TITLE": "Zapis/ładowanie konfiguracji",
+				"SAVE_CONFIG": "Zapisz konfigurację",
+				"LOAD_CONFIG": "Załaduj konfigurację"
+			}
+		}
+	},
+	"HEADER": {
+		"ABOUT": "Informacje",
+		"APP_NAME": "MiuCheck",
+		"ENGLISH": "Angielski",
+		"GERMAN": "Niemiecki",
+		"LANGUAGES": "Języki",
+		"POLISH": "Polski",
+		"PRIVATE_POLICY": "Polityka prywatności"
+	},
+	"LEFT_MENU": {
+		"REPORTS": "Raporty",
+		"CONFIGURATION": "Konfiguracja"
+	}
+}

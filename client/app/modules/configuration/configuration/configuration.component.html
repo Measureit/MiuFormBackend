@@ -1,0 +1,31 @@
+<h1>{{ 'CONFIG.TITLE' | translate }}</h1>
+
+<mat-tab-group>
+    <mat-tab>
+        <ng-template mat-tab-label>
+            <div class="tab-header">
+                <mat-icon class="example-tab-icon">factory</mat-icon>
+                <span>{{ 'CONFIG.FACTORIES.TITLE' | translate }}</span>
+            </div>
+        </ng-template>
+        <app-factories></app-factories>
+    </mat-tab>
+    <mat-tab>
+        <ng-template mat-tab-label>
+            <div class="tab-header">
+                <mat-icon class="example-tab-icon">format_list_bulleted</mat-icon>
+                <span>{{ 'CONFIG.CHECKLIST.TITLE' | translate }}</span>
+            </div>
+        </ng-template>
+        <app-checklist></app-checklist>
+    </mat-tab>
+    <mat-tab>
+        <ng-template mat-tab-label>
+            <div class="tab-header">
+                <mat-icon class="example-tab-icon">tune</mat-icon>
+                <span>{{ 'CONFIG.GENERAL.TITLE' | translate }}</span>
+            </div>
+        </ng-template>
+        <app-general></app-general>
+    </mat-tab>
+</mat-tab-group>

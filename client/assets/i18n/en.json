@@ -1,0 +1,105 @@
+{
+	"COMMON": {
+		"CREATE": "Create",
+		"UPDATE": "Update",
+		"DELETE": "Delete",
+		"CANCEL": "Cancel",
+		"ACTIVATE": "Activate",
+		"SAVE": "Save",
+		"FILTER": "Filter",
+		"CLEAR_FILTER": "Clear",
+		"YES": "Yes",
+		"NO": "No"
+	},
+	"FIELD_ERRORS": {
+		"REQUIRED": "The field is required.",
+		"REQUIRED_MINLENGTH": "The minimum length for this field is {{requiredLength}} characters."
+	},
+	"REPORTS": {
+		"TITLE": "Reports",
+		"FILTER": "Filter",
+		"FILTER_BY_FACTORIES": "Factory filter",
+		"LOAD_NOACTIVE_FACTORIES": "Show also no active"
+	},
+	"PREVIEW_REPORT": {
+		"TITLE": "Report Preview",
+		"SEND_BY_EMAIL": "Send by email",
+		"EDIT_REPORT": "Edit"
+	},
+	"PREPARE_REPORT": {
+		"TITLE": "Preparing Report",
+		"SUMMARY": "Summary",
+		"UPDATE_CHECKLIST_QUESTION_TITLE": "Checklist Update",
+		"UPDATE_CHECKLIST_QUESTION": "Checklist was changed, do you want to update it?"
+	},
+	"ITEM": {
+		"FACTORY": {
+			"NAME": "Name",
+			"SHORTNAME": "Short Name",
+			"ADDRESS": "Address"
+		},
+		"CHECKLISTITEM": {
+			"COMMENT": "Comment"
+		},
+		"REPORT": {
+			"PRODUCT_NAME": "Product Name",
+			"PRODUCT_COLOR": "Produkt Color",
+			"PRODUCT_ID": "Product Id",
+			"FACTORY": "Factory",
+			"COMMENT": "Comment"
+		},		
+		"DELIVERY": {
+			"FROM_USER": "Sender",
+			"EMAIL_SERVER_SECRET_CODE": "Email server secret code",
+			"EMAIL_SERVER_URL": "Email server url"
+		},
+		"INSPECTION_DATA": {
+			"COMPANY_NAME": "Company name",
+			"COMPANY_ADDRESS": "Company address",
+			"INSPECTION_SIGN": "Sign"
+		}
+	},
+	"CONFIG": {
+		"TITLE": "Configuration",
+		"FACTORIES": {
+			"TITLE": "Factories",
+			"LOAD_NOACTIVE": "Display also inactive items",
+			"EDITOR": {
+				"CREATE": "Create factory info",
+				"UPDATE": "update factory info",
+				"DELETE": "Delete factory info"
+			}
+		},
+		"CHECKLIST": {
+			"TITLE": "Checklist",
+			"LOAD_NOACTIVE": "Display also inactive items"
+		},
+		"GENERAL": {
+			"TITLE": "General",
+			"DELIVERY": {
+				"TITLE": "Delivery"
+			},
+			"PERSIST": {
+				"TITLE": "Save/Load configuration",
+				"SAVE_CONFIG": "Save configuration",
+				"LOAD_CONFIG": "Load configuration"
+			},
+			"INSPECTION_DATA": {
+				"TITLE": "Inspection Data"
+			}	
+		}
+	},
+	"HEADER": {
+		"ABOUT": "About",
+		"APP_NAME": "MiuCheck",
+		"ENGLISH": "English",
+		"GERMAN": "German",
+		"LANGUAGES": "Languages",
+		"POLISH": "Polish",
+		"PRIVATE_POLICY": "Private Policy"
+	},
+	"LEFT_MENU": {
+		"REPORTS": "Reports",
+		"CONFIGURATION": "Configuration"
+	}
+}

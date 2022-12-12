@@ -1,0 +1,124 @@
+@use 'variables' as v;
+
+// GENERAL
+
+html,
+body {
+  height: 100%;
+}
+body {
+  margin: 0;
+  font-family: Roboto, "Helvetica Neue", sans-serif;
+}
+
+.full-width {
+  width: 100%;
+}
+.header {
+  padding: 10px 20px;
+  padding-left: 7px;
+  background: v.$base-color;
+  color: #fff;
+  display: flex;
+}
+
+.spacer {
+  flex: 1 1 auto;
+}
+
+
+
+// SPINNER
+mat-spinner.mat-progress-spinner circle,
+.mat-spinner circle {
+  stroke: white;
+}
+
+.shade {
+  position: absolute;
+  top: 0;
+  left: 0;
+  bottom: 0;
+  right: 0;
+  background: rgba(0, 0, 0, 0.15);
+  z-index: 1;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+//CARD
+
+mat-card.container {
+  width: 100vw;
+  display: flex;
+  flex-direction: column;
+  justify-content: stretch;
+  background-color: transparent;
+}
+.mat-card {
+  .mat-card-header {
+    .icon-card-header {
+      height: 2rem;
+      font-size: 2rem;
+    }
+  }
+}
+
+.icon-avatar-green {
+  color: green;
+}
+
+.icon-avatar-blue {
+  color: rgb(5, 70, 92);
+}
+
+.mat-fab-bottom-right {
+  position: fixed !important;
+  right: 5px;
+  bottom: 5px;
+}
+
+.mat-fab-bottom-right-second {
+  position: fixed !important;
+  right: 70px;
+  bottom: 5px;
+}
+
+//override list item of angular material 
+//orginal (angular v 15.0.0) the click for button inside list item is not working 
+.an-list-item {
+  display: flex; 
+  flex-direction: row; 
+  flex-grow: 1;
+  padding: 5px; 
+  margin-top: 5px; 
+  border: 0.5px solid black;
+  border-radius: 5px;
+  > mat-icon {
+    flex: 0 0 40px;
+    margin-right: 5px;
+  }
+  > .an-list-item-des {
+      flex-direction: column;
+      > span {
+          display: block;
+      }
+      > span:first-of-type {
+          font-size: 20px;
+      }
+  }
+  > .an-list-item-actions {   
+      flex: 0 0 40px; 
+      margin-left: auto;
+      color:blue;
+  }
+}
+
+.an-flex {
+  display: flex;
+}
+
+.an-flex-direction-column {
+  flex-direction: column;
+}

@@ -1,0 +1,25 @@
+<div >
+  <div >
+    <mat-checkbox [checked]="loadFactoryWithNoActive" (change)="loadFactoryWithNoActiveChange($event.checked)">
+      {{ 'CONFIG.FACTORIES.LOAD_NOACTIVE' | translate}}
+    </mat-checkbox>
+  </div>
+
+  <mat-list>
+    <div class="an-list-item" *ngFor="let item of items | hideNoActives : !loadFactoryWithNoActive" (click)="updateItem(item._id)">
+      <div class="an-list-item-des" >
+        <span >{{item.shortName}}</span>
+        <span>{{item.name}}</span>
+        <span >{{item.address}}</span>
+        <span >{{item.emails ? item.emails.join(', ') : ''}}</span>
+      </div>
+      <!-- <button > -->
+        <mat-icon class="an-list-item-actions" *ngIf="item.isActive" (click)="deleteItem($event, item._id)">delete</mat-icon>
+      <!-- </button> -->
+    </div>
+  </mat-list>
+
+  <button mat-fab color="primary" class="mat-fab-bottom-right" (click)="addItem()">
+    <mat-icon>add</mat-icon>
+  </button>
+</div>

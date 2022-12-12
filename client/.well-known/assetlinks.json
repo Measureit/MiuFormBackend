@@ -1,0 +1,10 @@
+[{
+  "relation": ["delegate_permission/common.handle_all_urls"],
+  "target": {
+    "namespace": "android_app",
+    "package_name": "io.github.measureit.miuform",
+    "sha256_cert_fingerprints": [
+      "EC:90:93:87:AD:24:77:66:5B:F9:72:A5:CD:AE:74:AD:B2:BF:FB:DF:7C:5B:2F:29:72:BC:64:C4:02:36:07:44"
+    ]
+  }
+}]

@@ -1,0 +1,41 @@
+.card {
+  padding: 1em;
+  border: 1px solid rgba(0, 0, 0, 0.25);
+}
+
+.width-indicator {
+  position: absolute;
+  bottom: 100px;
+  left: 50%;
+  transform: translateX(-50%);
+  font-size: 1.5rem;
+  background: white;
+  padding: 1em;
+  box-shadow: 0 0 1em rgba(0, 0, 0, 0.3);
+  width: max-content;
+}
+
+.columns {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 2em;
+}
+
+.columns > * {
+  //ideal size
+  flex-basis: calc(calc(35em - 100%) * 999);
+  //allow to shrink
+  flex-shrink: 1;
+  //allow to grow
+  flex-grow: 1;
+}
+
+.card > :is(h1,h2,h3){
+    color: green;
+}
+.another-section {
+  background: white;
+  padding: 1em;
+  //   max-width: 15em;
+  flex-grow: 0.4;
+}

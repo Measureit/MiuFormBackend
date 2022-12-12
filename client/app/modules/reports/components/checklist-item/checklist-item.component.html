@@ -1,0 +1,28 @@
+<mat-card [formGroup]="checklistItemFormGroup">
+    <mat-card-header>
+        <div style="display: flex; flex-direction: row; flex-grow: 1; gap: 5px; min-height: 50px;"
+            (click)="onClickChecked()">
+            <mat-icon style="flex: 0 0 40px; transform: scale(1.7);" [ngClass]="{
+                'positive' : isChecked === true,
+                'negative' : isChecked === false,
+                'notChoose' : isChecked === null 
+             }">check_circle</mat-icon> 
+             <h4 style="flex: 1;">{{checklistItemFormGroup.get('order').value + 1}}. {{checklistItemFormGroup.get('content').value}}</h4>
+             <mat-icon (click)="showDetails($event)" style="flex: 0 0 40px; transform: scale(1.7); margin-left: auto;" [ngClass]="{
+                'hasDetails' : hasDetails,
+                'doesNotHaveDetails' : !hasDetails 
+             }"
+              
+             >assistant</mat-icon>
+        </div>        
+    </mat-card-header>
+
+    <mat-card-content [ngStyle]="{'display': detailsShown ? 'block' : 'none'}">
+        <mat-form-field style="width: 100%">
+            <mat-label>{{ 'ITEM.CHECKLISTITEM.COMMENT' | translate}}</mat-label>
+            <input matInput placeholder="{{ 'ITEM.CHECKLISTITEM.COMMENT' | translate}}" formControlName="comment">
+        </mat-form-field>
+
+        <app-images-selector [imagesFormArray]="pointImages" imagesFormArrayName="pointImages" [parentImagesFormGroup]="checklistItemFormGroup" ></app-images-selector>
+    </mat-card-content>
+</mat-card>

@@ -1,0 +1,41 @@
+<ng-container  >
+  <div class="header">
+    <button mat-icon-button (click)="onSinenavToggle()">
+      <mat-icon>menu</mat-icon>
+    </button>
+    <span class="header-app-name" [routerLink]="'/'">{{'HEADER.APP_NAME' | translate }}</span>
+    <span class="spacer"></span>
+    <button mat-icon-button [matMenuTriggerFor]="menu">
+      <mat-icon>more_vert</mat-icon>
+    </button>
+    <mat-menu #menu="matMenu" style="background-color: red;">
+      <!-- <button mat-menu-item *ngIf="isLoggedIn" (click)="logout()">
+        <mat-icon>exit_to_app</mat-icon>
+        <span i18nTEST="@@log-out">Log Out</span>
+      </button>
+      <button mat-menu-item [routerLink]="'/auth/login'" *ngIf="!isLoggedIn">
+        <mat-icon>login</mat-icon>
+        <span i18nTEST="@@log-in">Log In</span>
+      </button>
+      <button mat-menu-item [routerLink]="'/auth/register'" *ngIf="!isLoggedIn">
+        <mat-icon>how_to_reg</mat-icon>
+        <span i18nTEST="@@log-in">Register</span>
+      </button> -->
+      <button mat-menu-item [matMenuTriggerFor]="languages">
+        <span>{{'HEADER.LANGUAGES' | translate }}</span>
+      </button>
+      <button mat-menu-item [routerLink]="'/privacy'">
+        <span>{{'HEADER.PRIVATE_POLICY' | translate }}</span>
+      </button>
+      <button mat-menu-item [routerLink]="'/about'">
+        <span>{{'HEADER.ABOUT' | translate }}</span>
+      </button>
+    </mat-menu>
+
+    <mat-menu #languages="matMenu">
+      <a mat-menu-item (click)="setLang('en')">{{'HEADER.ENGLISH' | translate }}</a>
+      <a mat-menu-item (click)="setLang('pl')">{{'HEADER.POLISH' | translate }}</a>
+      <a mat-menu-item (click)="setLang('de')">{{'HEADER.GERMAN' | translate }}</a>
+    </mat-menu>
+  </div>
+</ng-container>
