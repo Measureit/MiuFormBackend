@@ -8,7 +8,6 @@
   },
   "scripts": {
     "ng": "ng",
-    "preinstall": "npm install -g npm@latest", 
     "builddev": "ng build -c development && tsc -p server",
     "build": "ng build && tsc -p server && cp package.json dist/",
     "start": "node server/app.js",
