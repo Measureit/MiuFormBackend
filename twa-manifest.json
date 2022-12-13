@@ -1,0 +1,41 @@
+{
+  "packageId": "io.github.measureit.miuform",
+  "host": "miucheck.cyclic.app",
+  "name": "MiuCheck",
+  "launcherName": "MiuCheck",
+  "display": "standalone",
+  "themeColor": "#1976D2",
+  "navigationColor": "#000000",
+  "navigationColorDark": "#000000",
+  "navigationDividerColor": "#000000",
+  "navigationDividerColorDark": "#000000",
+  "backgroundColor": "#FAFAFA",
+  "enableNotifications": true,
+  "startUrl": "/",
+  "iconUrl": "https://miucheck.cyclic.app/assets/icons/icon-512x512.png",
+  "splashScreenFadeOutDuration": 300,
+  "signingKey": {
+    "path": "/home/adam/projects/node_server_client/android.keystore",
+    "alias": "android"
+  },
+  "appVersionName": "6",
+  "appVersionCode": 6,
+  "shortcuts": [],
+  "generatorApp": "bubblewrap-cli",
+  "webManifestUrl": "https://miucheck.cyclic.app/manifest.webmanifest",
+  "fallbackType": "customtabs",
+  "features": {},
+  "alphaDependencies": {
+    "enabled": false
+  },
+  "enableSiteSettingsShortcut": true,
+  "isChromeOSOnly": false,
+  "isMetaQuest": false,
+  "fullScopeUrl": "https://miucheck.cyclic.app/",
+  "minSdkVersion": 19,
+  "orientation": "default",
+  "fingerprints": [],
+  "additionalTrustedOrigins": [],
+  "retainedBundles": [],
+  "appVersion": "6"
+}

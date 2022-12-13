@@ -10,5 +10,6 @@ export const fontMiu = 'AAEAAAARAQAABAAQR0RFRiU4IlcABKk8AAADikdQT1MXcEvYAASsyAAA
 export const addFontToDoc = (doc: jsPDF, font: any) => {
     doc.addFileToVFS("MyFont.ttf", font);
     doc.addFont("MyFont.ttf", "MyFont", "normal");
+    doc.addFont("MyFont.ttf", "MyFont", "italic");
     doc.setFont("MyFont");
 }

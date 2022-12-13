@@ -1,11 +1,49 @@
-# starter-express-api
+# MiuApp (technically Miuform)
 
-This is the simplest possible nodejs api using express that responds to any request with: 
+Application to provides factory inspection reports.
+
+use free icons:
+<a href="https://www.flaticon.com/free-icons/inspector" title="inspector icons">Inspector icons created by Good Ware - Flaticon</a>
+
+# Google Store
+
+Generates by 
+```cmd
+bubblewrap --help
+bubblewrap build --skipSigning
 ```
-Yo!
-```
+from main folder of repository.
 
-### Deploy it in 7 seconds: 
+file for google:
+./app-release.aab
 
-[![Deploy to Cyclic](https://deploy.cyclic.app/button.svg)](https://deploy.cyclic.app/)
+to generate digical assets links
+bubblewrap fingerprint generateAssetLinks
 
+# Development
+
+This project was generated with [Angular CLI](https://github.com/angular/angular-cli) version 14.2.9.
+
+## Development server
+
+Run `ng serve` for a dev server. Navigate to `http://localhost:4200/`. The application will automatically reload if you change any of the source files.
+
+## Code scaffolding
+
+Run `ng generate component component-name` to generate a new component. You can also use `ng generate directive|pipe|service|class|guard|interface|enum|module`.
+
+## Build
+
+Run `ng build` to build the project. The build artifacts will be stored in the `dist/` directory.
+
+## Running unit tests
+
+Run `ng test` to execute the unit tests via [Karma](https://karma-runner.github.io).
+
+## Running end-to-end tests
+
+Run `ng e2e` to execute the end-to-end tests via a platform of your choice. To use this command, you need to first add a package that implements end-to-end testing capabilities.
+
+## Further help
+
+To get more help on the Angular CLI use `ng help` or go check out the [Angular CLI Overview and Command Reference](https://angular.io/cli) page.
