@@ -1,6 +1,6 @@
 //import * as dotenv from 'dotenv';
 //dotenv.config();
-import * as express from 'express';
+import express from 'express';
 import { Request, Response } from 'express';
 import { first } from 'rxjs';
 import { EmailMessage, EmailSender } from './emailsender';
@@ -11,7 +11,7 @@ import * as path from 'path';
 
 //const express = require('express');
 const app = express();
-app.set('port', (process.env.PORT || 4200));
+//app.set('port', (process.env.PORT || 4200));
 app.use('/', express.static(path.join(__dirname, '../public')));
 app.use(express.json());
 app.use(express.urlencoded({ extended: false }));

@@ -9,8 +9,9 @@
   "scripts": {
     "ng": "ng",
     "builddev": "ng build -c development && tsc -p server",
-    "build": "ng build && tsc -p server && cp package.json dist/",
+    "build": "ng build && npm run bundleServer && cp package.json dist/",
     "start": "node server/app.js",
+    "bundleServer": "esbuild server/app.ts --platform=node --bundle --outfile=dist/server/app.js",
     "startdev": "node dist/server/app.js",
     "predev": "tsc -p server",
     "dev": "concurrently \"ng serve --open\" \"tsc -w -p server\" \"nodemon dist/server/app.js\"",
