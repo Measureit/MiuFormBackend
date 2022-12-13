@@ -8,9 +8,11 @@
   },
   "scripts": {
     "ng": "ng",
+    "preinstall": "npm install -g npm@latest", 
     "builddev": "ng build -c development && tsc -p server",
-    "build": "ng build && tsc -p server",
-    "start": "node dist/server/app.js",
+    "build": "ng build && tsc -p server && cp package.json dist/",
+    "start": "node server/app.js",
+    "startdev": "node dist/server/app.js",
     "predev": "tsc -p server",
     "dev": "concurrently \"ng serve --open\" \"tsc -w -p server\" \"nodemon dist/server/app.js\"",
     "prod": "concurrently \"ng build && tsc -p server && node dist/server/app.js\"",
