@@ -8,6 +8,7 @@ import { DomSanitizer } from '@angular/platform-browser';
 import moment from 'moment';
 import { M } from '@angular/cdk/keycodes';
 import { addFontToDoc, fontMiu } from './AbhayaLibre-Regular-normal';
+import { InspectorInfo } from '../models/inspector-info.model';
 
 interface ReportGeneratorConfig {
     vMargin: number;
@@ -22,6 +23,7 @@ interface ReportGeneratorContext {
     yPosition: number;
     yPage: number;
     config: ReportGeneratorConfig;
+    inspectorInfo: InspectorInfo;
 }
 
 interface AddTextLineOptions {
@@ -114,6 +116,7 @@ export class ReportGeneratorService {
                     addFontToDoc(doc, fontMiu);
                     return of({ doc: doc, 
                         yPage: 0, yPosition: 0, factory: f[0],
+                        inspectorInfo: f[1],
                         config: { vMargin: 10, hMargin: 10, lineDistance: 5,
                             pageHeight: doc.internal.pageSize.height || doc.internal.pageSize.getHeight(),
                             pageWidth: doc.internal.pageSize.width || doc.internal.pageSize.getWidth() } as ReportGeneratorConfig
@@ -125,7 +128,7 @@ export class ReportGeneratorService {
                     this.addProductInfo(x, report.productName, report.productId, report.productColor);
                     this.addChecklist(x, report.checklist);
                     this.addSummary(x, report.comment, report.images);
-                    this.addSign(x, 'asdfadf\rasfdasdf');
+                    this.addSign(x, x.inspectorInfo.inspectorSign);
                     return of(x.doc);
                 })
             );
@@ -135,8 +138,8 @@ export class ReportGeneratorService {
 
     private addHeader(context: ReportGeneratorContext, dateOfCreation: string) { //}: Observable<ReportGeneratorContext> {
         this.addTextLine(context, dateOfCreation, { fontSize: 10, align: 'right', makeBottomMargin: false, keepY: true});
-        this.addTextLine(context, "MY COMPANY", { fontSize: 15 });
-        this.addTextLine(context, "MY COMPANY ADDRESS", { fontSize: 15 });
+        this.addTextLine(context, context.inspectorInfo.companyName, { fontSize: 16 });
+        this.addTextLine(context, context.inspectorInfo.companyAddress, { fontSize: 16 });
         this.addYSpace(context, 10);
         this.addTextLine(context, "Raport pokontrolny produkcji mebla", { fontSize: 20, align: 'center'});
         
@@ -151,9 +154,12 @@ export class ReportGeneratorService {
             
     private addProductInfo(context: ReportGeneratorContext, productName: string, productId: string, productColor: string) { //}: Observable<ReportGeneratorContext> {
         this.addYSpace(context, 7);
-        this.addTextLine(context, "Nazwa produktu: " + productName, { fontSize: 15} );
-        this.addTextLine(context, "Id produktu: " + productId, { fontSize: 15});
-        this.addTextLine(context, "Kolor produktu: " + productColor, { fontSize: 15});
+        this.addTextLine(context, "Nazwa produktu: " , { keepY: true } );
+        this.addTextLine(context, productName, { xPos: 50, fontSize: 18 } );
+        this.addTextLine(context, "Id produktu: "  , { keepY: true } );
+        this.addTextLine(context, productId, { xPos: 50, fontSize: 18 });
+        this.addTextLine(context, "Kolor produktu: " , { keepY: true } );
+        this.addTextLine(context, productColor, { xPos: 50, fontSize: 18 });
     }
     
     getScale(originalSize: ImageSize, maxWidth: number, maxHeight: number): ImageSize {
@@ -196,9 +202,22 @@ export class ReportGeneratorService {
 
     private addComment(context: ReportGeneratorContext, comment: string) { //} Observable<ReportGeneratorContext> {
         if (comment && comment.length > 0) {
-            context.doc.setFont("MyFont", "italic");
-            this.addTextLine(context, 'Komentarz: ' + comment, {});
-            context.doc.setFont("MyFont", "normal");
+            this.addTextLine(context, 'Komentarz: ', { xPos: context.config.hMargin }); 
+            const answerTextWidth = 20;
+            let contentWidth = context.config.pageWidth - 2 * context.config.hMargin 
+                - answerTextWidth;
+
+            var arr = context.doc.splitTextToSize(comment, contentWidth) as string[];
+            var dim = context.doc.getTextDimensions(comment);
+            var arrHeight = arr.length * dim.h + (arr.length - 1) * context.config.lineDistance; 
+            if (this.spaceToEndOfPage(context, arrHeight) > 0) {
+                context.doc.addPage();
+                context.yPosition = context.config.vMargin;
+            }
+
+            arr.forEach((line, i) => {
+                this.addTextLine(context, line, { xPos: context.config.hMargin });
+            });
         }
     }
     

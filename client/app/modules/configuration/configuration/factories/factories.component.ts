@@ -3,9 +3,9 @@ import { MatDialog } from '@angular/material/dialog';
 import { first, mergeMap, tap } from 'rxjs';
 import { EditorActions } from 'client/app/core/enums';
 import { CreateFactoryInfoConfig, FactoryInfoConfig } from 'client/app/core/models';
-import { ConfigurationService, ConsoleLoggerService, Logger } from 'client/app/core/services';
+import { ConfigurationService, Logger } from 'client/app/core/services';
 import { FactoryEditorComponent, FactoryEditorData } from './editor/editor.component';
-import { UserNotificationService } from 'client/app/core/services/user-notification.service';
+import { UserNotificationService } from 'client/app/core/services';
 
 @Component({
   selector: 'app-factories',
