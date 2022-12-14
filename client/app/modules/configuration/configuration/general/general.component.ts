@@ -201,7 +201,7 @@ export class GeneralComponent implements OnInit {
   }
 
   addEmail(event): void {
-    console.log(event.value)
+    //console.log(event.value)
     if (event.value) {
       if (this.validateEmail(event.value.trim())) {
         this.formEmails
@@ -219,7 +219,7 @@ export class GeneralComponent implements OnInit {
   }
 
   removeEmail(data: any): void {
-    console.log('Removing ' + data)
+    //console.log('Removing ' + data)
     let inx = this.formEmails.value.indexOf(data);
     if (inx >= 0) {
       this.formEmails.removeAt(inx);

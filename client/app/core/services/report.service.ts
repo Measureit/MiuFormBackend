@@ -44,7 +44,7 @@ export class ReportService {
       .pipe(
         map(x => {
           let result = x.sort((x, y) => x.order - y.order);
-          console.log('getChecklist: ' + JSON.stringify(result));
+          //console.log('getChecklist: ' + JSON.stringify(result));
           return result;
         })
       )

@@ -44,14 +44,13 @@ export class ImagesSelectorComponent implements OnInit {
   }
 
   onFileInput = (event) => {
-    console.log('aaa');
     if (event.target.files && event.target.files.length > 0) {
       zip(
         Array.from<File>(event.target.files)
           .map(y => this.resizeImage(y, 1200, 1200)))        
         .subscribe({
           next:  (y) => { 
-            console.log(y);
+            //console.log(y);
             //let cur = (this.itemForm.get('images').value ?? []) as Array<ReportImageItem>;
             //let newArray = cur.concat(y);
             //this.itemForm.get('images').reset();
@@ -60,7 +59,7 @@ export class ImagesSelectorComponent implements OnInit {
               'base64': new FormControl(await blobToBase64(x.blob)),
               'size': new FormControl(x.size),
             })));
-            console.log(this.imagesFormArray)
+            //console.log(this.imagesFormArray)
           },
           error: (err) => { console.error(err); }
         });

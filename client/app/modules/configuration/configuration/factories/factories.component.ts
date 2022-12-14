@@ -87,7 +87,7 @@ export class FactoriesComponent implements OnInit {
 
   deleteItem(event, id: string) {
     event.stopPropagation();
-    console.log('delete factory');
+    //console.log('delete factory');
     const item = this.configurationService.getFactory(id).
       pipe(
         first(),

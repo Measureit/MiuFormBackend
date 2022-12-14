@@ -85,7 +85,7 @@ export class ReportGeneratorService {
                     break;
             }
         }
-        console.log('y: ' + context.yPosition )
+        //console.log('y: ' + context.yPosition )
         if (text && text.length> 0) {
             context.doc.text(text, x, context.yPosition, {align: actual.align});
         }

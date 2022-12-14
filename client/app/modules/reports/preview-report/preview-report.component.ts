@@ -156,7 +156,7 @@ export class PreviewReportComponent implements OnInit {
         )
         .subscribe({
           next: (n) => {
-            console.log(n);
+            //console.log(n);
             if (n) {
               this.userNotificationService.notifyInfo('MESSAGE.REPORT.SEND_SUCCESSED');
             } else {

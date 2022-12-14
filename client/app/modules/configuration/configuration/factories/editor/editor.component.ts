@@ -119,7 +119,7 @@ export class FactoryEditorComponent {
   }
 
   removeEmail(data: any): void {
-    console.log('Removing ' + data)
+    //console.log('Removing ' + data)
     let inx = this.formEmails.value.indexOf(data);
     if (inx >= 0) {
       this.formEmails.removeAt(inx);

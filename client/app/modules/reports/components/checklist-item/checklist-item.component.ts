@@ -19,7 +19,7 @@ export class ChecklistItemComponent implements OnInit {
   
 
   ngOnInit(): void {
-    console.log('checklist item init');
+    //console.log('checklist item init');
     this.detailsShown = this.hasDetails; 
   }
 
