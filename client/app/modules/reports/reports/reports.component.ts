@@ -15,7 +15,7 @@ export class ReportsComponent implements OnInit {
   loadFactoryWithNoActive: boolean = false;
   factoryItems: FactoryInfoConfig[] = [];
   items: Report[] = [];
-
+  selectedFactoryIds: string[] = [];
   productIdFilter: string = '';
 
   constructor(private reportService: ReportService, 
@@ -41,7 +41,7 @@ export class ReportsComponent implements OnInit {
   }
 
   reloadReports(): Observable<boolean> {
-    return this.reportService.getReports(true)
+    return this.reportService.getFiltered(this.productIdFilter, this.selectedFactoryIds)
       .pipe(
         tap(x => this.items = x),
         map(x => true)
@@ -49,11 +49,23 @@ export class ReportsComponent implements OnInit {
   }
 
   filter() {
-    
+    console.log('filter: ' + JSON.stringify(this.selectedFactoryIds) + ' ' + this.productIdFilter);
+    this.reloadReports()
+    .pipe(
+      first()
+    )
+    .subscribe({
+      error: (err) =>{
+        console.error(err);
+        this.userNotificationService.notifyError('MESSAGE.LOAD.FAILED');
+      } 
+    });  
   }
 
   clearFilter() {
-    
+    this.selectedFactoryIds = [];
+    this.productIdFilter = '';
+    this.filter();
   }
 
   reloadFactories(loadNoActive: boolean): Observable<boolean> {

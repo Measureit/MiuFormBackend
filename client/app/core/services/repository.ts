@@ -1,21 +1,22 @@
 import PouchDB from 'pouchdb';
 import { from, Observable } from 'rxjs';
 import { map, mergeMap, tap } from 'rxjs/operators';
-import { DbModel } from '../models';
+import { ChecklistItemConfig, DbModel, DeliveryConfig, FactoryInfoConfig, Report } from '../models';
+import { InspectorInfo } from '../models/inspector-info.model';
 import { ConsoleLoggerService, Logger } from './console.logger.service';
-
-
-export class Repository<T extends DbModel> {
+import PouchDBFind from 'pouchdb-find';
+class Repository<T extends DbModel> {
 
     
-  private readonly dbName: string;
-  private readonly db: PouchDB.Database<T>;
-  private readonly logger: Logger;
+  protected readonly dbName: string;
+  protected readonly db: PouchDB.Database<T>;
+  protected readonly logger: Logger;
 
   constructor(
     logger: Logger,
     dbName: string
   ) {
+    PouchDB.plugin(PouchDBFind);
     this.dbName = dbName;
     this.logger = logger;
     this.db = new PouchDB(dbName);
@@ -94,5 +95,63 @@ export class Repository<T extends DbModel> {
       .pipe(
         map(x => true)
       );
+  }
+}
+
+export class ReportRepository extends Repository<Report> {
+  constructor(logger: Logger) {
+    super(logger, 'miuapp_Report');
+  }
+
+  getFiltered(productFilter: string, selectedFactoryIds: string[]): Observable<Report[]> {
+    this.logger.debug(`getFiltered with productIdFilter: ${productFilter} and selectedFactoryIds: ${selectedFactoryIds.join(',')} on ${this.dbName}`);
+    return new Observable<Array<Report>>((obs) => {
+      const docs = this.db
+        .find({selector: 
+          {
+            $and:
+            [
+              //{
+              //  $or: 
+              //  [
+                  productFilter.length > 0 ? {productId: {$regex: `.*${productFilter}.*`}} : {},
+              //    productFilter.length > 0 ? {productName: {$regex:  `.*${productFilter}.*`}} : {}
+              //  ]
+              //},
+              selectedFactoryIds.length > 0 ? { factoryInfoId: { $in: selectedFactoryIds } } : {}
+            ]
+          }
+        })
+        .then((docs) => {
+          console.log(JSON.stringify(docs));
+          obs.next(docs.docs.map((x) => x));
+          obs.complete();
+        })
+        .catch((err) => {
+          obs.error(err);
+        });
+    });
+  }
+}
+
+export class ChecklistItemConfigRepository extends Repository<ChecklistItemConfig> {
+  constructor(logger: Logger) {
+    super(logger, 'miuapp_ChecklistItem');
+  }
+}
+export class FactoryInfoConfigRepository extends Repository<FactoryInfoConfig> {
+  constructor(logger: Logger) {
+    super(logger, 'miuapp_FactoryInfoConfig');
+  }
+}
+export class DeliveryConfigRepository extends Repository<DeliveryConfig> {
+  constructor(logger: Logger) {
+    super(logger, 'miuapp_DeliveryConfig');
+  }
+}
+
+export class InspectorInfoRepository extends Repository<InspectorInfo> {
+  constructor(logger: Logger) {
+    super(logger, 'miuapp_InspectorInfo');
   }
 }

@@ -1,10 +1,9 @@
 import { Injectable } from '@angular/core';
-import { first, map, mergeMap, Observable, of } from 'rxjs';
-import { ChecklistItemConfig, CreateReport, DeliveryConfig, FactoryInfoConfig, Report } from '../models';
-import { ConsoleLoggerService, Logger } from './console.logger.service';
-import { DBService } from './db.service';
+import { first, map, Observable, of } from 'rxjs';
+import { ChecklistItemConfig, FactoryInfoConfig, Report } from '../models';
+import { Logger } from './console.logger.service';
 import { ReportGeneratorService } from './report-generator.service';
-import { Repository } from "./repository";
+import { ChecklistItemConfigRepository, DeliveryConfigRepository, FactoryInfoConfigRepository, ReportRepository } from "./repository";
 
 export const blobToBase64 = (blob: Blob) : Promise<string> => {
   return new Promise((resolve, _) => {
@@ -19,20 +18,17 @@ export const blobToBase64 = (blob: Blob) : Promise<string> => {
 })
 export class ReportService {
   
-  private readonly dbChecklistItemRepo: Repository<ChecklistItemConfig>;
-  private readonly dbFactoryInfoConfigRepo: Repository<FactoryInfoConfig>;
-  private readonly dbDeliveryConfigRepo: Repository<DeliveryConfig>;
-  private readonly dbReportRepo: Repository<Report>;
+  private readonly dbChecklistItemRepo: ChecklistItemConfigRepository;
+  private readonly dbFactoryInfoConfigRepo: FactoryInfoConfigRepository;
+  private readonly dbReportRepo: ReportRepository;
 
   constructor(
-    private dbService: DBService,
     private logger: Logger,
     private reportGeneratorService: ReportGeneratorService
   ) {
-    this.dbChecklistItemRepo = new Repository<ChecklistItemConfig>(logger, 'miuapp_ChecklistItem');
-    this.dbFactoryInfoConfigRepo = new Repository<FactoryInfoConfig>(logger, 'miuapp_FactoryInfoConfig');
-    this.dbDeliveryConfigRepo = new Repository<DeliveryConfig>(logger, 'miuapp_DeliveryConfig');
-    this.dbReportRepo = new Repository<Report>(logger, 'miuapp_Report');
+    this.dbChecklistItemRepo = new ChecklistItemConfigRepository(logger);
+    this.dbFactoryInfoConfigRepo = new FactoryInfoConfigRepository(logger);
+    this.dbReportRepo = new ReportRepository(logger);
   }
 
   getFactories() : Observable<FactoryInfoConfig[]> {
@@ -44,7 +40,6 @@ export class ReportService {
       .pipe(
         map(x => {
           let result = x.sort((x, y) => x.order - y.order);
-          //console.log('getChecklist: ' + JSON.stringify(result));
           return result;
         })
       )
@@ -60,6 +55,10 @@ export class ReportService {
   }
   getReports(withNoActive: boolean) : Observable<Report[]> {
     return this.dbReportRepo.get(withNoActive);
+  }
+
+  getFiltered(productFilter: string, selectedFactoryIds: string[]) : Observable<Report[]> {
+    return this.dbReportRepo.getFiltered(productFilter, selectedFactoryIds);
   }
 
   updateReport(report: Report) : Observable<string | undefined> {

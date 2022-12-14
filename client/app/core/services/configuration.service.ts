@@ -1,12 +1,10 @@
-import { HttpClient } from '@angular/common/http';
-import { Inject, Injectable } from '@angular/core';
-import { Observable, of, pipe, zip } from 'rxjs';
-import { catchError, concatMap, map, mergeMap } from 'rxjs/operators';
+import { Injectable } from '@angular/core';
+import { Observable, of, zip } from 'rxjs';
+import { catchError, map, mergeMap } from 'rxjs/operators';
 import { ChecklistItemConfig, CreateDeliveryConfig, CreateIdChecklistItemConfig, CreateIdFactoryInfoConfig, DeliveryConfig, DeliveryId, FactoryInfoConfig } from '../models';
 import { CreateInspectorInfo, InspectorInfo, InspectorInfoId } from '../models/inspector-info.model';
-import { ConsoleLoggerService, Logger } from './console.logger.service';
-import { DBService } from './db.service';
-import { Repository } from './repository';
+import { Logger } from './console.logger.service';
+import { ChecklistItemConfigRepository, DeliveryConfigRepository, FactoryInfoConfigRepository, InspectorInfoRepository } from './repository';
 
 export interface Configuration {
   factories: FactoryInfoConfig[];
@@ -21,19 +19,18 @@ export interface Configuration {
 export class ConfigurationService  {
   
 
-  private readonly dbChecklistItemRepo: Repository<ChecklistItemConfig>;
-  private readonly dbFactoryInfoConfigRepo: Repository<FactoryInfoConfig>;
-  private readonly dbDeliveryConfigRepo: Repository<DeliveryConfig>;
-  private readonly dbInspectorInfoRepo: Repository<InspectorInfo>;
+  private readonly dbChecklistItemRepo: ChecklistItemConfigRepository;
+  private readonly dbFactoryInfoConfigRepo: FactoryInfoConfigRepository;
+  private readonly dbDeliveryConfigRepo: DeliveryConfigRepository;
+  private readonly dbInspectorInfoRepo: InspectorInfoRepository;
 
   constructor(
-    private dbService: DBService,
     private logger: Logger
     ) {
-    this.dbChecklistItemRepo = new Repository<ChecklistItemConfig>(logger, 'miuapp_ChecklistItem');
-    this.dbFactoryInfoConfigRepo = new Repository<FactoryInfoConfig>(logger, 'miuapp_FactoryInfoConfig');
-    this.dbDeliveryConfigRepo = new Repository<DeliveryConfig>(logger, 'miuapp_DeliveryConfig');
-    this.dbInspectorInfoRepo = new Repository<InspectorInfo>(logger, 'miuapp_InspectorInfo');
+    this.dbChecklistItemRepo = new ChecklistItemConfigRepository(logger);
+    this.dbFactoryInfoConfigRepo = new FactoryInfoConfigRepository(logger);
+    this.dbDeliveryConfigRepo = new DeliveryConfigRepository(logger);
+    this.dbInspectorInfoRepo = new InspectorInfoRepository(logger);
   }
 
   //START FACTORIES
