@@ -7,6 +7,7 @@ import { catchError, first, map, mergeMap, of, take, tap } from 'rxjs';
 import { CreateDeliveryConfig, DeliveryConfig } from 'client/app/core/models';
 import { CreateInspectorInfo, InspectorInfo } from 'client/app/core/models/inspector-info.model';
 import { Configuration, ConfigurationService } from 'client/app/core/services';
+import { UserNotificationService } from 'client/app/core/services/user-notification.service';
 
 @Component({
   selector: 'app-general',
@@ -29,7 +30,8 @@ export class GeneralComponent implements OnInit {
 
   constructor(private _ngZone: NgZone,
     private formBuiler: FormBuilder,
-    private configurationService: ConfigurationService,) { 
+    private configurationService: ConfigurationService,
+    private userNotificationService: UserNotificationService) { 
   }
 
   ngOnInit(): void {
@@ -63,11 +65,12 @@ export class GeneralComponent implements OnInit {
       )
       .subscribe({
         next: (x) => {
-          console.log('SUcc');
+          console.log('Initial configuration => Success');
           this.loading = false;
         },
         error: (err) => {
           console.error(err);
+          this.userNotificationService.notifyError('MESSAGE.CONFIG.READ_FAILED');
           this.loading = false;
         }
        })
@@ -113,9 +116,12 @@ export class GeneralComponent implements OnInit {
         first()
       )
       .subscribe({
-        next: (x) => console.log(x),
-        error: (err) => console.error(err)
-      })
+        next: (x) => this.userNotificationService.notifyInfo('MESSAGE.SAVE.SUCCESS'),
+        error: (err) => {
+          console.error(err);
+          this.userNotificationService.notifyError('MESSAGE.SAVE.FAILED');
+        }
+      });
   }
 
   saveDelivery() {
@@ -125,9 +131,12 @@ export class GeneralComponent implements OnInit {
         first()
       )
       .subscribe({
-        next: (x) => console.log(x),
-        error: (err) => console.error(err)
-      })
+        next: (x) => this.userNotificationService.notifyInfo('MESSAGE.SAVE.SUCCESS'),
+        error: (err) => {
+          console.error(err);
+          this.userNotificationService.notifyError('MESSAGE.SAVE.FAILED');
+        }
+      });
   }
 
   download(content, fileName, contentType) {
@@ -147,9 +156,12 @@ export class GeneralComponent implements OnInit {
       })
     )
     .subscribe({
-      next: (x) => {},
-      error: (err) => console.log(err)
-    })
+      next: (x) => this.userNotificationService.notifyInfo('MESSAGE.SAVE.SUCCESS'),
+      error: (err) => {
+        console.error(err);
+        this.userNotificationService.notifyError('MESSAGE.SAVE.FAILED');
+      }
+    });
   }
 
   loadConfig = (event) => {
@@ -165,10 +177,14 @@ export class GeneralComponent implements OnInit {
               }))
               .subscribe({
                 next: (x) => console.log(x),
-                error: (err) => console.error(err)
+                error: (err) => {
+                  console.error(err);
+                  this.userNotificationService.notifyError('MESSAGE.CONFIG.SET_CONFIG_FAILED');
+                }
               })
             } else {
               console.error('Config - No parse correctly.');
+              this.userNotificationService.notifyError('MESSAGE.CONFIG.FAILED_FILE_STRUCT');
             } 
         }
 
@@ -197,6 +213,7 @@ export class GeneralComponent implements OnInit {
         //this.item.emails.push({ value: event.value });
         //this.rulesForm.controls['emails'].setErrors({'incorrectEmail': true});
         console.error('wrong email...');
+        this.userNotificationService.notifyError('MESSAGE.VALIDATION.EMAIL_FORMAT_FAILED');
       }
     }
   }

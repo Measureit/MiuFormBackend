@@ -6,6 +6,7 @@ import { ChecklistItemConfig, FactoryInfoConfig } from 'client/app/core/models';
 import { ConfigurationService } from 'client/app/core/services';
 import { COMMA, ENTER } from '@angular/cdk/keycodes';
 import { FormGroup, AbstractControl, Validators, FormControl, FormArray, FormBuilder } from '@angular/forms';
+import { UserNotificationService } from 'client/app/core/services/user-notification.service';
 
 export interface ChecklistItemEditorData {
   item: ChecklistItemConfig;
@@ -29,6 +30,7 @@ export class ChecklistItemEditorComponent {
   constructor(
     private formBuiler: FormBuilder,
     private configurationService: ConfigurationService,
+    private userNotificationService: UserNotificationService,
     public dialogRef: MatDialogRef<ChecklistItemEditorComponent>,
     @Inject(MAT_DIALOG_DATA) public data: ChecklistItemEditorData,
   ) {
@@ -57,7 +59,13 @@ export class ChecklistItemEditorComponent {
       .pipe(
         first(),
         tap(x => this.dialogRef.close(true))        
-      ).subscribe();    
+      ).subscribe({
+        next: (x) => this.userNotificationService.notifyInfo('MESSAGE.SAVE.SUCCESS'),
+        error: (err) => {
+          console.error(err);
+          this.userNotificationService.notifyError('MESSAGE.SAVE.FAILED');
+        }
+      });    
   }
 
   deleteItem(item: ChecklistItemConfig): void {
@@ -66,6 +74,12 @@ export class ChecklistItemEditorComponent {
       .pipe(
         first(),
         tap(x => this.dialogRef.close(true))        
-      ).subscribe();    
+      ).subscribe({
+        next: (x) => this.userNotificationService.notifyInfo('MESSAGE.DELETE.SUCCESS'),
+        error: (err) => {
+          console.error(err);
+          this.userNotificationService.notifyError('MESSAGE.DELETE.FAILED');
+        }
+      });    
   }
 }

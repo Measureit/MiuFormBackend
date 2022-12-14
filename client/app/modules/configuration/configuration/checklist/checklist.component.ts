@@ -7,6 +7,7 @@ import { Logger, ConfigurationService } from 'client/app/core/services';
 import { FactoryEditorComponent, FactoryEditorData } from '../factories/editor/editor.component';
 import { ChecklistItemEditorComponent, ChecklistItemEditorData } from './editor/editor.component';
 import { CdkDragDrop, moveItemInArray } from '@angular/cdk/drag-drop';
+import { UserNotificationService } from 'client/app/core/services/user-notification.service';
 
 @Component({
   selector: 'app-checklist',
@@ -22,6 +23,7 @@ export class ChecklistComponent implements OnInit {
   constructor(
     private logger: Logger,
     private configurationService: ConfigurationService,
+    private userNotificationService: UserNotificationService,
     private dialog: MatDialog) { }
 
   ngOnInit(): void {
@@ -36,7 +38,12 @@ export class ChecklistComponent implements OnInit {
         tap(x => this.items = x),
         first(),
       )
-      .subscribe();
+      .subscribe({
+        error: (err) =>{
+          console.error(err);
+          this.userNotificationService.notifyError('MESSAGE.LOAD.FAILED');
+        } 
+      });
   }
 
   loadChecklistWithNoActiveChange(checked: boolean) {
@@ -53,7 +60,10 @@ export class ChecklistComponent implements OnInit {
       next: x => {
         this.reloadItems();
       },
-      error: (err) => console.error(err)
+      error: (err) => {
+        console.error(err);
+        this.userNotificationService.notifyError('MESSAGE.MOVE.FAILED');
+      } 
     })
   }
 

@@ -122,3 +122,13 @@ mat-card.container {
 .an-flex-direction-column {
   flex-direction: column;
 }
+
+.user-notify-info {
+  --mdc-snackbar-container-color: rgb(151, 211, 151);
+  --mdc-snackbar-supporting-text-color: black;
+}
+
+.user-notify-error {
+  --mdc-snackbar-container-color: rgb(209, 126, 105);
+  --mdc-snackbar-supporting-text-color: black;
+}

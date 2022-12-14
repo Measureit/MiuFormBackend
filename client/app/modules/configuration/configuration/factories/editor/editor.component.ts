@@ -6,6 +6,7 @@ import { FactoryInfoConfig } from 'client/app/core/models';
 import { ConfigurationService } from 'client/app/core/services';
 import { COMMA, ENTER } from '@angular/cdk/keycodes';
 import { FormGroup, AbstractControl, Validators, FormControl, FormArray, FormBuilder } from '@angular/forms';
+import { UserNotificationService } from 'client/app/core/services/user-notification.service';
 
 export interface FactoryEditorData {
   item: FactoryInfoConfig;
@@ -29,6 +30,7 @@ export class FactoryEditorComponent {
   constructor(
     private formBuiler: FormBuilder,
     private configurationService: ConfigurationService,
+    private userNotificationService: UserNotificationService,
     public dialogRef: MatDialogRef<FactoryEditorComponent>,
     @Inject(MAT_DIALOG_DATA) public data: FactoryEditorData,
   ) {
@@ -67,7 +69,13 @@ export class FactoryEditorComponent {
       .pipe(
         first(),
         tap(x => this.dialogRef.close(true))        
-      ).subscribe();    
+      ).subscribe({
+        next: (x) => this.userNotificationService.notifyInfo('MESSAGE.SAVE.SUCCESS'),
+        error: (err) => {
+          console.error(err);
+          this.userNotificationService.notifyError('MESSAGE.SAVE.FAILED');
+        }
+      });    
   }
 
   deleteItem(item: FactoryInfoConfig): void {
@@ -76,7 +84,13 @@ export class FactoryEditorComponent {
       .pipe(
         first(),
         tap(x => this.dialogRef.close(true))        
-      ).subscribe();    
+      ).subscribe({
+        next: (x) => this.userNotificationService.notifyInfo('MESSAGE.DELETE.SUCCESS'),
+        error: (err) => {
+          console.error(err);
+          this.userNotificationService.notifyError('MESSAGE.DELETE.FAILED');
+        }
+      });    
   }
 
   //handle emails
@@ -99,6 +113,7 @@ export class FactoryEditorComponent {
         //this.item.emails.push({ value: event.value });
         //this.rulesForm.controls['emails'].setErrors({'incorrectEmail': true});
         console.error('wrong email...');
+        this.userNotificationService.notifyError('MESSAGE.VALIDATION.EMAIL_FORMAT_FAILED');
       }
     }
   }

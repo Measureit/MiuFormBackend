@@ -5,6 +5,7 @@ import { EditorActions } from 'client/app/core/enums';
 import { CreateFactoryInfoConfig, FactoryInfoConfig } from 'client/app/core/models';
 import { ConfigurationService, ConsoleLoggerService, Logger } from 'client/app/core/services';
 import { FactoryEditorComponent, FactoryEditorData } from './editor/editor.component';
+import { UserNotificationService } from 'client/app/core/services/user-notification.service';
 
 @Component({
   selector: 'app-factories',
@@ -19,6 +20,7 @@ export class FactoriesComponent implements OnInit {
   constructor(
     private logger: Logger,
     private configurationService: ConfigurationService,
+    private userNotificationService: UserNotificationService,
     private dialog: MatDialog) { }
 
   ngOnInit(): void {
@@ -31,7 +33,12 @@ export class FactoriesComponent implements OnInit {
         tap(x => this.items = x),
         first(),
       )
-      .subscribe();
+      .subscribe({
+        error: (err) =>{
+          console.error(err);
+          this.userNotificationService.notifyError('MESSAGE.LOAD.FAILED');
+        } 
+      });
   }
 
   loadFactoryWithNoActiveChange(checked: boolean) {

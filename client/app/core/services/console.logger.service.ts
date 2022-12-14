@@ -13,7 +13,6 @@ export abstract class Logger {
 }
 
 
-
 const noop = (): any => undefined;
 
 @Injectable({
