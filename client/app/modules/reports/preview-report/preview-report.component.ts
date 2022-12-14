@@ -4,6 +4,7 @@ import { first, from, map, mergeMap, tap, throwError, zip } from 'rxjs';
 import { Report } from 'client/app/core/models';
 import { blobToBase64, ConfigurationService, Logger, ReportService } from 'client/app/core/services';
 import { EmailMessage, EmailService } from 'client/app/core/services/email.service';
+import { UserNotificationService } from 'client/app/core/services/user-notification.service';
 
 @Component({
   selector: 'app-preview-report',
@@ -20,6 +21,7 @@ export class PreviewReportComponent implements OnInit {
     private logger: Logger,
     private activatedRoute: ActivatedRoute,
     private reportService: ReportService,
+    private userNotificationService: UserNotificationService,
     private configurationService: ConfigurationService,
     private emailService: EmailService) {
 
@@ -46,7 +48,11 @@ export class PreviewReportComponent implements OnInit {
         tap(x => { this.reportBlob = x })
       )
       .subscribe({
-        error: (err) => { this.genereting = false; console.error(err); },
+        error: (err) => { 
+          this.genereting = false; 
+          console.error(err);
+          this.userNotificationService.notifyError('MESSAGE.REPORT.PREVIEW_FAILED');
+        },
         complete: () => this.genereting = false
       })
 
@@ -117,8 +123,14 @@ export class PreviewReportComponent implements OnInit {
         mergeMap(x => this.emailService.send(x.emailServerUrl, "sendinblue", x.options, x.email))        
       )
       .subscribe({
-        next: (n) => console.log(n),
-        error: (err) => console.error(err)
+        next: (n) => {
+         console.log(n);
+         this.userNotificationService.notifyInfo('MESSAGE.REPORT.SEND_SUCCESSED');
+        },
+        error: (err) => {
+          console.error(err);
+          this.userNotificationService.notifyError('MESSAGE.REPORT.SEND_FAILED');
+        }
       })
     }
   }

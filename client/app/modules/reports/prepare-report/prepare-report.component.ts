@@ -10,6 +10,7 @@ import { Logger, ReportService } from 'client/app/core/services';
 import { ConfirmDialogComponent, ConfirmDialogModel } from 'client/app/shared/components/confirm-dialog/confirm-dialog.component';
 import { ChecklistItemConfig, CreateReport, FactoryInfoConfig, ImageSize, Report, ReportChecklistItem, ReportImageItem } from '../../../core/models';
 import { ChecklistComponent } from '../../configuration/configuration/checklist/checklist.component';
+import { UserNotificationService } from 'client/app/core/services/user-notification.service';
 
 interface CompareChecklistInput {
   _id: string;
@@ -46,6 +47,7 @@ export class PrepareReportComponent implements OnInit {
   constructor(
     private formBuilder: FormBuilder,
     private translateService: TranslateService,
+    private userNotificationService: UserNotificationService,
     private logger: Logger,
     private router: Router,
     private dialog: MatDialog,
@@ -148,6 +150,7 @@ export class PrepareReportComponent implements OnInit {
         },
         error: (err) => {
           console.error(err);
+          this.userNotificationService.notifyError('MESSAGE.REPORT.PREPARE_FAILED');
           this.loading = false;
         }
       });
@@ -234,7 +237,10 @@ export class PrepareReportComponent implements OnInit {
         next: (b) => {
           this.router.navigate(['/reports/preview', report._id]);
         },
-        error: (err) => console.error(err)
+        error: (err) => {
+          console.error(err);
+          this.userNotificationService.notifyError('MESSAGE.REPORT.SAVE_FAILED');
+        }
       });
   }
 
@@ -253,8 +259,14 @@ export class PrepareReportComponent implements OnInit {
         first(),
       )
       .subscribe({
-        next: (x ) => console.log('success'),
-        error: (err) => console.error(err)
+        next: (x ) => {
+          console.log('success');
+          this.userNotificationService.notifyInfo('MESSAGE.REPORT.SAVE_SUCCESSED');
+        },
+        error: (err) => {
+          console.error(err);
+          this.userNotificationService.notifyError('MESSAGE.REPORT.SAVE_FAILED');
+        }
       });
   }
 }

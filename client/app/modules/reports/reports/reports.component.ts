@@ -3,6 +3,7 @@ import { first, map, mergeMap, Observable, tap } from 'rxjs';
 import { FactoryInfoConfig, Report } from 'client/app/core/models';
 import { ReportService } from 'client/app/core/services';
 import { Router } from '@angular/router';
+import { UserNotificationService } from 'client/app/core/services/user-notification.service';
 
 @Component({
   selector: 'app-reports',
@@ -18,6 +19,7 @@ export class ReportsComponent implements OnInit {
   productIdFilter: string = '';
 
   constructor(private reportService: ReportService, 
+    private userNotificationService: UserNotificationService,
     private router: Router) { }
 
   ngOnInit(): void {
@@ -26,7 +28,12 @@ export class ReportsComponent implements OnInit {
         mergeMap(x => this.reloadReports()),
         first()
       )
-      .subscribe();  
+      .subscribe({
+        error: (err) =>{
+          console.error(err);
+          this.userNotificationService.notifyError('MESSAGE.LOAD.FAILED');
+        } 
+      });  
   }
 
   selectFactoryInfoConfig(id: string): FactoryInfoConfig | undefined {
