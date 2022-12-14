@@ -24,7 +24,9 @@
 	"PREVIEW_REPORT": {
 		"TITLE": "Podgląd raportu",
 		"SEND_BY_EMAIL": "Wyślij wiadomość email",
-		"EDIT_REPORT": "Edytuj"
+		"EDIT_REPORT": "Edytuj",
+		"SEND_EMAIL_QUESTION": "Czy chesz wysłać maila do tych odiorców",
+		"SEND_EMAIL_QUESTION_TITLE": "Wysyłanie wiadomości"
 	},
 	"PREPARE_REPORT": {
 		"TITLE": "Przygotowanie raportu",
@@ -57,6 +59,36 @@
 			"COMPANY_NAME": "Nazwa Firmy",
 			"COMPANY_ADDRESS": "Adres Firmy",
 			"INSPECTION_SIGN": "Podpis"
+		}
+	},
+	"MESSAGE": {
+		"SAVE": {
+			"SUCCESSED": "Zapis zakończył się powodzeniem.",
+			"FAILED": "Zapis się nie powiódł."			
+		},
+		"DELETE": {
+			"SUCCESSED": "Uwuwanie zakończyło się powodzeniem.",
+			"FAILED": "Usuwanie się nie powiódło."
+		},
+		"LOAD": {
+			"FAILED": "Ładowanie się nie powiódło."
+		},
+		"MOVE": {
+			"FAILED": "Przesunięcie się nie powiódło."
+		},
+		"CONFIG": {
+			"LOAD_FAILED": "Ładowanie konfiguracji się nie powiódło.",
+			"SET_CONFIG_FAILED": "Ustawianie konfiguracji się nie powiodło.",
+			"FILE_STRUCT_FAILED": "Struktura pliku jest błędna."
+		},
+		"REPORT": {
+			"PREPARE_FAILED": "Tworzenie raportu się nie powiódło.",
+			"PREVIEW_FAILED": "Generowanie podglądu się nie powiódło.",
+			"SEND_FAILED": "Wysłanie się nie powiódło.",
+			"SEND_SUCCESSED": "Wysłanie się powiódło."
+		},
+		"VALIDATION": {
+			"EMAIL_FORMAT_FAILED": "Format emaila jest niepoprawny."
 		}
 	},
 	"CONFIG": {

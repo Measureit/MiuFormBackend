@@ -21,7 +21,7 @@ export class EmailService {
     
   }
 
-  send(serverUrl: string, provider: string, options: any, emailMessage: EmailMessage): Observable<any> {
+  send(serverUrl: string, provider: string, options: any, emailMessage: EmailMessage): Observable<Response> {
     var myHeaders = new Headers({
       "Content-Type": "application/json",
     });
@@ -32,9 +32,6 @@ export class EmailService {
           headers: myHeaders,
           body: JSON.stringify({ provider: provider, options: options, emailMessage: emailMessage })
       }))
-      .pipe(
-        mergeMap(res => res.json())
-      );
 
   }
 }

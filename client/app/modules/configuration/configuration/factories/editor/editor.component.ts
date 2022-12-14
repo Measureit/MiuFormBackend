@@ -70,7 +70,7 @@ export class FactoryEditorComponent {
         first(),
         tap(x => this.dialogRef.close(true))        
       ).subscribe({
-        next: (x) => this.userNotificationService.notifyInfo('MESSAGE.SAVE.SUCCESS'),
+        next: (x) => this.userNotificationService.notifyInfo('MESSAGE.SAVE.SUCCESSED'),
         error: (err) => {
           console.error(err);
           this.userNotificationService.notifyError('MESSAGE.SAVE.FAILED');
@@ -85,7 +85,7 @@ export class FactoryEditorComponent {
         first(),
         tap(x => this.dialogRef.close(true))        
       ).subscribe({
-        next: (x) => this.userNotificationService.notifyInfo('MESSAGE.DELETE.SUCCESS'),
+        next: (x) => this.userNotificationService.notifyInfo('MESSAGE.DELETE.SUCCESSED'),
         error: (err) => {
           console.error(err);
           this.userNotificationService.notifyError('MESSAGE.DELETE.FAILED');

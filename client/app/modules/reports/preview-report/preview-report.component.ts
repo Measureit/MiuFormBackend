@@ -1,10 +1,13 @@
 import { Component, OnInit } from '@angular/core';
 import { ActivatedRoute, Router } from '@angular/router';
-import { first, from, map, mergeMap, tap, throwError, zip } from 'rxjs';
+import { first, from, map, mergeMap, of, tap, throwError, zip } from 'rxjs';
 import { Report } from 'client/app/core/models';
 import { blobToBase64, ConfigurationService, Logger, ReportService } from 'client/app/core/services';
 import { EmailMessage, EmailService } from 'client/app/core/services/email.service';
 import { UserNotificationService } from 'client/app/core/services/user-notification.service';
+import { TranslateService } from '@ngx-translate/core';
+import { ConfirmDialogComponent, ConfirmDialogModel } from 'client/app/shared/components/confirm-dialog/confirm-dialog.component';
+import { MatDialog } from '@angular/material/dialog';
 
 @Component({
   selector: 'app-preview-report',
@@ -21,8 +24,10 @@ export class PreviewReportComponent implements OnInit {
     private logger: Logger,
     private activatedRoute: ActivatedRoute,
     private reportService: ReportService,
+    private translateService: TranslateService,
     private userNotificationService: UserNotificationService,
     private configurationService: ConfigurationService,
+    private dialog: MatDialog,
     private emailService: EmailService) {
 
   }
@@ -33,7 +38,7 @@ export class PreviewReportComponent implements OnInit {
         first(),
         map(params => params['id']),
         mergeMap(id => {
-          this.genereting = true; 
+          this.genereting = true;
           this.logger.debug(`prepare report for id: ${id}`)
           if (id !== undefined && id !== '') {
             return this.reportService.getReport(id);
@@ -42,14 +47,14 @@ export class PreviewReportComponent implements OnInit {
           }
         }),
         mergeMap(report => {
-          this.report = report; 
+          this.report = report;
           return this.reportService.generatePdf(report)
         }),
         tap(x => { this.reportBlob = x })
       )
       .subscribe({
-        error: (err) => { 
-          this.genereting = false; 
+        error: (err) => {
+          this.genereting = false;
           console.error(err);
           this.userNotificationService.notifyError('MESSAGE.REPORT.PREVIEW_FAILED');
         },
@@ -67,7 +72,7 @@ export class PreviewReportComponent implements OnInit {
   //private currentZoomFactor: number;
   // getter and setter make the demo nicer -
   // you probably don't need them in your code
-  public get zoomSetting(): number | string  {
+  public get zoomSetting(): number | string {
     return String(this._zoomSetting);
   }
   public set zoomSetting(zoom: number | string) {
@@ -92,46 +97,77 @@ export class PreviewReportComponent implements OnInit {
   // };
 
   send() {
-    if (this.reportBlob && this.reportBlob.size > 0 && this.report) {      
+    if (this.reportBlob && this.reportBlob.size > 0 && this.report) {
       let sufix = Date.now().toString();
-      
+
       zip(
         this.configurationService.getDelivery(),
         this.configurationService.getFactory(this.report.factoryInfoId),
-        from(blobToBase64(this.reportBlob))
+        this.translateService.get('PREVIEW_REPORT.SEND_EMAIL_QUESTION_TITLE'),
+        this.translateService.get('PREVIEW_REPORT.SEND_EMAIL_QUESTION')
       )
-      .pipe(
-        map(zipRes => {
-          let delivery = zipRes[0];
-          let factory = zipRes[1];
-          let to = (factory.emails ?? []).concat(delivery.deliveryEmails);
-          let reportBase64 = zipRes[2].replace(/^data:(.*,)?/, '');
-          return {
-            emailServerUrl: delivery.emailServerUrl, 
-            options: { serverSecureCode: delivery.emailServerSecretCode },
-            email: {
-              report: reportBase64, 
-              reportName: `${this.report.productId}_${sufix}.pdf`,
-              //reportData: JSON.stringify(this.report),
-              from: delivery.fromUser,
-              to: to,
-              subject: `Raport pokontrolny -> ${this.report.productName} (${this.report.productId}) ${this.report.productColor}`,
-              plainContent: `Dzień dobry,\n w załączniku znajduje się raport pokontrolny produktu ${this.report.productName} (${this.report.productId}) ${this.report.productColor}\n\n\n`
-            } as EmailMessage
+        .pipe(
+          mergeMap(deliveryInfo => {
+            let delivery = deliveryInfo[0];
+            let factory = deliveryInfo[1];
+            let to = (factory.emails ?? []).concat(delivery.deliveryEmails);
+
+            const dialogData = new ConfirmDialogModel(deliveryInfo[2], `${deliveryInfo[3]}: ${to.join(', ')}?`);
+
+            const dialogRef = this.dialog.open(ConfirmDialogComponent, {
+              maxWidth: "400px",
+              data: dialogData
+            });
+
+            return zip(dialogRef.afterClosed(), of(delivery), of(to));
+          }),
+          mergeMap(zipR => {
+            let dialogRes = zipR[0];
+            if (!dialogRes) {
+              return of(false);
+            }
+            return zip(
+              of(zipR[1]),
+              of(zipR[2]),
+              from(blobToBase64(this.reportBlob))
+            ).pipe(
+              map(zipRes => {
+                let delivery = zipRes[0];
+                let to = zipRes[1];
+                let reportBase64 = zipRes[2].replace(/^data:(.*,)?/, '');
+                return {
+                  emailServerUrl: delivery.emailServerUrl,
+                  options: { serverSecureCode: delivery.emailServerSecretCode },
+                  email: {
+                    report: reportBase64,
+                    reportName: `${this.report.productId}_${sufix}.pdf`,
+                    //reportData: JSON.stringify(this.report),
+                    from: delivery.fromUser,
+                    to: to,
+                    subject: `Raport pokontrolny -> ${this.report.productName} (${this.report.productId}) ${this.report.productColor}`,
+                    plainContent: `Dzień dobry,\n w załączniku znajduje się raport pokontrolny produktu ${this.report.productName} (${this.report.productId}) ${this.report.productColor}\n\n\n`
+                  } as EmailMessage
+                }
+              }),
+              mergeMap(x => this.emailService.send(x.emailServerUrl, "sendinblue", x.options, x.email)),
+              map(x => x.ok)
+            )
+          }),
+        )
+        .subscribe({
+          next: (n) => {
+            console.log(n);
+            if (n) {
+              this.userNotificationService.notifyInfo('MESSAGE.REPORT.SEND_SUCCESSED');
+            } else {
+              //user canceled
+            }
+          },
+          error: (err) => {
+            console.error(err);
+            this.userNotificationService.notifyError('MESSAGE.REPORT.SEND_FAILED');
           }
-        }),
-        mergeMap(x => this.emailService.send(x.emailServerUrl, "sendinblue", x.options, x.email))        
-      )
-      .subscribe({
-        next: (n) => {
-         console.log(n);
-         this.userNotificationService.notifyInfo('MESSAGE.REPORT.SEND_SUCCESSED');
-        },
-        error: (err) => {
-          console.error(err);
-          this.userNotificationService.notifyError('MESSAGE.REPORT.SEND_FAILED');
-        }
-      })
+        })
     }
   }
 

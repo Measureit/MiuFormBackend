@@ -24,6 +24,7 @@ app.use('/', express.static(path.join(__dirname, '../public')));
 app.options('/api/emailsender', cors()) // cors for pre-flight
 app.options('/api', cors()) // cors for pre-flight
 app.options('/', cors()) // cors for pre-flight
+app.options(cors()) // cors for pre-flight
 
 app.get('/api', (req: Request, res: Response) => {
     res.send("Express server:\n\r emailsender - api to send emails.");
@@ -33,7 +34,7 @@ app.get('/api/emailsender', (req: Request, res: Response) => {
     res.send("Express server to send email.");
 });
 
-app.post('/api/emailsender', (req: Request, res: Response) => {
+app.post('/api/emailsender', cors(), (req: Request, res: Response) => {
     // Prepare output in JSON format  
     const response = req.body;
     if (!response) {

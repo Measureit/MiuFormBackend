@@ -70,7 +70,7 @@ export class GeneralComponent implements OnInit {
         },
         error: (err) => {
           console.error(err);
-          this.userNotificationService.notifyError('MESSAGE.CONFIG.READ_FAILED');
+          this.userNotificationService.notifyError('MESSAGE.CONFIG.LOAD_FAILED');
           this.loading = false;
         }
        })
@@ -116,7 +116,7 @@ export class GeneralComponent implements OnInit {
         first()
       )
       .subscribe({
-        next: (x) => this.userNotificationService.notifyInfo('MESSAGE.SAVE.SUCCESS'),
+        next: (x) => this.userNotificationService.notifyInfo('MESSAGE.SAVE.SUCCESSED'),
         error: (err) => {
           console.error(err);
           this.userNotificationService.notifyError('MESSAGE.SAVE.FAILED');
@@ -131,7 +131,7 @@ export class GeneralComponent implements OnInit {
         first()
       )
       .subscribe({
-        next: (x) => this.userNotificationService.notifyInfo('MESSAGE.SAVE.SUCCESS'),
+        next: (x) => this.userNotificationService.notifyInfo('MESSAGE.SAVE.SUCCESSED'),
         error: (err) => {
           console.error(err);
           this.userNotificationService.notifyError('MESSAGE.SAVE.FAILED');
@@ -156,7 +156,7 @@ export class GeneralComponent implements OnInit {
       })
     )
     .subscribe({
-      next: (x) => this.userNotificationService.notifyInfo('MESSAGE.SAVE.SUCCESS'),
+      next: (x) => this.userNotificationService.notifyInfo('MESSAGE.SAVE.SUCCESSED'),
       error: (err) => {
         console.error(err);
         this.userNotificationService.notifyError('MESSAGE.SAVE.FAILED');
@@ -184,7 +184,7 @@ export class GeneralComponent implements OnInit {
               })
             } else {
               console.error('Config - No parse correctly.');
-              this.userNotificationService.notifyError('MESSAGE.CONFIG.FAILED_FILE_STRUCT');
+              this.userNotificationService.notifyError('MESSAGE.CONFIG.FILE_STRUCT_FAILED');
             } 
         }
 

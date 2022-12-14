@@ -24,7 +24,9 @@
 	"PREVIEW_REPORT": {
 		"TITLE": "Report Preview",
 		"SEND_BY_EMAIL": "Send by email",
-		"EDIT_REPORT": "Edit"
+		"EDIT_REPORT": "Edit",
+		"SEND_EMAIL_QUESTION": "Do you want to send email to receivers",
+		"SEND_EMAIL_QUESTION_TITLE": "Sending email"
 	},
 	"PREPARE_REPORT": {
 		"TITLE": "Preparing Report",
@@ -52,6 +54,41 @@
 			"FROM_USER": "Sender",
 			"EMAIL_SERVER_SECRET_CODE": "Email server secret code",
 			"EMAIL_SERVER_URL": "Email server url"
+		},
+		"INSPECTION_DATA": {
+			"COMPANY_NAME": "Company name",
+			"COMPANY_ADDRESS": "Company address",
+			"INSPECTION_SIGN": "Sign"
+		}
+	},
+	"MESSAGE": {
+		"SAVE": {
+			"SUCCESSED": "Saving successful.",
+			"FAILED": "Saving failed."			
+		},
+		"DELETE": {
+			"SUCCESSED": "Deleting successful.",
+			"FAILED": "Deleting failed."
+		},
+		"LOAD": {
+			"FAILED": "Loading failed."
+		},
+		"MOVE": {
+			"FAILED": "Moving failed."
+		},
+		"CONFIG": {
+			"LOAD_FAILED": "Configuration loading failed.",
+			"SET_CONFIG_FAILED": "Configuration setting failed.",
+			"FILE_STRUCT_FAILED": "Config file structure failed."
+		},
+		"REPORT": {
+			"PREPARE_FAILED": "Report preparing failed.",
+			"PREVIEW_FAILED": "Preview generating failed.",
+			"SEND_FAILED": "Report sending failed.",
+			"SEND_SUCCESSED": "Report sent successfully."
+		},
+		"VALIDATION": {
+			"EMAIL_FORMAT_FAILED": "Email format is invalid."
 		}
 	},
 	"CONFIG": {
@@ -78,7 +115,10 @@
 				"TITLE": "Save/Load configuration",
 				"SAVE_CONFIG": "Save configuration",
 				"LOAD_CONFIG": "Load configuration"
-			}
+			},
+			"INSPECTION_DATA": {
+				"TITLE": "Inspection Data"
+			}	
 		}
 	},
 	"HEADER": {

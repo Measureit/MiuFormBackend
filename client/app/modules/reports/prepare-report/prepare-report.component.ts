@@ -239,7 +239,7 @@ export class PrepareReportComponent implements OnInit {
         },
         error: (err) => {
           console.error(err);
-          this.userNotificationService.notifyError('MESSAGE.REPORT.SAVE_FAILED');
+          this.userNotificationService.notifyError('MESSAGE.SAVE.FAILED');
         }
       });
   }
@@ -261,11 +261,11 @@ export class PrepareReportComponent implements OnInit {
       .subscribe({
         next: (x ) => {
           console.log('success');
-          this.userNotificationService.notifyInfo('MESSAGE.REPORT.SAVE_SUCCESSED');
+          this.userNotificationService.notifyInfo('MESSAGE.SAVE.SUCCESSED');
         },
         error: (err) => {
           console.error(err);
-          this.userNotificationService.notifyError('MESSAGE.REPORT.SAVE_FAILED');
+          this.userNotificationService.notifyError('MESSAGE.SAVE.FAILED');
         }
       });
   }
