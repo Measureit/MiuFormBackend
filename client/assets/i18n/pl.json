@@ -19,7 +19,7 @@
 		"TITLE": "Raporty",
 		"FILTER": "Filtr",
 		"FILTER_BY_FACTORIES": "Filtruj po fabryce",
-		"LOAD_NOACTIVE_FACTORIES": "Pokaż rónież nieaktywne"
+		"LOAD_NOACTIVE_FACTORIES": "Pokaż również nieaktywne"
 	},
 	"PREVIEW_REPORT": {
 		"TITLE": "Podgląd raportu",
@@ -67,25 +67,25 @@
 			"FAILED": "Zapis się nie powiódł."			
 		},
 		"DELETE": {
-			"SUCCESSED": "Uwuwanie zakończyło się powodzeniem.",
-			"FAILED": "Usuwanie się nie powiódło."
+			"SUCCESSED": "Usuwanie zakończyło się powodzeniem.",
+			"FAILED": "Usuwanie się nie powiodło."
 		},
 		"LOAD": {
-			"FAILED": "Ładowanie się nie powiódło."
+			"FAILED": "Ładowanie się nie powiodło."
 		},
 		"MOVE": {
-			"FAILED": "Przesunięcie się nie powiódło."
+			"FAILED": "Przesunięcie się nie powiodło."
 		},
 		"CONFIG": {
-			"LOAD_FAILED": "Ładowanie konfiguracji się nie powiódło.",
+			"LOAD_FAILED": "Ładowanie konfiguracji się nie powiodło.",
 			"SET_CONFIG_FAILED": "Ustawianie konfiguracji się nie powiodło.",
 			"FILE_STRUCT_FAILED": "Struktura pliku jest błędna."
 		},
 		"REPORT": {
-			"PREPARE_FAILED": "Tworzenie raportu się nie powiódło.",
-			"PREVIEW_FAILED": "Generowanie podglądu się nie powiódło.",
-			"SEND_FAILED": "Wysłanie się nie powiódło.",
-			"SEND_SUCCESSED": "Wysłanie się powiódło."
+			"PREPARE_FAILED": "Tworzenie raportu się nie powiodło.",
+			"PREVIEW_FAILED": "Generowanie podglądu się nie powiodło.",
+			"SEND_FAILED": "Wysłanie się nie powiodło.",
+			"SEND_SUCCESSED": "Wysłanie się powiodło."
 		},
 		"VALIDATION": {
 			"EMAIL_FORMAT_FAILED": "Format emaila jest niepoprawny."
