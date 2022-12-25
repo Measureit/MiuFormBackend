@@ -1,7 +1,7 @@
 import { Injectable } from '@angular/core';
 import { Observable, of, zip } from 'rxjs';
 import { catchError, map, mergeMap } from 'rxjs/operators';
-import { ChecklistItemConfig, CreateDeliveryConfig, CreateIdChecklistItemConfig, CreateIdFactoryInfoConfig, DeliveryConfig, DeliveryId, FactoryInfoConfig } from '../models';
+import { ChecklistItemConfig, CreateDeliveryConfig, CreateIdChecklistItemConfig, CreateIdFactoryInfoConfig, DeliveryConfig, DeliveryId, FactoryInfoConfig, ImageSize } from '../models';
 import { CreateInspectorInfo, InspectorInfo, InspectorInfoId } from '../models/inspector-info.model';
 import { Logger } from './console.logger.service';
 import { ChecklistItemConfigRepository, DeliveryConfigRepository, FactoryInfoConfigRepository, InspectorInfoRepository } from './repository';
@@ -17,6 +17,9 @@ export interface Configuration {
   providedIn: 'root',
 })
 export class ConfigurationService  {
+  getMaxImageSize(): Observable<ImageSize> {
+      return of({ height: 70, width: 70 })
+  }
   
 
   private readonly dbChecklistItemRepo: ChecklistItemConfigRepository;

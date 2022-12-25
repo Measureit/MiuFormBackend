@@ -11,6 +11,8 @@ import { addFontToDoc, fontMiu } from './AbhayaLibre-Regular-normal';
 import { InspectorInfo } from '../models/inspector-info.model';
 
 interface ReportGeneratorConfig {
+    maxImageHeight: number;
+    maxImageWidth: number;
     vMargin: number;
     hMargin: number;
     pageHeight: number;
@@ -32,7 +34,9 @@ interface AddTextLineOptions {
     align?: "left" | "center" | "right";
     makeBottomMargin?: boolean; 
     keepY?: boolean;
-}
+    color?: "black" | "red";
+    underline?: boolean;
+} 
 
 //https://codesandbox.io/s/dx5v0?file=/src/index.js
 @Injectable({
@@ -65,7 +69,9 @@ export class ReportGeneratorService {
             fontSize: 16,
             align: "left",
             makeBottomMargin: true, 
-            keepY: false
+            keepY: false,
+            color: "black",
+            underline: false
         };
         let actual = Object.assign({}, defaults, options);
         
@@ -89,7 +95,13 @@ export class ReportGeneratorService {
         }
         //console.log('y: ' + context.yPosition )
         if (text && text.length> 0) {
+            context.doc.setTextColor(actual.color);
             context.doc.text(text, x, context.yPosition, {align: actual.align});
+            if (actual.underline) {
+                context.doc.setDrawColor(actual.color);
+                const textWidth = context.doc.getTextWidth(text);
+                context.doc.line(x, context.yPosition + 1, x + textWidth, context.yPosition + 1)
+            }
         }
         if (!actual.keepY) {
             context.yPosition = context.yPosition + this.fontSizeToMm(actual.fontSize);        
@@ -108,18 +120,21 @@ export class ReportGeneratorService {
     generatePdf(report: Report): Observable<jsPDF> {
         return zip(
                 this.configurationService.getFactory(report.factoryInfoId),
-                this.configurationService.getInspectorInfo()
+                this.configurationService.getInspectorInfo(), 
+                this.configurationService.getMaxImageSize(),
                 )
             .pipe(                
-                mergeMap(f => {
+                mergeMap(readConf => {
                     let doc = new jsPDF("p", "mm", "a4", true);
                     addFontToDoc(doc, fontMiu);
                     return of({ doc: doc, 
-                        yPage: 0, yPosition: 0, factory: f[0],
-                        inspectorInfo: f[1],
+                        yPage: 0, yPosition: 0, factory: readConf[0],
+                        inspectorInfo: readConf[1],
                         config: { vMargin: 10, hMargin: 10, lineDistance: 5,
                             pageHeight: doc.internal.pageSize.height || doc.internal.pageSize.getHeight(),
-                            pageWidth: doc.internal.pageSize.width || doc.internal.pageSize.getWidth() } as ReportGeneratorConfig
+                            pageWidth: doc.internal.pageSize.width || doc.internal.pageSize.getWidth() ,
+                            maxImageHeight: readConf[2].height, maxImageWidth: readConf[2].width,
+                        } as ReportGeneratorConfig
                     } as ReportGeneratorContext)
                 }),
                 mergeMap(x => {
@@ -186,8 +201,8 @@ export class ReportGeneratorService {
             let pageHeightWithoutMargin = context.config.pageHeight - 2 * context.config.vMargin;
             images.forEach(ib => {
                 let pdfSize = this.getScale(ib.size, 
-                    context.config.pageWidth - 2 * context.config.hMargin,
-                    (pageHeightWithoutMargin) / 2 - distanceBetweenImages
+                    Math.min(context.config.pageWidth - 2 * context.config.hMargin, context.config.maxImageWidth),
+                    Math.min((pageHeightWithoutMargin) / 2 - distanceBetweenImages, context.config.maxImageHeight)
                 );
                 if (this.spaceToEndOfPage(context, pdfSize.height) > 0) {
                     context.doc.addPage();
@@ -244,7 +259,8 @@ export class ReportGeneratorService {
                     this.addTextLine(context, x.isChecked === true ? 'TAK' : (x.isChecked === false ? 'NIE' : '-'), 
                         { xPos: context.config.pageWidth - context.config.hMargin, align: 'right', keepY: true });
                 } 
-                this.addTextLine(context, line, { xPos: context.config.hMargin + numberWidth + 2});
+                this.addTextLine(context, line, { xPos: context.config.hMargin + numberWidth + 2, 
+                    color: x.isChecked === false ? 'red' : 'black', underline: x.isChecked === false });
 
                 this.addComment(context, x.comment);
 
