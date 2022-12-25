@@ -195,23 +195,39 @@ export class ReportGeneratorService {
         return { width: newWidth, height: newHeight };
       }
 
+    private getWorkingPageWidth(config: ReportGeneratorConfig): number {
+        return config.pageWidth - 2 * config.hMargin;
+    }
     private addImages(context: ReportGeneratorContext, images: ReportImageItem[]) { //} Observable<ReportGeneratorContext> {
         if (images && images.length > 0) {
             let distanceBetweenImages = 5;
             let pageHeightWithoutMargin = context.config.pageHeight - 2 * context.config.vMargin;
+            let x = context.config.hMargin;
+            let pdfSize: ImageSize = { width: 0, height: 0 }
             images.forEach(ib => {
-                let pdfSize = this.getScale(ib.size, 
+                
+                //moze zmieści się obok
+                if (pdfSize.width + x + context.config.hMargin > this.getWorkingPageWidth( context.config )) {
+                    context.yPosition = context.yPosition + distanceBetweenImages + pdfSize.height;
+                    x = context.config.hMargin;
+                }
+
+                pdfSize = this.getScale(ib.size, 
                     Math.min(context.config.pageWidth - 2 * context.config.hMargin, context.config.maxImageWidth),
                     Math.min((pageHeightWithoutMargin) / 2 - distanceBetweenImages, context.config.maxImageHeight)
                 );
+                
                 if (this.spaceToEndOfPage(context, pdfSize.height) > 0) {
                     context.doc.addPage();
                     context.yPosition = context.config.vMargin;
+                    x = context.config.hMargin;
                 }
                                 
-                context.doc.addImage(ib.base64, "png", context.config.hMargin, context.yPosition, pdfSize.width, pdfSize.height);
-                context.yPosition = context.yPosition + distanceBetweenImages + pdfSize.height;
-            });            
+                context.doc.addImage(ib.base64, "png", x, context.yPosition, pdfSize.width, pdfSize.height);
+                x = x + pdfSize.width + distanceBetweenImages;
+                
+            });     
+            context.yPosition = context.yPosition + distanceBetweenImages + pdfSize.height + distanceBetweenImages;       
         }
     }
 
