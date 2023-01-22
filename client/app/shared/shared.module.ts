@@ -107,14 +107,12 @@ const materialModules = [
 
 
 // AoT requires an exported function for factories
-export function HttpLoaderFactory(httpClient: HttpClient) {
-  return new TranslateHttpLoader(httpClient, "assets/i18n/", ".json");
-}
+export const httpLoaderFactory = (httpClient: HttpClient) => new TranslateHttpLoader(httpClient, 'assets/i18n/', '.json');
 
 @NgModule({
   imports: [
     ...materialModules,
-    HttpClientModule,    
+    HttpClientModule,
     CommonModule,
     FormsModule,
     ReactiveFormsModule,
@@ -122,7 +120,7 @@ export function HttpLoaderFactory(httpClient: HttpClient) {
     TranslateModule.forChild({
       loader: {
         provide: TranslateLoader,
-        useFactory: HttpLoaderFactory,
+        useFactory: httpLoaderFactory,
         deps: [HttpClient]
       },
       isolate: false
@@ -133,7 +131,7 @@ export function HttpLoaderFactory(httpClient: HttpClient) {
     ...materialModules,
     FormsModule,
     ReactiveFormsModule,
-    HttpClientModule,    
+    HttpClientModule,
     //FlexLayoutModule,
     LetDirective,
     TranslateModule,

@@ -85,6 +85,13 @@ mat-card.container {
   bottom: 5px;
 }
 
+.mat-fab-bottom-right-third {
+  position: fixed !important;
+  right: 135px;
+  bottom: 5px;
+}
+
+
 //override list item of angular material 
 //orginal (angular v 15.0.0) the click for button inside list item is not working 
 .an-list-item {

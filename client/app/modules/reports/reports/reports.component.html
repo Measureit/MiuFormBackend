@@ -53,13 +53,21 @@
             </div>
             <div class="an-list-item-actions">
                 <!-- <button (click)="prepare($event, item._id)"> -->
-                    <mat-icon (click)="prepare($event, item._id)">edit</mat-icon>
+                    <mat-icon *ngIf="!isBackupSelected" (click)="prepare($event, item._id)">edit</mat-icon>
+                    <mat-icon *ngIf="isBackupSelected" (click)="checkToBackup($event, item)">{{item.isSelected ? 'check_box' : 'check_box_outline_blank' }}</mat-icon>
                 <!-- </button> -->
             </div>
         </div>
     </mat-list>
 
-    <button mat-fab color="primary" class="mat-fab-bottom-right" [routerLink]="['prepare']">
+    <button mat-fab color="primary" class="mat-fab-bottom-right-third" *ngIf="isBackupSelected" (click)="onCancelBackup($event)">
+        <mat-icon>close</mat-icon>
+    </button>
+    <button mat-fab color="primary" class="mat-fab-bottom-right-second" (click)="onBackup($event)">
+        <mat-icon *ngIf="isBackupSelected">cloud_download</mat-icon>
+        <mat-icon *ngIf="!isBackupSelected">file_download_done</mat-icon>
+    </button>
+    <button mat-fab color="primary" class="mat-fab-bottom-right" [routerLink]="['prepare']" *ngIf="!isBackupSelected">
         <mat-icon>add</mat-icon>
     </button>
 </div>

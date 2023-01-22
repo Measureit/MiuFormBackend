@@ -1,7 +1,7 @@
-import { ChecklistItemConfig } from "./checklist-item-config.model";
-import { DbModel } from "./db.model";
-import * as uuid from "uuid";
-import { FactoryInfoConfig } from "./factory-info-config.model";
+import { ChecklistItemConfig } from './checklist-item-config.model';
+import { DbModel } from './db.model';
+import * as uuid from 'uuid';
+import { FactoryInfoConfig } from './factory-info-config.model';
 
 export interface ImageSize {
     width: number;
@@ -15,9 +15,9 @@ export interface ReportImageItem {
 
 
 //checklist item w reporcie
-export class ReportChecklistItem {    
-    public static Create(checklistConfig: ChecklistItemConfig) : ReportChecklistItem {
-        let res = new ReportChecklistItem();
+export class ReportChecklistItem {
+    public static Create(checklistConfig: ChecklistItemConfig): ReportChecklistItem {
+        const res = new ReportChecklistItem();
         res.checklistItemId = checklistConfig._id;
         res.content = checklistConfig.content;
         res.order = checklistConfig.order;
@@ -27,22 +27,22 @@ export class ReportChecklistItem {
 
     checklistItemId: string; //id z configuracji
     content: string; //przepisany z configuracji (moze sie zmieniac w konfiguracji po wygeneroaniu raportu)
-    isChecked: boolean | null;    
+    isChecked: boolean | null;
     comment: string;
     order: number; //przepisany z configuracji (moze sie zmieniac w konfiguracji po wygeneroaniu raportu)
     pointImages: ReportImageItem[] = []; //images assigned to checklist item
 }
 
-export const CreateReport = (checklist: ChecklistItemConfig[]) : Report => {
-    let res = {} as Report;
+export const CreateReport = (checklist: ChecklistItemConfig[]): Report => {
+    const res = {} as Report;
     res._id = `report_${uuid.v4()}`;
     res.isActive = true;
     res.checklist = checklist.map(x => ReportChecklistItem.Create(x));
     res.dateOfCreation = Date.now();
-    res.images = []; 
+    res.images = [];
     return res;
-}
-    
+};
+
 export interface Report extends DbModel {
     dateOfCreation: number;
     productName: string;
@@ -51,7 +51,7 @@ export interface Report extends DbModel {
     comment: string;
     factoryInfoId: string;
     checklist: ReportChecklistItem[];
-    images: ReportImageItem[]; 
+    images: ReportImageItem[];
 
     dateOfDelivery?: number;
 }

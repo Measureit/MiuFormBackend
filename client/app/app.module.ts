@@ -22,7 +22,7 @@ import {
 import { HeaderComponent } from './header/header.component';
 import { LeftMenuComponent } from './left-menu/left-menu.component';
 import { PrivacyComponent } from './privacy/privacy.component';
-import { HttpLoaderFactory, SharedModule } from './shared/shared.module';
+import { httpLoaderFactory, SharedModule } from './shared/shared.module';
 
 @NgModule({
   declarations: [
@@ -40,7 +40,7 @@ import { HttpLoaderFactory, SharedModule } from './shared/shared.module';
     TranslateModule.forRoot({
       loader: {
         provide: TranslateLoader,
-        useFactory: HttpLoaderFactory,
+        useFactory: httpLoaderFactory,
         deps: [HttpClient]
       },
       isolate : false
