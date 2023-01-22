@@ -6,6 +6,8 @@ import { Router } from '@angular/router';
 import { UserNotificationService } from 'client/app/core/services/user-notification.service';
 import { ConfirmDialogComponent, ConfirmDialogModel } from 'client/app/shared/components/confirm-dialog/confirm-dialog.component';
 import { MatDialog } from '@angular/material/dialog';
+import { ArchiveReportGeneratorService } from 'client/app/core/services/archive-report.service';
+import { TranslateService } from '@ngx-translate/core';
 
 export interface SelectionItem {
   isSelected: boolean;
@@ -30,7 +32,9 @@ export class ReportsComponent implements OnInit {
 
   constructor(private reportService: ReportService,
     private dialog: MatDialog,
+    private translateService: TranslateService,
     private userNotificationService: UserNotificationService,
+    private archiveReportGeneratorService: ArchiveReportGeneratorService,
     private router: Router) { }
 
   ngOnInit(): void {
@@ -102,7 +106,9 @@ export class ReportsComponent implements OnInit {
       this.isBackupSelected = true;
     } else {
       //operate backup backup
-      const dialogData = new ConfirmDialogModel('Backup Reports', 'Do you want to backup reports?');
+      const dialogData = new ConfirmDialogModel(
+        this.translateService.instant('MESSAGE.BACKUP.BACKUP_REPORTS') as string,
+        this.translateService.instant('MESSAGE.BACKUP.BACKUP_REPORTS_QUESTION') as string);
 
       const dialogRef = this.dialog.open(ConfirmDialogComponent, {
         maxWidth: '400px',
@@ -121,7 +127,9 @@ export class ReportsComponent implements OnInit {
         //ask about remove
         mergeMap(x => {
           if (x === true) {
-            const dialogDataRemoveReport = new ConfirmDialogModel('Remove Reports', 'Do you want to remove backed up reports?');
+            const dialogDataRemoveReport =
+              new ConfirmDialogModel( this.translateService.instant('MESSAGE.BACKUP.REMOVE_REPORTS') as string,
+                this.translateService.instant('MESSAGE.BACKUP.REMOVE_REPORTS_QUESTION') as string);
             const dialogRefRemoveReport = this.dialog.open(ConfirmDialogComponent, {
               maxWidth: '400px',
               data: dialogDataRemoveReport
@@ -133,20 +141,43 @@ export class ReportsComponent implements OnInit {
         }),
         mergeMap(x => {
           if (x === true) {
-            return this.removeReports(this.items.filter(y => y.isSelected));
+            return this.removeReports(this.items.filter(y => y.isSelected))
+            .pipe(
+              // remove reports (which were removed from system) from view)
+              tap(y => { for (let i = this.items.length - 1; i >= 0; --i) {
+                if (this.items[i].isSelected) {
+                  this.items.splice(i,1);
+                }
+            }})
+            );
           } else {
             return of(false);
           }
-        })
-      ).subscribe();
+        }),
+        tap(x => this.isBackupSelected = false)
+      ).subscribe({
+        error: (err) => this.userNotificationService.notifyError('MESSAGE.BACKUP.FAILED')
+      });
 
     }
   }
 
+  download(content, fileName, contentType) {
+    const a = document.createElement('a');
+    const file = new Blob([content], {type: contentType});
+    a.href = URL.createObjectURL(file);
+    a.download = fileName;
+    a.click();
+  }
+
   backupReports(reports: Report[]): Observable<boolean> {
-    //todo:
     console.log('backupReports');
-    return of(true);
+
+    return this.archiveReportGeneratorService.generateZip(this.factoryItems, reports)
+      .pipe(
+        tap(x => this.download(x, 'test.zip', 'application/zip')),
+        map(x => true)
+      );
   }
 
   removeReports(reports: Report[]): any {
@@ -162,5 +193,9 @@ export class ReportsComponent implements OnInit {
   onCancelBackup(event: any) {
     this.items.forEach(x => x.isSelected = false);
     this.isBackupSelected = false;
+  }
+
+  anySelected(): boolean {
+    return this.items.findIndex(x => x.isSelected) > -1;
   }
 }

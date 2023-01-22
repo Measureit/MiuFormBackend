@@ -63,8 +63,9 @@
     <button mat-fab color="primary" class="mat-fab-bottom-right-third" *ngIf="isBackupSelected" (click)="onCancelBackup($event)">
         <mat-icon>close</mat-icon>
     </button>
-    <button mat-fab color="primary" class="mat-fab-bottom-right-second" (click)="onBackup($event)">
-        <mat-icon *ngIf="isBackupSelected">cloud_download</mat-icon>
+    <button mat-fab [disabled]="isBackupSelected && !anySelected()" 
+        color="primary" class="mat-fab-bottom-right-second" (click)="onBackup($event)">
+        <mat-icon *ngIf="isBackupSelected" >cloud_download</mat-icon>
         <mat-icon *ngIf="!isBackupSelected">file_download_done</mat-icon>
     </button>
     <button mat-fab color="primary" class="mat-fab-bottom-right" [routerLink]="['prepare']" *ngIf="!isBackupSelected">

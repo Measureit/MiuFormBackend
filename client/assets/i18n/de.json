@@ -59,6 +59,13 @@
 			"COMPANY_NAME": "Company name",
 			"COMPANY_ADDRESS": "Company address",
 			"INSPECTION_SIGN": "Sign"
+		},
+		"BACKUP": {
+			"FAILED": "Backup reports failed",
+			"BACKUP_REPORTS": "Backup Reports",
+			"BACKUP_REPORTS_QUESTION": "Do you want to backup selected reports?",
+			"REMOVE_REPORTS": "Remove Reports",
+			"REMOVE_REPORTS_QUESTION": "Do you want to remove backed up reports?"
 		}
 	},
 	"MESSAGE": {

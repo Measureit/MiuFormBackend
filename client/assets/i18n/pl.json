@@ -89,6 +89,13 @@
 		},
 		"VALIDATION": {
 			"EMAIL_FORMAT_FAILED": "Format emaila jest niepoprawny."
+		},
+		"BACKUP": {
+			"FAILED": "Archiwizacja raportów sie nie powiodło.",
+			"BACKUP_REPORTS": "Archiwizacja raportów",
+			"BACKUP_REPORTS_QUESTION": "Czy chcesz zarchiwizować raporty?",
+			"REMOVE_REPORTS": "Usuwanie zarchiwizowanych raportów",
+			"REMOVE_REPORTS_QUESTION": "Czy chcesz usunąć raporty, które zostały zarchiwizowane?"
 		}
 	},
 	"CONFIG": {
