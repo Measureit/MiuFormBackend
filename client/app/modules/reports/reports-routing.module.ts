@@ -4,24 +4,24 @@ import { PrepareReportComponent } from './prepare-report/prepare-report.componen
 import { ReportsComponent } from './reports/reports.component';
 
 const routes: Routes = [
-  { 
-    path: '', 
-    component: ReportsComponent 
+  {
+    path: '',
+    component: ReportsComponent
   },
-  { 
-    path: 'prepare/:id', 
-    component: PrepareReportComponent 
+  {
+    path: 'prepare/:id',
+    component: PrepareReportComponent
   },
-  { 
-    path: 'prepare', 
+  {
+    path: 'prepare',
     pathMatch: 'full',
-    component: PrepareReportComponent 
-  },  
-  { 
-    path: 'preview', 
+    component: PrepareReportComponent
+  },
+  {
+    path: 'preview',
     loadChildren: () =>
       import('./preview-report/preview-report.module').then(
-        (m) => m.PreviewReportModule       
+        (m) => m.PreviewReportModule
       )
   }
 ];

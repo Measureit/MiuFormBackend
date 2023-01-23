@@ -21,7 +21,7 @@
     "test": "ng test",
     "testbe": "tsc -p server && mocha dist/server/test --exit",
     "lint": "ng lint && htmlhint \"client/**/*.html\" && sass-lint \"client/**/*.scss\" -v",
-    "lintfix": "ng lint -- --fix",
+    "lintfix": "ng lint --fix",
     "buildAAB": "bubblewrap build"
   },
   "private": true,

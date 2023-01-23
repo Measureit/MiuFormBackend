@@ -26,12 +26,12 @@ export class GeneralComponent implements OnInit {
   inspectorInfo: InspectorInfo;
   itemDeliveryConfigForm: FormGroup;
   itemInspectorInfoForm: FormGroup;
-  loading: boolean = false;
+  loading = false;
 
   constructor(private _ngZone: NgZone,
     private formBuiler: FormBuilder,
     private configurationService: ConfigurationService,
-    private userNotificationService: UserNotificationService) { 
+    private userNotificationService: UserNotificationService) {
   }
 
   ngOnInit(): void {
@@ -45,9 +45,9 @@ export class GeneralComponent implements OnInit {
         }),
         catchError(err => {
           console.error(err);// first time is not error (delivery does not exists)
-          this.delivery = CreateDeliveryConfig();   
+          this.delivery = CreateDeliveryConfig();
           this.createDeliveryConfigForm(this.delivery);
-          return of(this.delivery);     
+          return of(this.delivery);
         }),
         mergeMap(x => this.configurationService.getInspectorInfo()),
         map((read) => {
@@ -57,11 +57,11 @@ export class GeneralComponent implements OnInit {
         }),
         catchError(err => {
           console.error(err);// first time is not error (delivery does not exists)
-          this.inspectorInfo = CreateInspectorInfo();   
+          this.inspectorInfo = CreateInspectorInfo();
           this.createInspectorInfoForm(this.inspectorInfo);
-          return of(this.delivery);     
+          return of(this.delivery);
         }),
-        first(),       
+        first(),
       )
       .subscribe({
         next: (x) => {
@@ -73,7 +73,7 @@ export class GeneralComponent implements OnInit {
           this.userNotificationService.notifyError('MESSAGE.CONFIG.LOAD_FAILED');
           this.loading = false;
         }
-       })
+       });
   }
 
   createInspectorInfoForm(inspectorInfo: InspectorInfo) {
@@ -108,9 +108,9 @@ export class GeneralComponent implements OnInit {
   getInspectorInfoFromFormGroup(): InspectorInfo {
     return this.itemInspectorInfoForm.getRawValue() as InspectorInfo;
   }
-  
+
   saveInspectorInfo() {
-    let inspectorInfo = this.getInspectorInfoFromFormGroup();
+    const inspectorInfo = this.getInspectorInfoFromFormGroup();
     this.configurationService.updateInspectorInfo(inspectorInfo)
       .pipe(
         first()
@@ -125,7 +125,7 @@ export class GeneralComponent implements OnInit {
   }
 
   saveDelivery() {
-    let deliveryToSave = this.getDeliveryConfigFromFormGroup();
+    const deliveryToSave = this.getDeliveryConfigFromFormGroup();
     this.configurationService.updateDelivery(deliveryToSave)
       .pipe(
         first()
@@ -140,8 +140,8 @@ export class GeneralComponent implements OnInit {
   }
 
   download(content, fileName, contentType) {
-    var a = document.createElement("a");
-    var file = new Blob([content], {type: contentType});
+    const a = document.createElement('a');
+    const file = new Blob([content], {type: contentType});
     a.href = URL.createObjectURL(file);
     a.download = fileName;
     a.click();
@@ -151,7 +151,7 @@ export class GeneralComponent implements OnInit {
     this.configurationService.getConfig()
     .pipe(
       first(),
-      tap(x => {        
+      tap(x => {
         this.download(JSON.stringify(x), 'miu_config.json', 'text/plain');
       })
     )
@@ -166,10 +166,10 @@ export class GeneralComponent implements OnInit {
 
   loadConfig = (event) => {
       if (event.target.files && event.target.files.length > 0) {
-        var file: File = event.target.files[0];
-        var myReader: FileReader = new FileReader();
+        const file: File = event.target.files[0];
+        const myReader: FileReader = new FileReader();
         myReader.onloadend = (e) => {
-            var config = JSON.parse(myReader.result as string) as Configuration;
+            const config = JSON.parse(myReader.result as string) as Configuration;
             if (config) {
               this.configurationService.setConfig(config)
               .pipe(map(x => {
@@ -181,23 +181,23 @@ export class GeneralComponent implements OnInit {
                   console.error(err);
                   this.userNotificationService.notifyError('MESSAGE.CONFIG.SET_CONFIG_FAILED');
                 }
-              })
+              });
             } else {
               console.error('Config - No parse correctly.');
               this.userNotificationService.notifyError('MESSAGE.CONFIG.FILE_STRUCT_FAILED');
-            } 
-        }
+            }
+        };
 
-        myReader.readAsText(file); 
+        myReader.readAsText(file);
       }
-  }
+  };
 
   //EMAILS
   public separatorKeysCodes = [ENTER, COMMA];
   removable = true;
 
   get formEmails() {
-    return this.itemDeliveryConfigForm.get("deliveryEmails") as FormArray;
+    return this.itemDeliveryConfigForm.get('deliveryEmails') as FormArray;
   }
 
   addEmail(event): void {
@@ -220,13 +220,13 @@ export class GeneralComponent implements OnInit {
 
   removeEmail(data: any): void {
     //console.log('Removing ' + data)
-    let inx = this.formEmails.value.indexOf(data);
+    const inx = this.formEmails.value.indexOf(data);
     if (inx >= 0) {
       this.formEmails.removeAt(inx);
     }
   }
   private validateEmail(email) {
-    var re = /^(([^<>()\[\]\\.,;:\s@"]+(\.[^<>()\[\]\\.,;:\s@"]+)*)|(".+"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/;
+    const re = /^(([^<>()\[\]\\.,;:\s@"]+(\.[^<>()\[\]\\.,;:\s@"]+)*)|(".+"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/;
     return re.test(String(email).toLowerCase());
   }
 }

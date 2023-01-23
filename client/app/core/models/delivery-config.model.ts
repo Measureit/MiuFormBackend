@@ -1,17 +1,17 @@
-import { DbModel } from "./db.model";
-import * as uuid from "uuid";
+import { DbModel } from './db.model';
+import * as uuid from 'uuid';
 
-export const DeliveryId = `delivery`
+export const DeliveryId = `delivery`;
 
 export const CreateDeliveryConfig = (): DeliveryConfig => {
-    let res = {} as DeliveryConfig;
+    const res = {} as DeliveryConfig;
     res._id = DeliveryId; //only one
     res.isActive = true;
     res.deliveryEmails = [];
     return res;
-}
+};
 export interface DeliveryConfig extends DbModel {
-    
+
     emailServerUrl: string;
     emailServerSecretCode: string;
 

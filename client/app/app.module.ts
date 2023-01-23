@@ -13,7 +13,7 @@ import { AppRoutingModule } from './app-routing.module';
 import { AppComponent } from './app.component';
 
 import {
-  SidenavService 
+  SidenavService
 } from './core/services';
 import {
   ConsoleLoggerService,
@@ -53,7 +53,7 @@ import { httpLoaderFactory, SharedModule } from './shared/shared.module';
   ],
   providers: [
     { provide: LocationStrategy, useClass: HashLocationStrategy },
-    { provide: Logger, useClass: ConsoleLoggerService },    
+    { provide: Logger, useClass: ConsoleLoggerService },
     SidenavService
   ],
   bootstrap: [AppComponent],

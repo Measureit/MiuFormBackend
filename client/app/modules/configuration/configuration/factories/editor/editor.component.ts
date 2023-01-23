@@ -22,7 +22,7 @@ export class FactoryEditorComponent {
 
   item: FactoryInfoConfig;
   itemForm: FormGroup;
-  
+
   public EditorActions = EditorActions; //to use in html
 
 
@@ -38,7 +38,7 @@ export class FactoryEditorComponent {
     if (!this.item.emails ) {
       this.item.emails = [];
     }
-    this.itemForm = this.formBuiler.group({      
+    this.itemForm = this.formBuiler.group({
       _id: [this.item._id],
       _rev: [this.item._rev],
       isActive: [this.item.isActive],
@@ -62,20 +62,20 @@ export class FactoryEditorComponent {
 
   getFromFormGroup(): FactoryInfoConfig {
     return this.itemForm.getRawValue() as FactoryInfoConfig;
-  } 
+  }
 
   addOrUpdateItem(item: FactoryInfoConfig): void {
     this.configurationService.addOrUpdateFactory(item)
       .pipe(
         first(),
-        tap(x => this.dialogRef.close(true))        
+        tap(x => this.dialogRef.close(true))
       ).subscribe({
         next: (x) => this.userNotificationService.notifyInfo('MESSAGE.SAVE.SUCCESSED'),
         error: (err) => {
           console.error(err);
           this.userNotificationService.notifyError('MESSAGE.SAVE.FAILED');
         }
-      });    
+      });
   }
 
   deleteItem(item: FactoryInfoConfig): void {
@@ -83,14 +83,14 @@ export class FactoryEditorComponent {
     this.configurationService.addOrUpdateFactory(item)
       .pipe(
         first(),
-        tap(x => this.dialogRef.close(true))        
+        tap(x => this.dialogRef.close(true))
       ).subscribe({
         next: (x) => this.userNotificationService.notifyInfo('MESSAGE.DELETE.SUCCESSED'),
         error: (err) => {
           console.error(err);
           this.userNotificationService.notifyError('MESSAGE.DELETE.FAILED');
         }
-      });    
+      });
   }
 
   //handle emails
@@ -98,7 +98,7 @@ export class FactoryEditorComponent {
   removable = true;
 
   get formEmails() {
-    return this.itemForm.get("emails") as FormArray;
+    return this.itemForm.get('emails') as FormArray;
   }
 
   addEmail(event): void {
@@ -120,13 +120,13 @@ export class FactoryEditorComponent {
 
   removeEmail(data: any): void {
     //console.log('Removing ' + data)
-    let inx = this.formEmails.value.indexOf(data);
+    const inx = this.formEmails.value.indexOf(data);
     if (inx >= 0) {
       this.formEmails.removeAt(inx);
     }
   }
   private validateEmail(email) {
-    var re = /^(([^<>()\[\]\\.,;:\s@"]+(\.[^<>()\[\]\\.,;:\s@"]+)*)|(".+"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/;
+    const re = /^(([^<>()\[\]\\.,;:\s@"]+(\.[^<>()\[\]\\.,;:\s@"]+)*)|(".+"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/;
     return re.test(String(email).toLowerCase());
   }
 

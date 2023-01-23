@@ -14,9 +14,9 @@ import { UserNotificationService } from 'client/app/core/services';
 })
 export class FactoriesComponent implements OnInit {
 
-  loadFactoryWithNoActive: boolean = false;
+  loadFactoryWithNoActive = false;
   items: FactoryInfoConfig[] = [];
-  
+
   constructor(
     private logger: Logger,
     private configurationService: ConfigurationService,
@@ -24,7 +24,7 @@ export class FactoriesComponent implements OnInit {
     private dialog: MatDialog) { }
 
   ngOnInit(): void {
-    this.reloadFactories();  
+    this.reloadFactories();
   }
 
   reloadFactories() {
@@ -37,7 +37,7 @@ export class FactoriesComponent implements OnInit {
         error: (err) =>{
           console.error(err);
           this.userNotificationService.notifyError('MESSAGE.LOAD.FAILED');
-        } 
+        }
       });
   }
 
@@ -48,18 +48,18 @@ export class FactoriesComponent implements OnInit {
   displayEditor(item: FactoryInfoConfig, action: EditorActions) {
     return this.dialog.open(FactoryEditorComponent, {
       width: '90%',
-      data: { 
-        item: item,
-        action: action
+      data: {
+        item,
+        action
       } as FactoryEditorData,
     })
     .afterClosed()
     .pipe(
-      first(), 
+      first(),
       tap(res => this.logger.debug(`The dialog was closed with result ${res}, action ${action}`)),
       tap(res => {
         if (res === true) {
-          this.reloadFactories();  
+          this.reloadFactories();
         }
       })
     );
@@ -82,7 +82,7 @@ export class FactoriesComponent implements OnInit {
       .subscribe({
         next: (val) => {},
         error: (err) => {}
-      });    
+      });
   }
 
   deleteItem(event, id: string) {
@@ -96,6 +96,6 @@ export class FactoriesComponent implements OnInit {
       .subscribe({
         next: (val) => {},
         error: (err) => {}
-      });    
+      });
   }
 }

@@ -42,7 +42,7 @@ export class PrepareReportComponent implements OnInit {
   itemForm: FormGroup | undefined;
 
   file0src: SafeHtml | undefined; //string | ArrayBuffer;
-  loading: boolean = false;
+  loading = false;
 
   constructor(
     private formBuilder: FormBuilder,
@@ -60,9 +60,9 @@ export class PrepareReportComponent implements OnInit {
       .pipe(
         tap(cls => this.checklistItems = cls),
         mergeMap(x => this.activatedRoute.params),
-        map(params => params['id']),
+        map(params => params.id),
         mergeMap(id => {
-          this.logger.debug(`prepare report for id: ${id}`)
+          this.logger.debug(`prepare report for id: ${id}`);
           if (id !== undefined && id !== '') {
             return this.reportService.getReport(id)
               .pipe(
@@ -78,12 +78,12 @@ export class PrepareReportComponent implements OnInit {
                     .pipe(
                       mergeMap(x => {
                         const dialogData = new ConfirmDialogModel(x[0], x[1]);
-                    
+
                         const dialogRef = this.dialog.open(ConfirmDialogComponent, {
-                          maxWidth: "400px",
+                          maxWidth: '400px',
                           data: dialogData
                         });
-                    
+
                         return dialogRef.afterClosed();
                       }),
                       map(x => {
@@ -92,16 +92,14 @@ export class PrepareReportComponent implements OnInit {
                         }
                         return r;
                       }),
-                      map(r => {
-                        return this.reportService.updateReport(r)                        
-                      }),
+                      map(r => this.reportService.updateReport(r)),
                       mergeMap(x => this.reportService.getReport(id)),
                       first()
-                    )                                     
+                    );
                   }
                   return of(r);
                 })
-              )
+              );
           } else {
             return of(CreateReport(this.checklistItems));
           }
@@ -134,7 +132,7 @@ export class PrepareReportComponent implements OnInit {
             )),
             comment: [this.item.comment],
             dateOfDelivery: [this.item.dateOfDelivery]
-          
+
           });
           return this.reportService.getFactories();
         }
@@ -157,16 +155,16 @@ export class PrepareReportComponent implements OnInit {
   }
 
   compareChecklist(checklist: ReportChecklistItem[], checklistFromConfig: ChecklistItemConfig[]): CompareChecklistResult[] {
-    let checklistToCompare = checklist.map(x => { return { order: x.order, _id: x.checklistItemId, content: x.content } as CompareChecklistInput });
-    let checklistFromConfigToCompare = checklistFromConfig.map(x => { return { order: x.order, _id: x._id, content: x.content } as CompareChecklistInput });
+    const checklistToCompare = checklist.map(x => ({ order: x.order, _id: x.checklistItemId, content: x.content } as CompareChecklistInput));
+    const checklistFromConfigToCompare = checklistFromConfig.map(x => ({ order: x.order, _id: x._id, content: x.content } as CompareChecklistInput));
 
     const isSameId = (a: CompareChecklistInput, b: CompareChecklistInput) => a._id === b._id;
 
     // Get items that only occur in the left array,
     // using the compareFunction to determine equality.
-    const onlyInLeft = (left: CompareChecklistInput[], 
-      right: CompareChecklistInput[], 
-      compareFunction: (a: CompareChecklistInput, b: CompareChecklistInput) => boolean):CompareChecklistInput[] =>
+    const onlyInLeft = (left: CompareChecklistInput[],
+      right: CompareChecklistInput[],
+      compareFunction: (a: CompareChecklistInput, b: CompareChecklistInput) => boolean): CompareChecklistInput[] =>
       left.filter(leftValue =>
         !right.some(rightValue =>
           compareFunction(leftValue, rightValue)));
@@ -184,16 +182,16 @@ export class PrepareReportComponent implements OnInit {
       (a: CompareChecklistInput, b: CompareChecklistInput) => a._id === b._id && a.content === b.content);
 
     let result: CompareChecklistResult[] = [];
-    result = result.concat(wereRemoved.map(x => { return { checkListItem: x, reason: CompareChecklistReason.REMOVED } as CompareChecklistResult}));
-    result = result.concat(wereAdded.map(x => { return { checkListItem: x, reason: CompareChecklistReason.ADDED } as CompareChecklistResult}));
-    result = result.concat(wereChanged.map(x => { return { checkListItem: x, reason: CompareChecklistReason.CHANGED } as CompareChecklistResult}));
+    result = result.concat(wereRemoved.map(x => ({ checkListItem: x, reason: CompareChecklistReason.REMOVED } as CompareChecklistResult)));
+    result = result.concat(wereAdded.map(x => ({ checkListItem: x, reason: CompareChecklistReason.ADDED } as CompareChecklistResult)));
+    result = result.concat(wereChanged.map(x => ({ checkListItem: x, reason: CompareChecklistReason.CHANGED } as CompareChecklistResult)));
     return result;
   }
 
-  updateChecklist(reportChecklist: ReportChecklistItem[], 
-    compareChecklistResults: CompareChecklistResult[], 
+  updateChecklist(reportChecklist: ReportChecklistItem[],
+    compareChecklistResults: CompareChecklistResult[],
     checklistItems: ChecklistItemConfig[]): ReportChecklistItem[] {
-    let result = [...reportChecklist];
+    const result = [...reportChecklist];
     compareChecklistResults.forEach(x => {
       switch(x.reason) {
         case CompareChecklistReason.ADDED:
@@ -203,14 +201,14 @@ export class PrepareReportComponent implements OnInit {
           //todo: result.
           break;
         case CompareChecklistReason.CHANGED:
-          let itemToChange = result.find(y => x.checkListItem._id === y.checklistItemId);
-          let newItem = checklistItems.find(y => x.checkListItem._id === y._id);
+          const itemToChange = result.find(y => x.checkListItem._id === y.checklistItemId);
+          const newItem = checklistItems.find(y => x.checkListItem._id === y._id);
           if (itemToChange && newItem) {
             itemToChange.content = newItem.content;
           }
           break;
       }
-    })
+    });
     return result;
   }
 
@@ -228,7 +226,7 @@ export class PrepareReportComponent implements OnInit {
   }
 
   preview() {
-    let report = this.getFromFormGroup();
+    const report = this.getFromFormGroup();
     this.reportService.updateReport(report)
       .pipe(
         first()
@@ -245,9 +243,9 @@ export class PrepareReportComponent implements OnInit {
   }
 
   saveReport() {
-    let report = this.getFromFormGroup();
+    const report = this.getFromFormGroup();
     this.reportService.updateReport(report)
-      .pipe(        
+      .pipe(
         mergeMap(x => x ? this.reportService.getReport(x) : of(undefined)),
         tap(x => {
           this.item = x;

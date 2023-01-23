@@ -10,8 +10,8 @@ import * as path from 'path';
 
 const app: Express = express();
 
-var cors = require('cors')
-var bodyParser = require('body-parser');
+const cors = require('cors');
+const bodyParser = require('body-parser');
 
 
 // for parsing application/json
@@ -21,35 +21,35 @@ app.use(bodyParser.urlencoded({ extended: false, limit: '10mb' }));
 //static files (SPA)
 app.use('/', express.static(path.join(__dirname, '../public')));
 
-app.options('/api/emailsender', cors()) // cors for pre-flight
-app.options('/api', cors()) // cors for pre-flight
-app.options('/', cors()) // cors for pre-flight
-app.options(cors()) // cors for pre-flight
+app.options('/api/emailsender', cors()); // cors for pre-flight
+app.options('/api', cors()); // cors for pre-flight
+app.options('/', cors()); // cors for pre-flight
+app.options(cors()); // cors for pre-flight
 
 app.get('/api', (req: Request, res: Response) => {
-    res.send("Express server:\n\r emailsender - api to send emails.");
+    res.send('Express server:\n\r emailsender - api to send emails.');
 });
 
 app.get('/api/emailsender', (req: Request, res: Response) => {
-    res.send("Express server to send email.");
+    res.send('Express server to send email.');
 });
 
 app.post('/api/emailsender', cors(), (req: Request, res: Response) => {
-    // Prepare output in JSON format  
+    // Prepare output in JSON format
     const response = req.body;
     if (!response) {
-        throw new Error("Body is not defined correctly.");
+        throw new Error('Body is not defined correctly.');
     }
 
     const emailMessage = response.emailMessage as EmailMessage;
     if (!emailMessage) {
-        throw new Error("Email Message is not defined correctly or wrong formatted.");
+        throw new Error('Email Message is not defined correctly or wrong formatted.');
     }
 
     const options = response.options;
     const provider = response.provider;
 
-    let emailSender: EmailSender | undefined = undefined;
+    let emailSender: EmailSender | undefined;
 
     switch (provider) {
         case 'sendinblue':
@@ -61,7 +61,7 @@ app.post('/api/emailsender', cors(), (req: Request, res: Response) => {
             break;
 
         default:
-            throw new Error("Unknown provider.");
+            throw new Error('Unknown provider.');
     }
 
     emailSender.send(options, emailMessage)
@@ -69,7 +69,7 @@ app.post('/api/emailsender', cors(), (req: Request, res: Response) => {
         .subscribe({
             next: (m) => res.end(JSON.stringify(m)),
             error: (err) => res.status(500).end(JSON.stringify(err))
-        })
+        });
 });
 
 
@@ -80,4 +80,4 @@ app.get('/*', (req, res) => {
 
 app.listen(process.env.PORT || 3000);
 
-export { app } 
+export { app };

@@ -12,22 +12,22 @@ import { FormArray, FormControl, FormGroup } from '@angular/forms';
   styleUrls: ['./checklist-item.component.scss']
 })
 export class ChecklistItemComponent implements OnInit {
-  @Input('checklistItemFormGroup') checklistItemFormGroup: FormGroup;
+  @Input() checklistItemFormGroup: FormGroup;
   detailsShown: boolean;
 
   constructor() { }
-  
+
 
   ngOnInit(): void {
     //console.log('checklist item init');
-    this.detailsShown = this.hasDetails; 
+    this.detailsShown = this.hasDetails;
   }
 
-  //has any image or comment 
+  //has any image or comment
   get hasDetails(): boolean {
-    return this.pointImages.controls.length > 0 || 
+    return this.pointImages.controls.length > 0 ||
       this.comment?.length > 0;
-  } 
+  }
 
   get pointImages(): FormArray {
     return this.checklistItemFormGroup.get('pointImages') as FormArray;
@@ -54,7 +54,7 @@ export class ChecklistItemComponent implements OnInit {
     }
   }
 
-  
+
   showDetails(event) {
     //console.log('showDetails');
     this.detailsShown = !this.detailsShown;

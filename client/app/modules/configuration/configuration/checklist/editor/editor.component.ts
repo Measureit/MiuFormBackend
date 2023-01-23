@@ -22,7 +22,7 @@ export class ChecklistItemEditorComponent {
 
   item: ChecklistItemConfig;
   itemForm: FormGroup;
-  
+
   public EditorActions = EditorActions; //to use in html
 
 
@@ -36,7 +36,7 @@ export class ChecklistItemEditorComponent {
   ) {
     this.item = data.item;
 
-    this.itemForm = this.formBuiler.group({      
+    this.itemForm = this.formBuiler.group({
       _id: [this.item._id],
       _rev: [this.item._rev],
       isActive: [this.item.isActive],
@@ -52,20 +52,20 @@ export class ChecklistItemEditorComponent {
 
   getFromFormGroup(): ChecklistItemConfig {
     return this.itemForm.getRawValue() as ChecklistItemConfig;
-  } 
+  }
 
   addOrUpdateItem(item: ChecklistItemConfig): void {
     this.configurationService.addOrUpdateCheckListItem(item)
       .pipe(
         first(),
-        tap(x => this.dialogRef.close(true))        
+        tap(x => this.dialogRef.close(true))
       ).subscribe({
         next: (x) => this.userNotificationService.notifyInfo('MESSAGE.SAVE.SUCCESSED'),
         error: (err) => {
           console.error(err);
           this.userNotificationService.notifyError('MESSAGE.SAVE.FAILED');
         }
-      });    
+      });
   }
 
   deleteItem(item: ChecklistItemConfig): void {
@@ -73,13 +73,13 @@ export class ChecklistItemEditorComponent {
     this.configurationService.addOrUpdateCheckListItem(item)
       .pipe(
         first(),
-        tap(x => this.dialogRef.close(true))        
+        tap(x => this.dialogRef.close(true))
       ).subscribe({
         next: (x) => this.userNotificationService.notifyInfo('MESSAGE.DELETE.SUCCESSED'),
         error: (err) => {
           console.error(err);
           this.userNotificationService.notifyError('MESSAGE.DELETE.FAILED');
         }
-      });    
+      });
   }
 }

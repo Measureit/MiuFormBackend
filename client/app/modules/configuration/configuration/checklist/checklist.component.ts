@@ -17,9 +17,9 @@ import { UserNotificationService } from 'client/app/core/services/user-notificat
 export class ChecklistComponent implements OnInit {
 
 
-  loadFactoryWithNoActive: boolean = false;
+  loadFactoryWithNoActive = false;
   items: ChecklistItemConfig[] = [];
-  
+
   constructor(
     private logger: Logger,
     private configurationService: ConfigurationService,
@@ -27,7 +27,7 @@ export class ChecklistComponent implements OnInit {
     private dialog: MatDialog) { }
 
   ngOnInit(): void {
-    this.reloadItems();  
+    this.reloadItems();
   }
 
   reloadItems() {
@@ -42,7 +42,7 @@ export class ChecklistComponent implements OnInit {
         error: (err) =>{
           console.error(err);
           this.userNotificationService.notifyError('MESSAGE.LOAD.FAILED');
-        } 
+        }
       });
   }
 
@@ -63,33 +63,33 @@ export class ChecklistComponent implements OnInit {
       error: (err) => {
         console.error(err);
         this.userNotificationService.notifyError('MESSAGE.MOVE.FAILED');
-      } 
-    })
+      }
+    });
   }
 
 
   displayEditor(item: ChecklistItemConfig, action: EditorActions) {
     return this.dialog.open(ChecklistItemEditorComponent, {
       width: '90%',
-      data: { 
-        item: item,
-        action: action
+      data: {
+        item,
+        action
       } as ChecklistItemEditorData,
     })
     .afterClosed()
     .pipe(
-      first(), 
+      first(),
       tap(res => this.logger.debug(`The dialog was closed with result ${res}, action ${action}`)),
       tap(res => {
         if (res === true) {
-          this.reloadItems();  
+          this.reloadItems();
         }
       })
     );
   }
 
   addItem() {
-    let item = CreateChecklistItemConfig();
+    const item = CreateChecklistItemConfig();
     item.order = this.items.length;
     this.displayEditor(item, EditorActions.Create)
       .subscribe({
@@ -107,7 +107,7 @@ export class ChecklistComponent implements OnInit {
       .subscribe({
         next: (val) => {},
         error: (err) => {}
-      });    
+      });
   }
 
   deleteItem(event, id: string) {
@@ -121,6 +121,6 @@ export class ChecklistComponent implements OnInit {
       .subscribe({
         next: (val) => {},
         error: (err) => {}
-      });    
+      });
   }
 }

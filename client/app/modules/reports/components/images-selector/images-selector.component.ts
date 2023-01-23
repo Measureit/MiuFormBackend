@@ -16,17 +16,17 @@ interface ReportImageItemBeforePrepare {
   styleUrls: ['./images-selector.component.scss']
 })
 export class ImagesSelectorComponent implements OnInit {
-  @Input('parentImagesFormGroup') parentImagesFormGroup: FormGroup;
-  @Input('imagesFormArrayName') imagesFormArrayName: string;
-  @Input('imagesFormArray') imagesFormArray: FormArray;
-  
+  @Input() parentImagesFormGroup: FormGroup;
+  @Input() imagesFormArrayName: string;
+  @Input() imagesFormArray: FormArray;
+
   constructor(private domSanitizer: DomSanitizer) { }
 
   ngOnInit(): void {
     //console.log('a');
   }
 
-  get selectedImages() : FormGroup[] {
+  get selectedImages(): FormGroup[] {
     return (this.imagesFormArray.controls ?? []).map(x => x as FormGroup).filter(x => x && x.get('selected').value as boolean === true);
   }
   selectImage(formGroup) {
@@ -47,38 +47,38 @@ export class ImagesSelectorComponent implements OnInit {
     if (event.target.files && event.target.files.length > 0) {
       zip(
         Array.from<File>(event.target.files)
-          .map(y => this.resizeImage(y, 1200, 1200)))        
+          .map(y => this.resizeImage(y, 1200, 1200)))
         .subscribe({
-          next:  (y) => { 
+          next:  (y) => {
             //console.log(y);
             //let cur = (this.itemForm.get('images').value ?? []) as Array<ReportImageItem>;
             //let newArray = cur.concat(y);
             //this.itemForm.get('images').reset();
             y.forEach(async x => this.imagesFormArray.push(new FormGroup({
-              'selected': new FormControl(false),
-              'base64': new FormControl(await blobToBase64(x.blob)),
-              'size': new FormControl(x.size),
+              selected: new FormControl(false),
+              base64: new FormControl(await blobToBase64(x.blob)),
+              size: new FormControl(x.size),
             })));
             //console.log(this.imagesFormArray)
           },
           error: (err) => { console.error(err); }
         });
     }
-  }
+  };
 
   // blobToSrc(blob: Blob): SafeUrl {
   //   console.log('blobToSrc: ' + blob );
   //   return this.domSanitizer.bypassSecurityTrustUrl(URL.createObjectURL(blob));
   // }
 
-  
+
   resizeImage(file: File, maxWidth: number, maxHeight: number): Promise<ReportImageItemBeforePrepare> {
     return new Promise((resolve, reject) => {
-      let image = new Image();
+      const image = new Image();
       image.src = URL.createObjectURL(file);
       image.onload = () => {
-        let width = image.width;
-        let height = image.height;
+        const width = image.width;
+        const height = image.height;
 
         if (width <= maxWidth && height <= maxHeight) {
           resolve({ blob: file, size: { width, height } });
@@ -95,17 +95,17 @@ export class ImagesSelectorComponent implements OnInit {
           newHeight = maxHeight;
         }
 
-        let canvas = document.createElement('canvas');
+        const canvas = document.createElement('canvas');
         canvas.width = newWidth;
         canvas.height = newHeight;
 
-        let context = canvas.getContext('2d');
+        const context = canvas.getContext('2d');
 
         context.drawImage(image, 0, 0, newWidth, newHeight);
-        let resolve2 = (a: Blob): void => {
+        const resolve2 = (a: Blob): void => {
           resolve({ blob: a, size: { width: newWidth, height: newHeight }} as ReportImageItemBeforePrepare);
-        }
-        canvas.toBlob(resolve2, file.type)
+        };
+        canvas.toBlob(resolve2, file.type);
       };
       image.onerror = reject;
     });

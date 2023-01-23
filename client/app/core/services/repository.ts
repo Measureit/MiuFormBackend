@@ -7,7 +7,7 @@ import { ConsoleLoggerService, Logger } from './console.logger.service';
 import PouchDBFind from 'pouchdb-find';
 class Repository<T extends DbModel> {
 
-    
+
   protected readonly dbName: string;
   protected readonly db: PouchDB.Database<T>;
   protected readonly logger: Logger;
@@ -50,24 +50,20 @@ class Repository<T extends DbModel> {
       map(readItems => {
         readItems.forEach(e => e._deleted = true);
         items.forEach(it => {
-          let t = readItems.find(p => p._id == it._id); 
+          const t = readItems.find(p => p._id == it._id);
           if (t) {
             t._deleted = false;
-            clone(t, it);            
+            clone(t, it);
           } else {
             it._id ??= factoryId();
             it._rev = undefined;
             readItems.push(it);
-          }           
+          }
         });
         return readItems;
       }),
-      map(readItems => { 
-        return this.db.bulkDocs(readItems);
-      }),
-      mergeMap(x => {
-        return this.get(true)
-      })
+      map(readItems => this.db.bulkDocs(readItems)),
+      mergeMap(x => this.get(true))
     );
   }
 
@@ -84,10 +80,10 @@ class Repository<T extends DbModel> {
     return checkpoint;
   }
 
-  update(item: T) : Observable<string | undefined> {
+  update(item: T): Observable<string | undefined> {
     this.logger.debug(`update with ${item._id} on ${this.dbName}`);
     return from(this.db.put(item))
-      .pipe(map(x => x.ok ? x.id : undefined))
+      .pipe(map(x => x.ok ? x.id : undefined));
   }
 
   updateAll(items: T[]): Observable<boolean> {
@@ -107,12 +103,12 @@ export class ReportRepository extends Repository<Report> {
     this.logger.debug(`getFiltered with productIdFilter: ${productFilter} and selectedFactoryIds: ${selectedFactoryIds.join(',')} on ${this.dbName}`);
     return new Observable<Array<Report>>((obs) => {
       const docs = this.db
-        .find({selector: 
+        .find({selector:
           {
             $and:
             [
               //{
-              //  $or: 
+              //  $or:
               //  [
                   productFilter.length > 0 ? {productId: {$regex: `.*${productFilter}.*`}} : {},
               //    productFilter.length > 0 ? {productName: {$regex:  `.*${productFilter}.*`}} : {}

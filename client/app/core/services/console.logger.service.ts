@@ -2,7 +2,7 @@ import { Injectable } from '@angular/core';
 
 import { environment } from 'client/environments/environment';
 
-export let isDebugMode = !environment.production;
+export const isDebugMode = !environment.production;
 
 export abstract class Logger {
 

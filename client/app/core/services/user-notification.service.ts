@@ -8,17 +8,17 @@ import { TranslateService } from '@ngx-translate/core';
 })
 export class UserNotificationService {
 
-  constructor(private snackBar: MatSnackBar, 
+  constructor(private snackBar: MatSnackBar,
     private translateService: TranslateService) {
-    
+
   }
 
   notify(textKey: string, duration?: number, panelClass?: string) {
     duration = duration ?? 3000;
-    let options = { 
+    const options = {
       panelClass: panelClass ?? 'user-notify-info',
-      duration: duration,
-      horizontalPosition: 'right', 
+      duration,
+      horizontalPosition: 'right',
       verticalPosition: 'top'
     } as MatSnackBarConfig<any>;
     this.translateService.get(textKey)
@@ -26,13 +26,13 @@ export class UserNotificationService {
       next: (tran) => this.snackBar.open(tran, null, options),
       error: (err)  => {
         console.error(err);
-        this.snackBar.open(textKey, null, options)
+        this.snackBar.open(textKey, null, options);
       }
-    })
+    });
   }
 
   notifyInfo(textKey: string, duration?: number) {
-    this.notify(textKey, duration, 'user-notify-info');    
+    this.notify(textKey, duration, 'user-notify-info');
   }
 
   notifyError(textKey: string, duration?: number) {

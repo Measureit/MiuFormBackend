@@ -18,9 +18,9 @@ export interface Configuration {
 })
 export class ConfigurationService  {
   getMaxImageSize(): Observable<ImageSize> {
-      return of({ height: 70, width: 70 })
+      return of({ height: 70, width: 70 });
   }
-  
+
 
   private readonly dbChecklistItemRepo: ChecklistItemConfigRepository;
   private readonly dbFactoryInfoConfigRepo: FactoryInfoConfigRepository;
@@ -37,26 +37,26 @@ export class ConfigurationService  {
   }
 
   //START FACTORIES
-  getFactories(withNoActive: boolean) : Observable<FactoryInfoConfig[]> {
+  getFactories(withNoActive: boolean): Observable<FactoryInfoConfig[]> {
     return this.dbFactoryInfoConfigRepo.get(withNoActive);
   }
 
-  getFactory(id: string)  : Observable<FactoryInfoConfig> {
+  getFactory(id: string): Observable<FactoryInfoConfig> {
     return this.dbFactoryInfoConfigRepo.getById(id);
   }
 
-  addOrUpdateFactory(factory: FactoryInfoConfig) : Observable<string | undefined> {
+  addOrUpdateFactory(factory: FactoryInfoConfig): Observable<string | undefined> {
     return this.dbFactoryInfoConfigRepo.update(factory);
   }
 
-  changeActive(id: string, isActive: boolean) : Observable<string | undefined> {
+  changeActive(id: string, isActive: boolean): Observable<string | undefined> {
     return this.dbFactoryInfoConfigRepo.changeActive(id, isActive);
   }
 
   //END FACTORIES
 
   //START CHECK LIST
-  getChecklistItem(id: string) : Observable<ChecklistItemConfig> {
+  getChecklistItem(id: string): Observable<ChecklistItemConfig> {
     return this.dbChecklistItemRepo.getById(id);
   }
 
@@ -67,7 +67,7 @@ export class ConfigurationService  {
     );
   }
 
-  addOrUpdateCheckListItem(item: ChecklistItemConfig) : Observable<string | undefined> {
+  addOrUpdateCheckListItem(item: ChecklistItemConfig): Observable<string | undefined> {
     return this.dbChecklistItemRepo.update(item);
   }
 
@@ -77,7 +77,7 @@ export class ConfigurationService  {
 
   //END CHECK LIST
 
-  //START DELIVERY 
+  //START DELIVERY
   getDelivery(): Observable<DeliveryConfig> {
     return this.dbDeliveryConfigRepo.getById(DeliveryId);
   }
@@ -87,7 +87,7 @@ export class ConfigurationService  {
   }
   //END DELIVERY
 
-  //START INSPECTION INFO 
+  //START INSPECTION INFO
   getInspectorInfo(): Observable<InspectorInfo> {
     return this.dbInspectorInfoRepo.getById(InspectorInfoId);
   }
@@ -95,7 +95,7 @@ export class ConfigurationService  {
   updateInspectorInfo(inspectionInfo: InspectorInfo): Observable<string | undefined> {
     return this.dbInspectorInfoRepo.update(inspectionInfo);
   }
-  //END INSPECTION INFO 
+  //END INSPECTION INFO
 
   //START CONFIG
   getConfig(): Observable<Configuration> {
@@ -112,14 +112,12 @@ export class ConfigurationService  {
       )
     )
     .pipe(
-      map(x => {
-        return {
+      map(x => ({
           factories: x[0],
           checklistItems: x[1],
           delivery: x[2],
           inspectorInfo: x[3]
-        } as Configuration
-      })
+        } as Configuration))
     );
   }
 
@@ -130,8 +128,8 @@ export class ConfigurationService  {
       mergeMap(x => {
         if (conf.delivery) {
           conf.delivery._rev = x._rev;
-          return this.dbDeliveryConfigRepo.update(conf.delivery)
-        } 
+          return this.dbDeliveryConfigRepo.update(conf.delivery);
+        }
         return of('');
       }),
       mergeMap(x => this.dbInspectorInfoRepo.getById(InspectorInfoId)),
@@ -139,11 +137,11 @@ export class ConfigurationService  {
       mergeMap(x => {
         if (conf.inspectorInfo) {
           conf.inspectorInfo._rev = x._rev;
-          return this.dbInspectorInfoRepo.update(conf.inspectorInfo)
-        } 
+          return this.dbInspectorInfoRepo.update(conf.inspectorInfo);
+        }
         return of('');
       }),
-      mergeMap(x => 
+      mergeMap(x =>
         this.dbFactoryInfoConfigRepo.set(conf.factories, CreateIdFactoryInfoConfig, (org: FactoryInfoConfig, newIt: FactoryInfoConfig) => {
           org.address = newIt.address;
           org.emails = newIt.emails;
@@ -151,18 +149,16 @@ export class ConfigurationService  {
           org.name = newIt.name;
           org.order = newIt.order;
           org.shortName = newIt.shortName;
-        }),        
+        }),
       ),
-      mergeMap(x => 
+      mergeMap(x =>
         this.dbChecklistItemRepo.set(conf.checklistItems, CreateIdChecklistItemConfig, (org: ChecklistItemConfig, newIt: ChecklistItemConfig) => {
           org.content = newIt.content;
           org.isActive = newIt.isActive;
           org.order = newIt.order;
         }),
       ),
-      map(x => {
-        return conf;
-      })
+      map(x => conf)
     );
   }
   //END CONFIG

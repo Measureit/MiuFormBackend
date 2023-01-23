@@ -36,10 +36,10 @@ export class PreviewReportComponent implements OnInit {
     this.activatedRoute.params
       .pipe(
         first(),
-        map(params => params['id']),
+        map(params => params.id),
         mergeMap(id => {
           this.genereting = true;
-          this.logger.debug(`prepare report for id: ${id}`)
+          this.logger.debug(`prepare report for id: ${id}`);
           if (id !== undefined && id !== '') {
             return this.reportService.getReport(id);
           } else {
@@ -48,9 +48,9 @@ export class PreviewReportComponent implements OnInit {
         }),
         mergeMap(report => {
           this.report = report;
-          return this.reportService.generatePdf(report)
+          return this.reportService.generatePdf(report);
         }),
-        tap(x => { this.reportBlob = x })
+        tap(x => { this.reportBlob = x; })
       )
       .subscribe({
         error: (err) => {
@@ -59,7 +59,7 @@ export class PreviewReportComponent implements OnInit {
           this.userNotificationService.notifyError('MESSAGE.REPORT.PREVIEW_FAILED');
         },
         complete: () => this.genereting = false
-      })
+      });
 
   }
 
@@ -98,7 +98,7 @@ export class PreviewReportComponent implements OnInit {
 
   send() {
     if (this.reportBlob && this.reportBlob.size > 0 && this.report) {
-      let sufix = Date.now().toString();
+      const sufix = Date.now().toString();
 
       zip(
         this.configurationService.getDelivery(),
@@ -108,21 +108,21 @@ export class PreviewReportComponent implements OnInit {
       )
         .pipe(
           mergeMap(deliveryInfo => {
-            let delivery = deliveryInfo[0];
-            let factory = deliveryInfo[1];
-            let to = (factory.emails ?? []).concat(delivery.deliveryEmails);
+            const delivery = deliveryInfo[0];
+            const factory = deliveryInfo[1];
+            const to = (factory.emails ?? []).concat(delivery.deliveryEmails);
 
             const dialogData = new ConfirmDialogModel(deliveryInfo[2], `${deliveryInfo[3]}: ${to.join(', ')}?`);
 
             const dialogRef = this.dialog.open(ConfirmDialogComponent, {
-              maxWidth: "400px",
+              maxWidth: '400px',
               data: dialogData
             });
 
             return zip(dialogRef.afterClosed(), of(delivery), of(to));
           }),
           mergeMap(zipR => {
-            let dialogRes = zipR[0];
+            const dialogRes = zipR[0];
             if (!dialogRes) {
               return of(false);
             }
@@ -132,9 +132,9 @@ export class PreviewReportComponent implements OnInit {
               from(blobToBase64(this.reportBlob))
             ).pipe(
               map(zipRes => {
-                let delivery = zipRes[0];
-                let to = zipRes[1];
-                let reportBase64 = zipRes[2].replace(/^data:(.*,)?/, '');
+                const delivery = zipRes[0];
+                const to = zipRes[1];
+                const reportBase64 = zipRes[2].replace(/^data:(.*,)?/, '');
                 return {
                   emailServerUrl: delivery.emailServerUrl,
                   options: { serverSecureCode: delivery.emailServerSecretCode },
@@ -143,15 +143,15 @@ export class PreviewReportComponent implements OnInit {
                     reportName: `${this.report.productId}_${sufix}.pdf`,
                     //reportData: JSON.stringify(this.report),
                     from: delivery.fromUser,
-                    to: to,
+                    to,
                     subject: `Raport pokontrolny -> ${this.report.productName} (${this.report.productId}) ${this.report.productColor}`,
                     plainContent: `Dzień dobry,\n w załączniku znajduje się raport pokontrolny produktu ${this.report.productName} (${this.report.productId}) ${this.report.productColor}\n\n\n`
                   } as EmailMessage
-                }
+                };
               }),
-              mergeMap(x => this.emailService.send(x.emailServerUrl, "sendinblue", x.options, x.email)),
+              mergeMap(x => this.emailService.send(x.emailServerUrl, 'sendinblue', x.options, x.email)),
               map(x => x.ok)
-            )
+            );
           }),
         )
         .subscribe({
@@ -167,7 +167,7 @@ export class PreviewReportComponent implements OnInit {
             console.error(err);
             this.userNotificationService.notifyError('MESSAGE.REPORT.SEND_FAILED');
           }
-        })
+        });
     }
   }
 

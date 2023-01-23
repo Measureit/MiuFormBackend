@@ -9,7 +9,7 @@ import { SidenavService } from '../core/services';
   styleUrls: ['./header.component.scss'],
 })
 export class HeaderComponent implements OnInit {
-  siteLocale: string = 'en';
+  siteLocale = 'en';
   constructor(
     private router: Router,
     private sidenavService: SidenavService,
@@ -26,11 +26,11 @@ export class HeaderComponent implements OnInit {
     );
   }
 
-  
+
 
   setLang(lang: string)
   {
-    localStorage.setItem("language",lang);
-    this.translate.use(lang)
+    localStorage.setItem('language',lang);
+    this.translate.use(lang);
   }
 }

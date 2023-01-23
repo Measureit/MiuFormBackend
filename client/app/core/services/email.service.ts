@@ -18,20 +18,20 @@ export interface EmailMessage {
 })
 export class EmailService {
   constructor() {
-    
+
   }
 
   send(serverUrl: string, provider: string, options: any, emailMessage: EmailMessage): Observable<Response> {
-    var myHeaders = new Headers({
-      "Content-Type": "application/json",
+    const myHeaders = new Headers({
+      'Content-Type': 'application/json',
     });
 
-    return from(fetch(serverUrl, 
+    return from(fetch(serverUrl,
       {
-          method: "POST",
+          method: 'POST',
           headers: myHeaders,
-          body: JSON.stringify({ provider: provider, options: options, emailMessage: emailMessage })
-      }))
+          body: JSON.stringify({ provider, options, emailMessage })
+      }));
 
   }
 }

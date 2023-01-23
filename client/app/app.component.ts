@@ -11,17 +11,13 @@ import { OperationMessageComponent } from './shared/components/operation-message
   styleUrls: ['./app.component.scss'],
   animations: [onMainContentChange],
 })
-export class AppComponent implements OnInit {
+export class AppComponent {
   public onSideNavChange = true;
   configSuccess: MatSnackBarConfig = {
     duration: 2000,
     horizontalPosition: 'right',
     verticalPosition: 'bottom',
   };
-
-  ngOnInit() {
-    
-  }
 
   constructor(
     private snackBar: MatSnackBar,
@@ -30,7 +26,7 @@ export class AppComponent implements OnInit {
 
       translate.addLangs(['pl', 'en', 'de']);
       translate.setDefaultLang('en');
-  
+
       if(localStorage.getItem('language')){
         translate.setDefaultLang(localStorage.getItem('language') || 'en');
         translate.use(localStorage.getItem('language') || 'en');
@@ -38,9 +34,9 @@ export class AppComponent implements OnInit {
         const browserLang = translate.getBrowserLang() || 'en';
         const langFromBrowser = browserLang.match(/pl|en|de/) ? browserLang : 'en';
         translate.use(langFromBrowser);
-        localStorage.setItem("language",langFromBrowser);
+        localStorage.setItem('language',langFromBrowser);
       }
-    
+
 
     this.sidenavService.sideNavState$.subscribe((res) => {
       this.onSideNavChange = res;
