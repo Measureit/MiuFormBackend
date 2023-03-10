@@ -1,7 +1,7 @@
 //let jsPDF = require('jspdf');
 import { jsPDF } from 'jspdf';
 import { Injectable } from '@angular/core';
-import { from, map, merge, mergeAll, mergeMap, Observable, of, zip } from 'rxjs';
+import { flatMap, from, map, merge, mergeAll, mergeMap, Observable, of, tap, toArray, zip } from 'rxjs';
 import { FactoryInfoConfig, ImageSize, Report, ReportChecklistItem, ReportImageItem } from '../models';
 import { ConfigurationService } from './configuration.service';
 import { DomSanitizer } from '@angular/platform-browser';
@@ -39,33 +39,78 @@ export class ArchiveReportGeneratorService {
     }
 
     generateZip(factories: FactoryInfoConfig[], reports: Report[]): Observable<Blob> {
-        const reportsGroupByFactory = this.groupByKey(reports, (r: Report) => r.factoryInfoId);
-
-        const toZipStruct = Array.from( reportsGroupByFactory )
-            .map(([key, value]) => ({ key, value }))
-            .map(v => ({ folder: this.createFolderName(factories, v.key),
-                reports: v.value.map(r => ({ name: this.getFileNameForReport(r), report: r}))}));
-
         const jsZip = new JSZip();
+        return merge(
+            reports.map(x =>
+                zip(of(x), this.reportGeneratorService.generatePdf(x), of(JSON.stringify(x)))
+            )
+        )
+        .pipe(
+           // tap(x => console.log(x)),
+            mergeAll(),
+            //mergeMap(y => merge()),
+            //mergeMap(rs => rs.map( x => {
+            // flatMap(x =>zip(
+            //         of({ folderName: this.createFolderName(factories, x.factoryInfoId), fileName: this.getFileNameForReport(x)}),
+            //         from(jsZip.generateAsync({ type: 'blob' }))
+            // )),
+            map(y => {
+                const jsZipFolder = jsZip.folder(this.createFolderName(factories, y[0].factoryInfoId));
+                jsZipFolder.file(`${this.getFileNameForReport(y[0])}.pdf`, y[1].output('blob'));
+                jsZipFolder.file(`${this.getFileNameForReport(y[0])}.mfr`, y[2]);
+            }),
+            toArray(),
+            mergeMap(x => from(jsZip.generateAsync({ type: 'blob' })))
+        );
 
-        reportsGroupByFactory.forEach((groupItemReports: Report[], key: string) => {
 
 
-            const jsZipFolder = jsZip.folder(this.createFolderName(factories, key));
-            const jsZipFolder1 = jsZip.folder(this.createFolderName(factories, key));
+        // .pipe(
+        //     mergeAll(),
+        //     //mergeMap(y => merge()),
+        //     //mergeMap(rs => rs.map( x => {
+        //     map(x =>zip(
+        //             of({ folderName: this.createFolderName(factories, x.factoryInfoId), fileName: this.getFileNameForReport(x)}),
+        //             from(jsZip.generateAsync({ type: 'blob' }))
+        //     )),
+        //     map(y => {
+        //         const jsZipFolder = jsZip.folder(y[0].folderName);
+        //         jsZipFolder.file(y[0].fileName, y[1], { base64: true });
+        //     }),
+        //     mergeMap(x => from(jsZip.generateAsync({ type: 'blob' })))
+        // );
 
-            groupItemReports.forEach((report: Report) =>
-            {
-                const fileName = this.getFileNameForReport(report);
 
-                this.reportGeneratorService.generatePdf(report);
 
-            //    jsZipFolder.file('fileName.miurep', imgData, { base64: true });
-            //    jsZipFolder.file('fileName.pdf', imgData, { base64: true });
-            });
-        });
 
-        return from(jsZip.generateAsync({ type: 'blob' }));
+
+        // const reportsGroupByFactory = this.groupByKey(reports, (r: Report) => r.factoryInfoId);
+
+        // const toZipStruct = Array.from( reportsGroupByFactory )
+        //     .map(([key, value]) => ({ key, value }))
+        //     .map(v => ({ folder: this.createFolderName(factories, v.key),
+        //         reports: v.value.map(r => ({ name: this.getFileNameForReport(r), report: r}))}));
+
+        // const jsZip = new JSZip();
+
+        // reportsGroupByFactory.forEach((groupItemReports: Report[], key: string) => {
+
+
+        //     const jsZipFolder = jsZip.folder(this.createFolderName(factories, key));
+        //     const jsZipFolder1 = jsZip.folder(this.createFolderName(factories, key));
+
+        //     groupItemReports.forEach((report: Report) =>
+        //     {
+        //         const fileName = this.getFileNameForReport(report);
+
+        //         this.reportGeneratorService.generatePdf(report);
+
+        //     //    jsZipFolder.file('fileName.miurep', imgData, { base64: true });
+        //     //    jsZipFolder.file('fileName.pdf', imgData, { base64: true });
+        //     });
+        // });
+
+        //return from(jsZip.generateAsync({ type: 'blob' }));
     }
 
     private groupByKey<T, K>(array: Array<T>, keyFactor: (T) => K): Map<K, T[]> {

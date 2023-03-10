@@ -156,7 +156,10 @@ export class ReportsComponent implements OnInit {
         }),
         tap(x => this.isBackupSelected = false)
       ).subscribe({
-        error: (err) => this.userNotificationService.notifyError('MESSAGE.BACKUP.FAILED')
+        error: (err) => {
+          this.userNotificationService.notifyError('MESSAGE.BACKUP.FAILED');
+          console.error(err);
+        }
       });
 
     }
