@@ -120,3 +120,12 @@
         </button>
     </mat-card-actions>
 </mat-card>
+
+<mat-card style="margin-top: 15px">
+    <mat-card-header>{{ 'CONFIG.GENERAL.DB.TITLE' | translate }}</mat-card-header>
+    <mat-card-actions style="margin-left: auto">
+        <!-- <button (click)="showDbSize()" mat-raised-button color="primary" style="margin-right: 5px">{{'config.GENERAL.DB.SHOW_SIZE' |  translate}}</button> -->
+        <button (click)="compactDb()" mat-raised-button color="primary">{{'CONFIG.GENERAL.DB.COMPACT' |  translate}}
+        </button>
+    </mat-card-actions>
+</mat-card>

@@ -125,7 +125,13 @@
 			},
 			"INSPECTION_DATA": {
 				"TITLE": "Inspection Data"
-			}	
+			},
+			"DB": {
+				"TITLE": "Database",
+				"COMPACT": "Compact db",
+				"COMPACT_DB_SUCCESS": "Db compact successfully.",
+				"COMPACT_DB_FAILED": "Compacting db failed."
+			}
 		}
 	},
 	"HEADER": {

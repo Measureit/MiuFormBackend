@@ -22,6 +22,20 @@ class Repository<T extends DbModel> {
     this.db = new PouchDB(dbName);
   }
 
+  getDbInfo(): Observable<string> {
+    return from(this.db.info())
+      .pipe(
+        map(x => JSON.stringify(x))
+      );
+  }
+
+  compact(): Observable<boolean> {
+    return from(this.db.compact())
+    .pipe(
+      map(x => x.ok)
+    );
+  }
+
   getById(id: string): Observable<T> {
     this.logger.debug(`getById with ${id} on ${this.dbName}`);
     return from(this.db.get(id));

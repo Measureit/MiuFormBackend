@@ -125,6 +125,12 @@
 				"TITLE": "Zapis/ładowanie konfiguracji",
 				"SAVE_CONFIG": "Zapisz konfigurację",
 				"LOAD_CONFIG": "Załaduj konfigurację"
+			},
+			"DB": {
+				"TITLE": "Baza danych",
+				"COMPACT": "Optymalizacja rozmiaru DB",
+				"COMPACT_DB_SUCCESS": "Optymalizacja rozmiaru DB powiodła się.",
+				"COMPACT_DB_FAILED": "Optymalizacja rozmiaru DB się nie powiodła."
 			}
 		}
 	},

@@ -8,6 +8,9 @@ import { CreateDeliveryConfig, DeliveryConfig } from 'client/app/core/models';
 import { CreateInspectorInfo, InspectorInfo } from 'client/app/core/models/inspector-info.model';
 import { Configuration, ConfigurationService } from 'client/app/core/services';
 import { UserNotificationService } from 'client/app/core/services/user-notification.service';
+import { MatDialog } from '@angular/material/dialog';
+import { TranslateService } from '@ngx-translate/core';
+import { ConfirmDialogComponent, ConfirmDialogModel } from 'client/app/shared/components/confirm-dialog/confirm-dialog.component';
 
 @Component({
   selector: 'app-general',
@@ -29,6 +32,8 @@ export class GeneralComponent implements OnInit {
   loading = false;
 
   constructor(private _ngZone: NgZone,
+    private translateService: TranslateService,
+    private dialog: MatDialog,
     private formBuiler: FormBuilder,
     private configurationService: ConfigurationService,
     private userNotificationService: UserNotificationService) {
@@ -193,7 +198,7 @@ export class GeneralComponent implements OnInit {
   };
 
   //EMAILS
-  public separatorKeysCodes = [ENTER, COMMA];
+  separatorKeysCodes = [ENTER, COMMA];
   removable = true;
 
   get formEmails() {
@@ -225,6 +230,59 @@ export class GeneralComponent implements OnInit {
       this.formEmails.removeAt(inx);
     }
   }
+
+  showDbSize() {
+
+    const sizeofAllStorage = () => {  // provide the size in bytes of the data currently stored
+      let size = 0;
+      for (let i=0; i<=localStorage.length-1; i++)
+      {
+      const key = localStorage.key(i);
+      size += lengthInUtf8Bytes(localStorage.getItem(key));
+      }
+      return size;
+    };
+
+    const lengthInUtf8Bytes= (str) => {
+      // Matches only the 10.. bytes that are non-initial characters in a multi-byte sequence.
+      const m = encodeURIComponent(str).match(/%[89ABab]/g);
+      return str.length + (m ? m.length : 0);
+    };
+
+    console.log('lll' + sizeofAllStorage());
+
+    this.configurationService.getDbSize().subscribe({
+      next: (x) => {
+        console.log(x);
+
+        //todo:
+        // const dialogData = new ConfirmDialogModel(this.translateService.instant('MESSAGE.CONFIG.GET_DBSIZE.UPDATE_CHECKLIST_QUESTION_TITLE'), x);
+
+        // const dialogRef = this.dialog.open(ConfirmDialogComponent, {
+        //   maxWidth: '600px',
+        //   data: dialogData
+        // });
+      },
+      error: (err) => {
+        console.error(err);
+        this.userNotificationService.notifyError('CONFIG.GENERAL.DB.GET_DBSIZE_FAILED');
+      }
+    });
+  }
+
+  compactDb() {
+    this.configurationService.compactDb().subscribe({
+      next: (x) => {
+        console.log(x);
+        this.userNotificationService.notify('CONFIG.GENERAL.DB.COMPACT_DB_SUCCESS');
+      },
+      error: (err) => {
+        console.error(err);
+        this.userNotificationService.notifyError('CONFIG.GENERAL.DB.COMPACT_DB_FAILED');
+      }
+    });
+  }
+
   private validateEmail(email) {
     const re = /^(([^<>()\[\]\\.,;:\s@"]+(\.[^<>()\[\]\\.,;:\s@"]+)*)|(".+"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/;
     return re.test(String(email).toLowerCase());
