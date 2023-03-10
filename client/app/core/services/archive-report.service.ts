@@ -23,11 +23,11 @@ export class ArchiveReportGeneratorService {
     }
 
     toFolderAndFile(n: string): string {
-        return n;
+        return n.replace(/[^a-zA-Z0-9\- ]/g, '');
     }
 
     getFileNameForReport(report: Report): string {
-        return this.toFolderAndFile(report.productName + report.dateOfCreation.toLocaleString());
+        return this.toFolderAndFile(`${report.productName} ${report.productColor} ${moment(report.dateOfCreation).format('YYYY-MM-DD-HH-MM-SS')}`);
     }
 
     createFolderName(factories: FactoryInfoConfig[], factoryId: string): string {
@@ -46,14 +46,7 @@ export class ArchiveReportGeneratorService {
             )
         )
         .pipe(
-           // tap(x => console.log(x)),
             mergeAll(),
-            //mergeMap(y => merge()),
-            //mergeMap(rs => rs.map( x => {
-            // flatMap(x =>zip(
-            //         of({ folderName: this.createFolderName(factories, x.factoryInfoId), fileName: this.getFileNameForReport(x)}),
-            //         from(jsZip.generateAsync({ type: 'blob' }))
-            // )),
             map(y => {
                 const jsZipFolder = jsZip.folder(this.createFolderName(factories, y[0].factoryInfoId));
                 jsZipFolder.file(`${this.getFileNameForReport(y[0])}.pdf`, y[1].output('blob'));
@@ -62,65 +55,5 @@ export class ArchiveReportGeneratorService {
             toArray(),
             mergeMap(x => from(jsZip.generateAsync({ type: 'blob' })))
         );
-
-
-
-        // .pipe(
-        //     mergeAll(),
-        //     //mergeMap(y => merge()),
-        //     //mergeMap(rs => rs.map( x => {
-        //     map(x =>zip(
-        //             of({ folderName: this.createFolderName(factories, x.factoryInfoId), fileName: this.getFileNameForReport(x)}),
-        //             from(jsZip.generateAsync({ type: 'blob' }))
-        //     )),
-        //     map(y => {
-        //         const jsZipFolder = jsZip.folder(y[0].folderName);
-        //         jsZipFolder.file(y[0].fileName, y[1], { base64: true });
-        //     }),
-        //     mergeMap(x => from(jsZip.generateAsync({ type: 'blob' })))
-        // );
-
-
-
-
-
-        // const reportsGroupByFactory = this.groupByKey(reports, (r: Report) => r.factoryInfoId);
-
-        // const toZipStruct = Array.from( reportsGroupByFactory )
-        //     .map(([key, value]) => ({ key, value }))
-        //     .map(v => ({ folder: this.createFolderName(factories, v.key),
-        //         reports: v.value.map(r => ({ name: this.getFileNameForReport(r), report: r}))}));
-
-        // const jsZip = new JSZip();
-
-        // reportsGroupByFactory.forEach((groupItemReports: Report[], key: string) => {
-
-
-        //     const jsZipFolder = jsZip.folder(this.createFolderName(factories, key));
-        //     const jsZipFolder1 = jsZip.folder(this.createFolderName(factories, key));
-
-        //     groupItemReports.forEach((report: Report) =>
-        //     {
-        //         const fileName = this.getFileNameForReport(report);
-
-        //         this.reportGeneratorService.generatePdf(report);
-
-        //     //    jsZipFolder.file('fileName.miurep', imgData, { base64: true });
-        //     //    jsZipFolder.file('fileName.pdf', imgData, { base64: true });
-        //     });
-        // });
-
-        //return from(jsZip.generateAsync({ type: 'blob' }));
-    }
-
-    private groupByKey<T, K>(array: Array<T>, keyFactor: (T) => K): Map<K, T[]> {
-        const res = new Map<K, T[]>();
-        array.forEach(item => {
-            const itemKey = keyFactor(item);
-            if (!res.has(itemKey)) {
-                res.set(itemKey, array.filter(i => keyFactor(i) === keyFactor(item)));
-            }
-        });
-        return res;
     }
 }
