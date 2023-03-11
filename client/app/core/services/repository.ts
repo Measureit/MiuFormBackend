@@ -1,6 +1,6 @@
 import PouchDB from 'pouchdb';
 import { from, Observable } from 'rxjs';
-import { map, mergeMap, tap } from 'rxjs/operators';
+import { filter, map, mergeAll, mergeMap, tap } from 'rxjs/operators';
 import { ChecklistItemConfig, DbModel, DeliveryConfig, FactoryInfoConfig, Report } from '../models';
 import { InspectorInfo } from '../models/inspector-info.model';
 import { ConsoleLoggerService, Logger } from './console.logger.service';
@@ -14,12 +14,13 @@ class Repository<T extends DbModel> {
 
   constructor(
     logger: Logger,
-    dbName: string
+    dbName: string,
+    size: number = 10
   ) {
     PouchDB.plugin(PouchDBFind);
     this.dbName = dbName;
     this.logger = logger;
-    this.db = new PouchDB(dbName);
+    this.db = new PouchDB(dbName, { auto_compaction: true, size });
   }
 
   getDbInfo(): Observable<string> {
@@ -32,7 +33,8 @@ class Repository<T extends DbModel> {
   compact(): Observable<boolean> {
     return from(this.db.compact())
     .pipe(
-      map(x => x.ok)
+      map(x => x.ok),
+      tap(y => this.logger.debug(`compact on ${this.dbName} with result ${y}`))
     );
   }
 
@@ -107,17 +109,11 @@ class Repository<T extends DbModel> {
       );
   }
 
-  delete(item: T): Observable<boolean> {
-    return from(this.db.remove(item))
-    .pipe(
-      map(x => x.ok)
-    );
-  }
 }
 
 export class ReportRepository extends Repository<Report> {
   constructor(logger: Logger) {
-    super(logger, 'miuapp_Report');
+    super(logger, 'miuapp_Report', 250);
   }
 
   getFiltered(productFilter: string, selectedFactoryIds: string[]): Observable<Report[]> {
@@ -140,7 +136,6 @@ export class ReportRepository extends Repository<Report> {
           }
         })
         .then((docs) => {
-          console.log(JSON.stringify(docs));
           obs.next(docs.docs.map((x) => x));
           obs.complete();
         })
@@ -148,6 +143,13 @@ export class ReportRepository extends Repository<Report> {
           obs.error(err);
         });
     });
+  }
+
+  delete(item: Report): Observable<boolean> {
+    return from(this.db.remove(item))
+    .pipe(
+      map(x => x.ok)
+    );
   }
 }
 

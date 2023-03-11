@@ -6,6 +6,7 @@ import { UserNotificationService, ReportService, ArchiveReportGeneratorService, 
 import { ConfirmDialogComponent, ConfirmDialogModel } from 'client/app/shared/components/confirm-dialog/confirm-dialog.component';
 import { MatDialog } from '@angular/material/dialog';
 import { TranslateService } from '@ngx-translate/core';
+import moment from 'moment';
 
 export interface SelectionItem {
   isSelected: boolean;
@@ -63,7 +64,6 @@ export class ReportsComponent implements OnInit {
   }
 
   filter() {
-    console.log('filter: ' + JSON.stringify(this.selectedFactoryIds) + ' ' + this.productIdFilter);
     this.reloadReports()
     .pipe(
       first()
@@ -153,10 +153,10 @@ export class ReportsComponent implements OnInit {
             return of(false);
           }
         }),
-        map(x => {
-          if (x === true) { return this.dbInspectionService.compactDb();}
-          return of(false);
-        }),
+        map(x =>
+           this.dbInspectionService.compactDb()
+          //return of(false);
+        ),
         tap(x => this.isBackupSelected = false)
       ).subscribe({
         error: (err) => {
@@ -177,11 +177,9 @@ export class ReportsComponent implements OnInit {
   }
 
   backupReports(reports: Report[]): Observable<boolean> {
-    console.log('backupReports');
-
     return this.archiveReportGeneratorService.generateZip(this.factoryItems, reports)
       .pipe(
-        tap(x => this.download(x, 'test.zip', 'application/zip')),
+        tap(x => this.download(x, `miuform_${moment().format('XXXX-MM-DD_HH-MM-SS')}.zip`, 'application/zip')),
         map(x => true)
       );
   }

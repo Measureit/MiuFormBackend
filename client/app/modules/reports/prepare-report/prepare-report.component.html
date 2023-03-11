@@ -50,10 +50,10 @@
         </div>
     </mat-card-content>
     <mat-card-actions>
-        <button mat-fab color="primary" [disabled]="!itemForm.valid" class="mat-fab-bottom-right-second" (click)="saveReport()" class="to-right">
+        <button mat-fab color="primary" [disabled]="!itemForm || !itemForm.valid" class="mat-fab-bottom-right-second" (click)="saveReport()" class="to-right">
             <mat-icon>save</mat-icon>
         </button>
-        <button mat-fab color="primary" [disabled]="!itemForm.valid" class="mat-fab-bottom-right" (click)="preview()" >
+        <button mat-fab color="primary" [disabled]="!itemForm || !itemForm.valid" class="mat-fab-bottom-right" (click)="preview()" >
             <mat-icon>rebase_edit</mat-icon>
         </button>
     </mat-card-actions>

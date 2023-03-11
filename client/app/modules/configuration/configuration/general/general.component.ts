@@ -251,12 +251,8 @@ export class GeneralComponent implements OnInit {
       return str.length + (m ? m.length : 0);
     };
 
-    console.log('lll' + sizeofAllStorage());
-
     this.dbInpsectionService.getDbSize().subscribe({
       next: (x) => {
-        console.log(x);
-
         //todo:
         // const dialogData = new ConfirmDialogModel(this.translateService.instant('MESSAGE.CONFIG.GET_DBSIZE.UPDATE_CHECKLIST_QUESTION_TITLE'), x);
 
@@ -275,7 +271,6 @@ export class GeneralComponent implements OnInit {
   compactDb() {
     this.dbInpsectionService.compactDb().subscribe({
       next: (x) => {
-        console.log(x);
         this.userNotificationService.notify('CONFIG.GENERAL.DB.COMPACT_DB_SUCCESS');
       },
       error: (err) => {
