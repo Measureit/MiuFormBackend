@@ -5,6 +5,7 @@
 html,
 body {
   height: 100%;
+  @include v.flex-with-grow();
 }
 body {
   margin: 0;
@@ -73,41 +74,38 @@ mat-card.container {
   color: rgb(5, 70, 92);
 }
 
-.mat-fab-bottom-right {
-  position: fixed !important;
-  right: 5px;
-  bottom: 5px;
+mat-card.dialog {
+  display: flex;
+  flex-direction: column;
+  height: calc(100vh - 68px);
+  
+  mat-card-header {
+    font-size: 24px;
+    height: 36px;
+  }
+
+  mat-card-content {
+      overflow: auto;
+      //height: 100%;
+      height: calc(100vh - 68px - 36px);
+      // .content {
+      //   height: calc(100vh - 68px - 36px - 16px - 16px); //68 = toolbar, 36 = card header, 16 - padding bottom, 16 - padding top  
+      // }
+  }
+
+  mat-card-actions {
+    display: flex; 
+    flex-direction: row;
+    gap: 5px;
+    margin: 5px;
+  }
+  
+  .to-right {
+    margin-left: auto;
+  }
 }
 
-.mat-fab-bottom-right-second {
-  position: fixed !important;
-  right: 70px;
-  bottom: 5px;
-}
 
-.mat-fab-bottom-right-third {
-  position: fixed !important;
-  right: 135px;
-  bottom: 5px;
-}
-
-.mat-fab-bottom-left {
-  position: fixed ;
-  left: 5px;
-  bottom: 5px;
-}
-
-.mat-fab-bottom-left-second {
-  position: fixed ;
-  left: 70px;
-  bottom: 5px;
-}
-
-.mat-fab-bottom-left-third {
-  position: fixed ;
-  left: 135px;
-  bottom: 5px;
-}
 
 
 //override list item of angular material 

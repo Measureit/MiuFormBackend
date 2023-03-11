@@ -1,8 +1,17 @@
 .tab-header {
     display: flex;
     flex-direction: column;
+    height: 100%;
     align-items: center;
     > span {
         font-size: small;
     }
 }
+
+// .tab-content {
+    
+//   display: flex;
+//   flex-direction: column;
+//   height: calc(100vh - 68px - 36px - 16px - 16px - 48px);
+// }
+

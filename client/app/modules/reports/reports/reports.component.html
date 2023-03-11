@@ -1,74 +1,77 @@
-<div>
-    <h1>{{ 'REPORTS.TITLE' | translate }}</h1>
+<mat-card class="dialog">
+    <mat-card-header>{{ 'REPORTS.TITLE' | translate }}</mat-card-header>
 
-    <cdk-accordion >
-        <cdk-accordion-item #accordionItem="cdkAccordionItem" class="example-accordion-item" role="button" tabindex="0"
-            [attr.aria-expanded]="accordionItem.expanded">
-            <div class="example-accordion-item-header" (click)="accordionItem.toggle()">
-                <h4>{{ 'REPORTS.FILTER' | translate }}</h4>
-                <span class="example-accordion-item-description">
-                    <mat-icon>filter_alt</mat-icon>
-                </span>
+    <mat-card-content>
+        <cdk-accordion >
+            <cdk-accordion-item #accordionItem="cdkAccordionItem" class="example-accordion-item" role="button" tabindex="0"
+                [attr.aria-expanded]="accordionItem.expanded">
+                <div class="example-accordion-item-header" (click)="accordionItem.toggle()">
+                    <h4>{{ 'REPORTS.FILTER' | translate }}</h4>
+                    <span class="example-accordion-item-description">
+                        <mat-icon>filter_alt</mat-icon>
+                    </span>
+                </div>
+
+                <mat-card role="region" [style.display]="accordionItem.expanded ? '' : 'none'" >
+                    <mat-card-content>
+                        <mat-form-field appearance="outline" style="width: 100%">
+                            <mat-label>{{ 'ITEM.REPORT.PRODUCT_ID' | translate }}</mat-label>
+                            <input matInput type="text" name="value" [(ngModel)]="productIdFilter">
+                        </mat-form-field>
+                        <mat-form-field appearance="outline" style="width: 100%">
+                            <mat-select [(ngModel)]="selectedFactoryIds" multiple placeholder="{{ 'REPORTS.FILTER_BY_FACTORIES' | translate }}">
+                                <mat-option *ngFor="let factory of factoryItems" [value]="factory._id">
+                                    {{factory.shortName}}
+                                </mat-option>
+                            </mat-select>
+                        </mat-form-field>
+                        <!-- <mat-form-field> -->
+                        <mat-checkbox (change)="reloadFactories($event.checked)" [checked]="loadFactoryWithNoActive">
+                            {{ 'REPORTS.LOAD_NOACTIVE_FACTORIES' | translate}}
+                        </mat-checkbox>
+                        <!-- </mat-form-field> -->
+                    </mat-card-content>
+                    <mat-card-actions style="margin-left: auto">
+                        <button (click)="clearFilter()" mat-button color="secondary">{{'COMMON.CLEAR_FILTER' |
+                            translate}}</button>
+
+                        <button (click)="filter()" mat-raised-button color="primary">{{'COMMON.FILTER' |
+                            translate}}</button>
+                
+
+                    </mat-card-actions>
+                </mat-card>
+            </cdk-accordion-item>
+        </cdk-accordion>
+
+        <mat-list>
+            <div class="an-list-item" *ngFor="let item of items" (click)="preview($event, item._id)">
+                <div class="an-list-item-des">
+                    <span>{{item.productName}} ({{item.productId}}), {{item.productColor}}</span>
+                    <span>{{selectFactoryInfoConfig(item.factoryInfoId)?.shortName}} - {{selectFactoryInfoConfig(item.factoryInfoId)?.name}}</span>
+                    <span>{{item.dateOfCreation | date: 'YYYY-MM-d, H:mm:ss'}}</span>
+                </div>
+                <div class="an-list-item-actions">
+                    <!-- <button (click)="prepare($event, item._id)"> -->
+                        <mat-icon *ngIf="!isBackupSelected" (click)="prepare($event, item._id)">edit</mat-icon>
+                        <mat-icon *ngIf="isBackupSelected" (click)="checkToBackup($event, item)">{{item.isSelected ? 'check_box' : 'check_box_outline_blank' }}</mat-icon>
+                    <!-- </button> -->
+                </div>
             </div>
+        </mat-list>
+    </mat-card-content>
 
-            <mat-card role="region" [style.display]="accordionItem.expanded ? '' : 'none'" >
-                <mat-card-content>
-                    <mat-form-field appearance="outline" style="width: 100%">
-                        <mat-label>{{ 'ITEM.REPORT.PRODUCT_ID' | translate }}</mat-label>
-                        <input matInput type="text" name="value" [(ngModel)]="productIdFilter">
-                    </mat-form-field>
-                    <mat-form-field appearance="outline" style="width: 100%">
-                        <mat-select [(ngModel)]="selectedFactoryIds" multiple placeholder="{{ 'REPORTS.FILTER_BY_FACTORIES' | translate }}">
-                            <mat-option *ngFor="let factory of factoryItems" [value]="factory._id">
-                                {{factory.shortName}}
-                            </mat-option>
-                        </mat-select>
-                    </mat-form-field>
-                    <!-- <mat-form-field> -->
-                    <mat-checkbox (change)="reloadFactories($event.checked)" [checked]="loadFactoryWithNoActive">
-                        {{ 'REPORTS.LOAD_NOACTIVE_FACTORIES' | translate}}
-                    </mat-checkbox>
-                    <!-- </mat-form-field> -->
-                </mat-card-content>
-                <mat-card-actions style="margin-left: auto">
-                    <button (click)="clearFilter()" mat-button color="secondary">{{'COMMON.CLEAR_FILTER' |
-                        translate}}</button>
-
-                    <button (click)="filter()" mat-raised-button color="primary">{{'COMMON.FILTER' |
-                        translate}}</button>
-             
-
-                </mat-card-actions>
-            </mat-card>
-        </cdk-accordion-item>
-    </cdk-accordion>
-
-
-    <mat-list>
-        <div class="an-list-item" *ngFor="let item of items" (click)="preview($event, item._id)">
-            <div class="an-list-item-des">
-                <span>{{item.productName}} ({{item.productId}}), {{item.productColor}}</span>
-                <span>{{selectFactoryInfoConfig(item.factoryInfoId)?.shortName}} - {{selectFactoryInfoConfig(item.factoryInfoId)?.name}}</span>
-                <span>{{item.dateOfCreation | date: 'YYYY-MM-d, H:mm:ss'}}</span>
-            </div>
-            <div class="an-list-item-actions">
-                <!-- <button (click)="prepare($event, item._id)"> -->
-                    <mat-icon *ngIf="!isBackupSelected" (click)="prepare($event, item._id)">edit</mat-icon>
-                    <mat-icon *ngIf="isBackupSelected" (click)="checkToBackup($event, item)">{{item.isSelected ? 'check_box' : 'check_box_outline_blank' }}</mat-icon>
-                <!-- </button> -->
-            </div>
-        </div>
-    </mat-list>
-
-    <button mat-fab color="primary" class="mat-fab-bottom-left-second" *ngIf="isBackupSelected" (click)="onCancelBackup($event)">
-        <mat-icon>close</mat-icon>
-    </button>
-    <button mat-fab [disabled]="isBackupSelected && !anySelected()" 
-        color="primary" class="mat-fab-bottom-left" (click)="onBackup($event)">
-        <mat-icon *ngIf="isBackupSelected" >cloud_download</mat-icon>
-        <mat-icon *ngIf="!isBackupSelected">file_download_done</mat-icon>
-    </button>
-    <button mat-fab color="primary" class="mat-fab-bottom-right" [routerLink]="['prepare']" *ngIf="!isBackupSelected">
-        <mat-icon>add</mat-icon>
-    </button>
-</div>
+    <mat-card-actions>
+        <button mat-fab color="primary" *ngIf="isBackupSelected" (click)="onCancelBackup($event)">
+            <mat-icon>close</mat-icon>
+        </button>
+        <button mat-fab [disabled]="isBackupSelected && !anySelected()" 
+            color="primary"  (click)="onBackup($event)">
+            <mat-icon *ngIf="isBackupSelected" >cloud_download</mat-icon>
+            <mat-icon *ngIf="!isBackupSelected">file_download_done</mat-icon>
+        </button>
+        <button mat-fab color="primary" class="to-right" [routerLink]="['prepare']" *ngIf="!isBackupSelected">
+            <mat-icon>add</mat-icon>
+        </button>
+    </mat-card-actions>
+</mat-card>

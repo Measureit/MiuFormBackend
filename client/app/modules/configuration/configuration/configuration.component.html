@@ -1,31 +1,36 @@
-<h1>{{ 'CONFIG.TITLE' | translate }}</h1>
+<mat-card class="dialog">
 
-<mat-tab-group>
-    <mat-tab>
-        <ng-template mat-tab-label>
-            <div class="tab-header">
-                <mat-icon class="example-tab-icon">factory</mat-icon>
-                <span>{{ 'CONFIG.FACTORIES.TITLE' | translate }}</span>
-            </div>
-        </ng-template>
-        <app-factories></app-factories>
-    </mat-tab>
-    <mat-tab>
-        <ng-template mat-tab-label>
-            <div class="tab-header">
-                <mat-icon class="example-tab-icon">format_list_bulleted</mat-icon>
-                <span>{{ 'CONFIG.CHECKLIST.TITLE' | translate }}</span>
-            </div>
-        </ng-template>
-        <app-checklist></app-checklist>
-    </mat-tab>
-    <mat-tab>
-        <ng-template mat-tab-label>
-            <div class="tab-header">
-                <mat-icon class="example-tab-icon">tune</mat-icon>
-                <span>{{ 'CONFIG.GENERAL.TITLE' | translate }}</span>
-            </div>
-        </ng-template>
-        <app-general></app-general>
-    </mat-tab>
-</mat-tab-group>
+    <mat-card-header>{{ 'CONFIG.TITLE' | translate }}</mat-card-header>
+
+    <mat-card-content>
+        <mat-tab-group class="content">
+            <mat-tab>
+                <ng-template mat-tab-label>
+                    <div class="tab-header">
+                        <mat-icon class="example-tab-icon">factory</mat-icon>
+                        <span>{{ 'CONFIG.FACTORIES.TITLE' | translate }}</span>
+                    </div>
+                </ng-template>
+                <app-factories class="tab-content"></app-factories>
+            </mat-tab>
+            <mat-tab>
+                <ng-template mat-tab-label>
+                    <div class="tab-header">
+                        <mat-icon class="example-tab-icon">format_list_bulleted</mat-icon>
+                        <span>{{ 'CONFIG.CHECKLIST.TITLE' | translate }}</span>
+                    </div>
+                </ng-template>
+                <app-checklist class="tab-content"></app-checklist>
+            </mat-tab>
+            <mat-tab>
+                <ng-template mat-tab-label>
+                    <div class="tab-header">
+                        <mat-icon class="example-tab-icon">tune</mat-icon>
+                        <span>{{ 'CONFIG.GENERAL.TITLE' | translate }}</span>
+                    </div>
+                </ng-template>
+                <app-general class="tab-content"></app-general>
+            </mat-tab>
+        </mat-tab-group>
+    </mat-card-content>
+</mat-card>

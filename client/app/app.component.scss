@@ -1,10 +1,27 @@
+@use '../variables' as v;
+
+:host {
+  @include v.flex-with-grow();
+
+  div {
+    @include v.flex-with-grow();
+  }
+}
+.mat-drawer-content {
+  display: flex;
+}
+.mat-sidenav-container {
+  @include v.flex-with-grow();
+}
 
 .mat-form-field {
   margin-right: 8px;
 }
 
 .main_content {
-  width: 100%;
-  height: calc(100vh - 80px);
+  @include v.flex-with-grow();
+  //width: 100%;
+ 
   background: #efefef;
+  //padding: 5px;
 }
