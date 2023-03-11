@@ -71,7 +71,9 @@ export class ReportService {
       );
   }
 
-
+  removeReport(report: Report): Observable<boolean> {
+    return this.dbReportRepo.delete(report);
+  }
 
   sendReport(report: Report): Observable<boolean> {
     return of(true);

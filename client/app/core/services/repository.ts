@@ -106,6 +106,13 @@ class Repository<T extends DbModel> {
         map(x => true)
       );
   }
+
+  delete(item: T): Observable<boolean> {
+    return from(this.db.remove(item))
+    .pipe(
+      map(x => x.ok)
+    );
+  }
 }
 
 export class ReportRepository extends Repository<Report> {

@@ -1,12 +1,10 @@
 import { Component, OnInit } from '@angular/core';
-import { first, map, mergeMap, Observable, of, tap } from 'rxjs';
+import { first, map, mergeMap, Observable, of, tap, zip } from 'rxjs';
 import { FactoryInfoConfig, Report } from 'client/app/core/models';
-import { ReportService } from 'client/app/core/services';
 import { Router } from '@angular/router';
-import { UserNotificationService } from 'client/app/core/services/user-notification.service';
+import { UserNotificationService, ReportService, ArchiveReportGeneratorService, DbInspectionService  } from 'client/app/core/services';
 import { ConfirmDialogComponent, ConfirmDialogModel } from 'client/app/shared/components/confirm-dialog/confirm-dialog.component';
 import { MatDialog } from '@angular/material/dialog';
-import { ArchiveReportGeneratorService } from 'client/app/core/services/archive-report.service';
 import { TranslateService } from '@ngx-translate/core';
 
 export interface SelectionItem {
@@ -35,6 +33,7 @@ export class ReportsComponent implements OnInit {
     private translateService: TranslateService,
     private userNotificationService: UserNotificationService,
     private archiveReportGeneratorService: ArchiveReportGeneratorService,
+    private dbInspectionService: DbInspectionService,
     private router: Router) { }
 
   ngOnInit(): void {
@@ -148,11 +147,15 @@ export class ReportsComponent implements OnInit {
                 if (this.items[i].isSelected) {
                   this.items.splice(i,1);
                 }
-            }})
+              }})
             );
           } else {
             return of(false);
           }
+        }),
+        map(x => {
+          if (x === true) { return this.dbInspectionService.compactDb();}
+          return of(false);
         }),
         tap(x => this.isBackupSelected = false)
       ).subscribe({
@@ -183,10 +186,15 @@ export class ReportsComponent implements OnInit {
       );
   }
 
-  removeReports(reports: Report[]): any {
-    //todo:
-    console.log('removeReports');
-    return of(true);
+  removeReports(reports: Report[]): Observable<boolean> {
+    return zip(
+      reports.map(x =>
+        this.reportService.removeReport(x)
+      )
+    )
+    .pipe(
+      mergeMap(x => of(x.every(r => r === true)))
+    );
   }
 
   checkToBackup(event: any, item: RerortWithSelection) {

@@ -11,6 +11,7 @@ import { UserNotificationService } from 'client/app/core/services/user-notificat
 import { MatDialog } from '@angular/material/dialog';
 import { TranslateService } from '@ngx-translate/core';
 import { ConfirmDialogComponent, ConfirmDialogModel } from 'client/app/shared/components/confirm-dialog/confirm-dialog.component';
+import { DbInspectionService } from 'client/app/core/services/db-inspection.service';
 
 @Component({
   selector: 'app-general',
@@ -36,6 +37,7 @@ export class GeneralComponent implements OnInit {
     private dialog: MatDialog,
     private formBuiler: FormBuilder,
     private configurationService: ConfigurationService,
+    private dbInpsectionService: DbInspectionService,
     private userNotificationService: UserNotificationService) {
   }
 
@@ -251,7 +253,7 @@ export class GeneralComponent implements OnInit {
 
     console.log('lll' + sizeofAllStorage());
 
-    this.configurationService.getDbSize().subscribe({
+    this.dbInpsectionService.getDbSize().subscribe({
       next: (x) => {
         console.log(x);
 
@@ -271,7 +273,7 @@ export class GeneralComponent implements OnInit {
   }
 
   compactDb() {
-    this.configurationService.compactDb().subscribe({
+    this.dbInpsectionService.compactDb().subscribe({
       next: (x) => {
         console.log(x);
         this.userNotificationService.notify('CONFIG.GENERAL.DB.COMPACT_DB_SUCCESS');

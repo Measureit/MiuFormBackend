@@ -6,11 +6,6 @@ import { CreateInspectorInfo, InspectorInfo, InspectorInfoId } from '../models/i
 import { Logger } from './console.logger.service';
 import { ChecklistItemConfigRepository, DeliveryConfigRepository, FactoryInfoConfigRepository, InspectorInfoRepository, ReportRepository } from './repository';
 
-export interface DbSizeInfo {
-  name: string;
-  info: string;
-}
-
 export interface Configuration {
   factories: FactoryInfoConfig[];
   checklistItems: ChecklistItemConfig[];
@@ -167,40 +162,6 @@ export class ConfigurationService  {
       map(x => conf)
     );
   }
-
-  getDbSize(): Observable<DbSizeInfo[]> {
-    return zip(
-      this.dbChecklistItemRepo.getDbInfo(),
-      this.dbInspectorInfoRepo.getDbInfo(),
-      this.dbDeliveryConfigRepo.getDbInfo(),
-      this.dbFactoryInfoConfigRepo.getDbInfo(),
-      this.dbReportRepo.getDbInfo()
-    )
-    .pipe(
-      map(x => [
-        { name: 'checklist', info: x[0] } as DbSizeInfo,
-        { name: 'inspectorinfo', info: x[1] } as DbSizeInfo,
-        { name: 'deliveryConfig', info: x[2] } as DbSizeInfo,
-        { name: 'factoryInfo', info: x[3] } as DbSizeInfo,
-        { name: 'report', info: x[4] } as DbSizeInfo,
-      ])
-    );
-  }
-
-  compactDb(): Observable<boolean> {
-    return zip(
-      this.dbChecklistItemRepo.compact(),
-      this.dbInspectorInfoRepo.compact(),
-      this.dbDeliveryConfigRepo.compact(),
-      this.dbFactoryInfoConfigRepo.compact(),
-      this.dbReportRepo.compact()
-    )
-    .pipe(
-      map(x => x[0] && x[1] && x[2] && x[3] && x[4])
-    );
-  }
-
-
   //END CONFIG
 }
 
