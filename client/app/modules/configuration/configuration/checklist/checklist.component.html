@@ -1,11 +1,11 @@
-<div >
-    <div >
+<mat-card >
+    <mat-card-header>
       <mat-checkbox [checked]="loadFactoryWithNoActive" (change)="loadChecklistWithNoActiveChange($event.checked)">
         {{ 'CONFIG.CHECKLIST.LOAD_NOACTIVE' | translate}}
       </mat-checkbox>
-    </div>
+    </mat-card-header>
   
-    <div cdkDropList (cdkDropListDropped)="dropped($event)">
+    <mat-card-content cdkDropList (cdkDropListDropped)="dropped($event)">
       <div cdkDrag  [cdkDragData]="item" class="an-list-item" *ngFor="let item of items | hideNoActives : !loadFactoryWithNoActive" (click)="updateItem(item._id)"> 
         <mat-icon cdkDragHandle>
           drag_indicator
@@ -18,9 +18,11 @@
           <mat-icon class="an-list-item-actions"  *ngIf="item.isActive" (click)="deleteItem($event, item._id)">delete</mat-icon>
         <!-- </button> -->
       </div>
-    </div>
-  
-    <button mat-fab color="primary" class="mat-fab-bottom-right" (click)="addItem()">
-      <mat-icon>add</mat-icon>
-    </button>
-  </div>
+    </mat-card-content>
+
+    <mat-card-actions>
+      <button mat-fab color="primary" class="mat-fab-bottom-right" (click)="addItem()" class="to-right">
+        <mat-icon>add</mat-icon>
+      </button>
+    </mat-card-actions>
+  </mat-card>

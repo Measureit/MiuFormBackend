@@ -1,0 +1,7 @@
+mat-card.general-item {
+    margin-top: 15px
+}
+
+mat-card.general {
+    height: calc(100vh - 68px - 36px - 16px - 16px - 48px); //68 = toolbar, 36 = card header, 16 - padding bottom, 16 - padding top, 48 - tab header
+  }

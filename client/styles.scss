@@ -82,12 +82,13 @@ mat-card.dialog {
   mat-card-header {
     font-size: 24px;
     height: 36px;
+    line-height: 36px;
   }
 
   mat-card-content {
       overflow: auto;
       //height: 100%;
-      height: calc(100vh - 68px - 36px);
+      //height: calc(100vh - 68px - 36px);
       // .content {
       //   height: calc(100vh - 68px - 36px - 16px - 16px); //68 = toolbar, 36 = card header, 16 - padding bottom, 16 - padding top  
       // }
