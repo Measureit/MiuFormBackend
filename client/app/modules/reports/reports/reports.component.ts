@@ -38,8 +38,16 @@ export class ReportsComponent implements OnInit {
     private router: Router) { }
 
   ngOnInit(): void {
-    this.reloadFactories(false)//this.loadFactoryWithNoActive)
-      .pipe(
+    this.dbInspectionService.compactDb()
+    .pipe(
+        tap(x => {
+          if (x) {
+            //this.userNotificationService.notify('MESSAGE.CLEAR.DB_SUCCESS');
+          }else {
+            this.userNotificationService.notifyError('MESSAGE.CLEAR.DB_FAILED');
+          }
+        }),
+        mergeMap(x => this.reloadFactories(false)),
         mergeMap(x => this.reloadReports()),
         first()
       )

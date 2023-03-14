@@ -15,11 +15,11 @@
   "iconUrl": "https://miucheck.cyclic.app/assets/icons/icon-512x512.png",
   "splashScreenFadeOutDuration": 300,
   "signingKey": {
-    "path": "/home/adam/projects/node_server_client/android.keystore",
+    "path": "C:\\projects\\miucheck\\android.keystore",
     "alias": "android"
   },
-  "appVersionName": "6",
-  "appVersionCode": 6,
+  "appVersionName": "9",
+  "appVersionCode": 9,
   "shortcuts": [],
   "generatorApp": "bubblewrap-cli",
   "webManifestUrl": "https://miucheck.cyclic.app/manifest.webmanifest",
@@ -37,5 +37,5 @@
   "fingerprints": [],
   "additionalTrustedOrigins": [],
   "retainedBundles": [],
-  "appVersion": "6"
+  "appVersion": "9"
 }

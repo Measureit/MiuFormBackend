@@ -14,6 +14,8 @@ bubblewrap build --skipSigning
 ```
 from main folder of repository.
 
+Issue with Out of Memory (https://github.com/GoogleChromeLabs/bubblewrap/issues/611)
+
 file for google:
 ./app-release.aab
 
