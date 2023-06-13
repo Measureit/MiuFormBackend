@@ -56,6 +56,7 @@ import { HideNoActivesPipe } from './pipes';
 import { WithLoadingPipe } from './pipes/with-loading.pipe';
 import {CdkAccordionModule} from '@angular/cdk/accordion';
 import { ConfirmDialogComponent } from './components/confirm-dialog/confirm-dialog.component';
+import { CanvasDrawerComponent } from './components/canvas-drawer/canvas-drawer.component';
 
 const materialModules = [
   CdkAccordionModule,
@@ -138,7 +139,8 @@ export const httpLoaderFactory = (httpClient: HttpClient) => new TranslateHttpLo
     WithLoadingPipe,
     HideNoActivesPipe,
     ReloadButtonComponent,
-    ConfirmDialogComponent
+    ConfirmDialogComponent,
+    CanvasDrawerComponent
   ],
   declarations: [
     OperationMessageComponent,
@@ -146,7 +148,8 @@ export const httpLoaderFactory = (httpClient: HttpClient) => new TranslateHttpLo
     WithLoadingPipe,
     HideNoActivesPipe,
     ReloadButtonComponent,
-    ConfirmDialogComponent
+    ConfirmDialogComponent,
+    CanvasDrawerComponent
   ],
   providers: [
     TranslateService
