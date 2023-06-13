@@ -1,5 +1,4 @@
 import { DbModel } from './db.model';
-import * as uuid from 'uuid';
 
 export const InspectorInfoId = `inspectorInfo`;
 

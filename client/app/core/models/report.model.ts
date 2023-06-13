@@ -1,7 +1,6 @@
+import * as uuid from 'uuid';
 import { ChecklistItemConfig } from './checklist-item-config.model';
 import { DbModel } from './db.model';
-import * as uuid from 'uuid';
-import { FactoryInfoConfig } from './factory-info-config.model';
 
 export interface ImageSize {
     width: number;

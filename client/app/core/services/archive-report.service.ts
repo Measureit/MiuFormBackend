@@ -1,15 +1,11 @@
 //let jsPDF = require('jspdf');
-import { jsPDF } from 'jspdf';
 import { Injectable } from '@angular/core';
-import { flatMap, from, map, merge, mergeAll, mergeMap, Observable, of, tap, toArray, zip } from 'rxjs';
-import { FactoryInfoConfig, ImageSize, Report, ReportChecklistItem, ReportImageItem } from '../models';
-import { ConfigurationService } from './configuration.service';
 import { DomSanitizer } from '@angular/platform-browser';
-import moment from 'moment';
-import { M } from '@angular/cdk/keycodes';
-import { addFontToDoc, fontMiu } from './AbhayaLibre-Regular-normal';
-import { InspectorInfo } from '../models/inspector-info.model';
 import JSZip from 'jszip';
+import moment from 'moment';
+import { from, map, merge, mergeAll, mergeMap, Observable, of, toArray, zip } from 'rxjs';
+import { FactoryInfoConfig, Report } from '../models';
+import { ConfigurationService } from './configuration.service';
 import { ReportGeneratorService } from './report-generator.service';
 
 //https://codesandbox.io/s/dx5v0?file=/src/index.js

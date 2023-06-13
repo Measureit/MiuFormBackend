@@ -1,16 +1,14 @@
-import { P, R } from '@angular/cdk/keycodes';
 import { Component, OnInit } from '@angular/core';
-import { FormArray, FormBuilder, FormControl, FormGroup, Validators } from '@angular/forms';
+import { FormArray, FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { MatDialog } from '@angular/material/dialog';
-import { DomSanitizer, SafeHtml, SafeUrl } from '@angular/platform-browser';
-import { ActivatedRoute, Router, TitleStrategy } from '@angular/router';
+import { SafeHtml } from '@angular/platform-browser';
+import { ActivatedRoute, Router } from '@angular/router';
 import { TranslateService } from '@ngx-translate/core';
-import { combineLatest, first, flatMap, from, map, mergeMap, of, tap, zip } from 'rxjs';
 import { Logger, ReportService } from 'client/app/core/services';
-import { ConfirmDialogComponent, ConfirmDialogModel } from 'client/app/shared/components/confirm-dialog/confirm-dialog.component';
-import { ChecklistItemConfig, CreateReport, FactoryInfoConfig, ImageSize, Report, ReportChecklistItem, ReportImageItem } from '../../../core/models';
-import { ChecklistComponent } from '../../configuration/configuration/checklist/checklist.component';
 import { UserNotificationService } from 'client/app/core/services/user-notification.service';
+import { ConfirmDialogComponent, ConfirmDialogModel } from 'client/app/shared/components/confirm-dialog/confirm-dialog.component';
+import { first, map, mergeMap, of, tap, zip } from 'rxjs';
+import { ChecklistItemConfig, CreateReport, FactoryInfoConfig, Report, ReportChecklistItem } from '../../../core/models';
 
 interface CompareChecklistInput {
   _id: string;

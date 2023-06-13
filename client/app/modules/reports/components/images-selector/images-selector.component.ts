@@ -1,10 +1,9 @@
 import { Component, Input, OnInit } from '@angular/core';
-import { first, map, mergeMap, Observable, tap, zip } from 'rxjs';
-import { FactoryInfoConfig, ImageSize, Report, ReportImageItem } from 'client/app/core/models';
-import { blobToBase64, ReportService } from 'client/app/core/services';
-import { Router } from '@angular/router';
-import { DomSanitizer, SafeUrl } from '@angular/platform-browser';
 import { FormArray, FormControl, FormGroup } from '@angular/forms';
+import { DomSanitizer } from '@angular/platform-browser';
+import { ImageSize } from 'client/app/core/models';
+import { blobToBase64 } from 'client/app/core/services';
+import { zip } from 'rxjs';
 
 interface ReportImageItemBeforePrepare {
   blob: Blob;
