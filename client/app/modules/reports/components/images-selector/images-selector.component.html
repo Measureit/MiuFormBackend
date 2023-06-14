@@ -4,6 +4,9 @@
         <input #fileInput type="file" (change)="onFileInput($event)" style="display:none;"
             accept="image/x-png,image/jpeg,image/gif" multiple="multiple" />
     </button>
+    <button mat-fab (click)="editSelected()" [disabled]="selectedImages.length !== 1" color="accent" >
+        <mat-icon>edit</mat-icon>
+    </button>
     <button mat-fab (click)="deleteSelected()" [disabled]="selectedImages.length === 0" color="warn" >
         <mat-icon>delete</mat-icon>
     </button>

@@ -6,6 +6,7 @@ import { ReportsRoutingModule } from './reports-routing.module';
 import { SharedModule } from 'client/app/shared/shared.module';
 import { ImagesSelectorComponent } from './components/images-selector/images-selector.component';
 import { ChecklistItemComponent } from './components/checklist-item/checklist-item.component';
+import { ImageEditorComponent } from './components/images-selector/image-editor/image-editor.component';
 
 
 
@@ -14,7 +15,8 @@ import { ChecklistItemComponent } from './components/checklist-item/checklist-it
     ImagesSelectorComponent,
     ChecklistItemComponent,
     ReportsComponent,
-    PrepareReportComponent
+    PrepareReportComponent,
+    ImageEditorComponent
   ],
   imports: [
     CommonModule,
