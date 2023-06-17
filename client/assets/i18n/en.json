@@ -34,6 +34,10 @@
 		"UPDATE_CHECKLIST_QUESTION_TITLE": "Checklist Update",
 		"UPDATE_CHECKLIST_QUESTION": "Checklist was changed, do you want to update it?"
 	},
+	"IMAGE_EDITOR": {
+		"HEADER": "Image Editor",
+		"CLEAR": "Clear Marks"
+	},
 	"ITEM": {
 		"FACTORY": {
 			"NAME": "Name",

@@ -7,7 +7,7 @@ import { blobToBase64 } from 'client/app/core/services';
 import { first, tap, zip } from 'rxjs';
 import { ImageEditorComponent } from './image-editor/image-editor.component';
 
-interface ReportImageItemBeforePrepare {
+export interface ReportImageItemBeforePrepare {
   blob: Blob;
   size: ImageSize;
 }

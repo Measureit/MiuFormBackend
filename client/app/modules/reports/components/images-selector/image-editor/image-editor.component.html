@@ -1,9 +1,9 @@
 <h1 mat-dialog-title >{{ 'IMAGE_EDITOR.HEADER' | translate }}</h1>
 <mat-dialog-content >  
-    <app-canvas-drawer></app-canvas-drawer>
+    <app-canvas-drawer ></app-canvas-drawer>
 </mat-dialog-content>
 <mat-dialog-actions>
-  <button mat-button (click)="cancel()" cdkFocusInitial >{{ 'COMMON.CANCEL' |  translate }}</button>
-  <button mat-button (click)="clearMarks()" >{{ 'IMAGE_EDITOR.CLEAR' |  translate }}</button>
-  <button mat-button (click)="save()">{{ 'COMMON.SAVE' |  translate }}</button>
+  <button mat-raised-button (click)="cancel()" cdkFocusInitial >{{ 'COMMON.CANCEL' |  translate }}</button>
+  <button mat-raised-button color="warn" (click)="clearMarks()" >{{ 'IMAGE_EDITOR.CLEAR' |  translate }}</button>
+  <button mat-raised-button color="primary" (click)="save()">{{ 'COMMON.SAVE' |  translate }}</button>
 </mat-dialog-actions>

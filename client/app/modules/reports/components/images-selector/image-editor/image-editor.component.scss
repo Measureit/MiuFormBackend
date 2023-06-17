@@ -1,6 +1,21 @@
-mat-dialog-content {
+:host {
+    height: 100%;
     display: flex;
     flex-direction: column;
+    justify-content: stretch; 
+    overflow: auto;
+}
+
+app-canvas-drawer {
+    display: flex;
+    flex: 1;    
+}
+
+mat-dialog-content {    
+    display: flex;
+    flex-direction: column;
+    justify-content: stretch; 
+    max-height: 1200px;
 }
 
 mat-dialog-actions {

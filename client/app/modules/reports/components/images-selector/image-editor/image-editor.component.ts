@@ -1,6 +1,7 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, HostListener, Input, OnInit } from '@angular/core';
 import { MatDialog, MatDialogRef } from '@angular/material/dialog';
 import { DomSanitizer } from '@angular/platform-browser';
+import { ReportImageItemBeforePrepare } from '../images-selector.component';
 
 
 @Component({
@@ -9,9 +10,7 @@ import { DomSanitizer } from '@angular/platform-browser';
   styleUrls: ['./image-editor.component.scss']
 })
 export class ImageEditorComponent implements OnInit {
-  // @Input() parentImagesFormGroup: FormGroup;
-  // @Input() imagesFormArrayName: string;
-  // @Input() imagesFormArray: FormArray;
+  @Input() reportImage: ReportImageItemBeforePrepare | undefined;
 
   constructor(
     private domSanitizer: DomSanitizer, 

@@ -4,6 +4,7 @@ import {
     ElementRef,
     AfterViewInit,
     ViewChild,
+    HostListener,
   } from '@angular/core';
   import { fromEvent } from 'rxjs';
   import { switchMap, takeUntil, pairwise } from 'rxjs/operators';
@@ -16,18 +17,30 @@ import {
   export class CanvasDrawerComponent implements AfterViewInit {
     @ViewChild('canvas') public canvas: ElementRef | undefined;
   
-    @Input() public width = 400;
-    @Input() public height = 400;
+    //@Input() public width = 400;
+   //@Input() public height = 400;
   
+    allowWidth: number = -1;
+    allowHeigh: number = -1;
+    @HostListener('window:resize')
+    onResize() {
+      //event.target.innerWidth;
+      this.allowHeigh = window.screen.height;
+      this.allowWidth = window.screen.width;
+      
+    }
+
     private cx: CanvasRenderingContext2D | null | undefined;
   
     public ngAfterViewInit() {
+      this.onResize();
+      
       const canvasEl: HTMLCanvasElement = this.canvas?.nativeElement;
   
       this.cx = canvasEl.getContext('2d');
   
-      canvasEl.width = this.width;
-      canvasEl.height = this.height;
+      //canvasEl.width = this.width;
+      //canvasEl.height = this.height;
   
       if (!this.cx) throw 'Cannot get context';
   

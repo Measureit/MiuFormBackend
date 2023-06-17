@@ -34,6 +34,10 @@
 		"UPDATE_CHECKLIST_QUESTION_TITLE": "Update checklisty",
 		"UPDATE_CHECKLIST_QUESTION": "Checklista się zmieniła, chcesz ją uaktualnić?"
 	},
+	"IMAGE_EDITOR": {
+		"HEADER": "Editor Obrazu",
+		"CLEAR": "Wyczyść zaznaczenia"
+	},
 	"ITEM": {
 		"FACTORY": {
 			"NAME": "Nazwa",
