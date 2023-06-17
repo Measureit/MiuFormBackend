@@ -6,10 +6,18 @@ export interface ImageSize {
     width: number;
     height: number;
 }
+export interface ImageMarkPart {
+  x1: number;
+  y1: number;
+  x2: number;
+  y2: number;
+}
+
 //image w reporcie
 export interface ReportImageItem {
     base64: string;
     size: ImageSize;
+    marks?: ImageMarkPart[];
 }
 
 

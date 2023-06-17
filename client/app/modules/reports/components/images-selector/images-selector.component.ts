@@ -5,7 +5,7 @@ import { DomSanitizer } from '@angular/platform-browser';
 import { ImageSize } from 'client/app/core/models';
 import { blobToBase64 } from 'client/app/core/services';
 import { first, tap, zip } from 'rxjs';
-import { ImageEditorComponent } from './image-editor/image-editor.component';
+import { ImageEditorComponent, ImageEditorData } from './image-editor/image-editor.component';
 
 export interface ReportImageItemBeforePrepare {
   blob: Blob;
@@ -41,7 +41,7 @@ export class ImagesSelectorComponent implements OnInit {
         width: '90%',
         height: '90%',
         data: {
-          image: this.selectedImages[0]
+          reportImage: this.selectedImages[0].getRawValue() as ImageEditorData
         } ,
       })
       .afterClosed()
@@ -80,6 +80,7 @@ export class ImagesSelectorComponent implements OnInit {
               selected: new FormControl(false),
               base64: new FormControl(await blobToBase64(x.blob)),
               size: new FormControl(x.size),
+              marks: new FormControl([]),              
             })));
             //console.log(this.imagesFormArray)
           },
