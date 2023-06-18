@@ -120,11 +120,7 @@ export class PrepareReportComponent implements OnInit {
                 order: [x.order],
                 pointImages: this.formBuilder.array(x.pointImages
                   .map(
-                    img => {
-                      console.log(img.marks?.length);
-                      var a = this.formBuilder.group({ selected: false, marks: this.formBuilder.array(img.marks ?? []), base64: img.base64, size: img.size })
-                      return a;
-                    }
+                    img => this.formBuilder.group({ selected: false, marks: this.formBuilder.array(img.marks ?? []), base64: img.base64, size: img.size })
                   )
                 ),
                 content: [x.content],
@@ -132,7 +128,7 @@ export class PrepareReportComponent implements OnInit {
               })
             )),
             images: this.formBuilder.array(this.item.images.map(
-              x => this.formBuilder.group({ selected: false, ...x })
+              img => this.formBuilder.group({ selected: false, marks: this.formBuilder.array(img.marks ?? []), base64: img.base64, size: img.size })
             )),
             comment: [this.item.comment],
             dateOfDelivery: [this.item.dateOfDelivery]
