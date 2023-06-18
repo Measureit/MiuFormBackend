@@ -66,7 +66,6 @@ export class PrepareReportComponent implements OnInit {
               .pipe(
                 mergeMap(r => {
                   const compareResult = this.compareChecklist(r.checklist, this.checklistItems);
-                  //console.log(JSON.stringify(compareResult));
                   if (compareResult.length > 0) {
                     //todo: spytać czy user chce zaktualizowac checkliste
                     return zip(

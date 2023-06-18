@@ -31,7 +31,7 @@ export const drawMarksOnCanvas = (crc: CanvasRenderingContext2D, marks: ImageMar
           m.x2 / ((crc.canvas.clientWidth > 0) ? (crc.canvas.clientWidth / crc.canvas.width) : 1);
         var y2 =
           m.y2 / ((crc.canvas.clientHeight > 0) ? (crc.canvas.clientHeight / crc.canvas.height) : 1);
-  console.log(`AAA: ${x1}, ${y1}, ${x2}, ${y2}`)
+  //console.log(`AAA: ${x1}, ${y1}, ${x2}, ${y2}`)
         crc.moveTo(x1, y1); // from
         crc.lineTo(x2, y2);
         crc.stroke();

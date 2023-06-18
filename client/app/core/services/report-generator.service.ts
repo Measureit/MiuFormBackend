@@ -237,7 +237,7 @@ export class ReportGeneratorService {
             let pdfSize: ImageSize = { width: 0, height: 0 };
             var markedImages = await Promise.all(images.map(x => this.addMarksOnImage(x)));
 
-            markedImages.forEach(async ib => {
+            markedImages.forEach(ib => {
             // var i = await images.reduce(
             //   async (_, ib) => {
 
@@ -273,7 +273,7 @@ export class ReportGeneratorService {
                     x = context.config.hMargin;
                 }
 
-                console.log('before addImage: ' + ib.base64)
+                //console.log('before addImage: ' + ib.base64)
                 context.doc.addImage(ib.base64, 'png', x, context.yPosition, pdfSize.width, pdfSize.height);
                 x = x + pdfSize.width + distanceBetweenImages;
                 //return _;
@@ -313,9 +313,11 @@ export class ReportGeneratorService {
             - answerTextWidth - numberWidth;
 
         this.addYSpace(context, 10);
-        checklist.forEach(async x => {
+        //checklist.forEach(async x => {
         //var i = await checklist.reduce(
            // async (_, x) => {
+        for(var idx = 0; idx < checklist.length; idx++) {
+            var x = checklist[idx];
           
             const arr = context.doc.splitTextToSize(x.content, contentWidth) as string[];
             const dim = context.doc.getTextDimensions(x.content);
@@ -329,7 +331,9 @@ export class ReportGeneratorService {
                 align: 'right', keepY: true});
                 // var ii = await arr.reduce(
                 //     async (_, line, i) => {
-            arr.forEach(async (line, i) => {
+            //arr.forEach(async (line, i) => {
+            for(var i=0; i<arr.length; i++) {
+                var line = arr[i];
                 if (i === 0) {
                     this.addTextLine(context, x.isChecked === true ? 'TAK' : (x.isChecked === false ? 'NIE' : '-'),
                         { xPos: context.config.pageWidth - context.config.hMargin, align: 'right', keepY: true });
@@ -343,11 +347,11 @@ export class ReportGeneratorService {
                 //return _;
             }
             //, Promise.resolve([])
-            );
+            //);
            // return _;
         }
         //, Promise.resolve([])
-        );
+        //);
         return true;
     }
 
@@ -357,7 +361,7 @@ export class ReportGeneratorService {
         this.addComment(context, comment);
 
         var res = await this.addImages(context, images);
-        console.log(res);
+        //console.log(res);
         return res;
     }
 
