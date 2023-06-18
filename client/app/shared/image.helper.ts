@@ -24,14 +24,14 @@ export const drawMarksOnCanvas = (crc: CanvasRenderingContext2D, marks: ImageMar
   
       marks.forEach(m => {
         crc.beginPath();
-        var x1 = m.x1 / (crc.canvas.clientWidth / crc.canvas.width);
+        var x1 = m.x1 / ((crc.canvas.clientWidth > 0) ? (crc.canvas.clientWidth / crc.canvas.width) : 1);
         var y1 =
-          m.y1 / (crc.canvas.clientHeight / crc.canvas.height);
+          m.y1 / ((crc.canvas.clientHeight > 0) ? (crc.canvas.clientHeight / crc.canvas.height) : 1);
         var x2 =
-          m.x2 / (crc.canvas.clientWidth / crc.canvas.width);
+          m.x2 / ((crc.canvas.clientWidth > 0) ? (crc.canvas.clientWidth / crc.canvas.width) : 1);
         var y2 =
-          m.y2 / (crc.canvas.clientHeight / crc.canvas.height);
-  console.log(`AAA: ${x1}, ${y1}, ${x2}, ${y2}`)
+          m.y2 / ((crc.canvas.clientHeight > 0) ? (crc.canvas.clientHeight / crc.canvas.height) : 1);
+  //console.log(`AAA: ${x1}, ${y1}, ${x2}, ${y2}`)
         crc.moveTo(x1, y1); // from
         crc.lineTo(x2, y2);
         crc.stroke();

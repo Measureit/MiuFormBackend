@@ -22,27 +22,4 @@ export class SidenavService {
       this.sideNavState$.next(false);
     }
   }
-
-  //constructor() {//private media: MediaObserver) {
-    //todo: an
-    // media.media$.subscribe((change: MediaChange) => {
-    //   if (change.mqAlias === 'xs') {
-    //     this.sideNavState$.next(false);
-    //   }
-    //   else{
-    //     this.sideNavState$.next(true);
-    //   }
-    // });
-
-    // media.asObservable()
-    // .subscribe((changes: MediaChange[]) => {
-    //     if (changes.some(x => x.mqAlias === 'xs')) {
-    //       this.sideNavState$.next(false);
-    //     }
-    //     else{
-    //       this.sideNavState$.next(true);
-    //     }
-    //   });
-   //}
-
 }
