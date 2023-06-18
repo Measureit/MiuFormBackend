@@ -118,9 +118,15 @@ export class PrepareReportComponent implements OnInit {
                 checklistItemId: [x.checklistItemId],
                 comment: [x.comment],
                 order: [x.order],
-                pointImages: this.formBuilder.array(x.pointImages.map(
-                  x => this.formBuilder.group({ selected: false, ...x })
-                )),
+                pointImages: this.formBuilder.array(x.pointImages
+                  .map(
+                    img => {
+                      console.log(img.marks?.length);
+                      var a = this.formBuilder.group({ selected: false, marks: this.formBuilder.array(img.marks ?? []), base64: img.base64, size: img.size })
+                      return a;
+                    }
+                  )
+                ),
                 content: [x.content],
                 isChecked: [x.isChecked]
               })

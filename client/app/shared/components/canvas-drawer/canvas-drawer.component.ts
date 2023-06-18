@@ -11,7 +11,7 @@ import {
 import { ImageMarkPart, ReportImageItem } from 'client/app/core/models';
 import { fromEvent } from 'rxjs';
 import { switchMap, takeUntil, pairwise } from 'rxjs/operators';
-import { calculateCanvasSize } from '../../image.helper';
+import { calculateCanvasSize, clearMarksOnCanvas, drawMarksOnCanvas } from '../../image.helper';
 
 
 
@@ -24,36 +24,36 @@ export class CanvasDrawerComponent implements AfterViewInit {
   @ViewChild('canvas') public canvas: ElementRef | undefined;
   @ViewChild('div') public div: ElementRef | undefined;
 
-  @Input() reportImage: ReportImageItem | undefined;
-  _marks: ImageMarkPart[] = []
+    
+  private factor: number | undefined;
+  private cx: CanvasRenderingContext2D | null | undefined;
+
+  private _marks: ImageMarkPart[] = []
+  
   get marks(): ImageMarkPart[] {
     return this._marks;
   }
   @Input() set marks(value: ImageMarkPart[] | undefined) {
     this._marks = value ?? [];
-    this.clearMarks(this.cx);
-    this.drawMarks(this.cx, this.marks, this.factor);
+    if (this.cx != undefined) {
+      clearMarksOnCanvas(this.cx, this.reportImage?.base64, (crc: CanvasRenderingContext2D) => drawMarksOnCanvas(crc, this.marks, this.factor));
+    }
     console.log('set marks')
   } 
-
+  @Input() reportImage: ReportImageItem | undefined;
   @Output() marksChange= new EventEmitter<ImageMarkPart[]>();
-
-  allowWidth: number = -1;
-  allowHeigh: number = -1;
-
-  factor: number | undefined;
 
   @HostListener('window:resize')
   onResize() {
     const divEl: HTMLCanvasElement = this.div?.nativeElement;
     const canvasEl: HTMLCanvasElement = this.canvas?.nativeElement;
 
-    this.allowHeigh = divEl.clientHeight;
-    this.allowWidth = divEl.clientWidth;
+    var allowHeigh = divEl.clientHeight;
+    var allowWidth = divEl.clientWidth;
 
     var newSize = calculateCanvasSize(
-      this.allowWidth,
-      this.allowHeigh,
+      allowWidth,
+      allowHeigh,
       this.reportImage?.size
     );
 
@@ -71,18 +71,13 @@ export class CanvasDrawerComponent implements AfterViewInit {
     ) {
       this.factor = newSize.height / this.reportImage.size.height;
 
-      var image = new Image();
-      image.onload = () => {
-        this.cx.drawImage(image, 0, 0);
-      };
-      image.src = this.reportImage.base64;
+      this.cx.lineWidth = 3;
+      this.cx.lineCap = 'round';
+      this.cx.strokeStyle = '#000';
+
+      clearMarksOnCanvas(this.cx, this.reportImage?.base64, (crc: CanvasRenderingContext2D) => drawMarksOnCanvas(crc, this.marks, this.factor));
     }
-
-    this.clearMarks(this.cx);
-    this.drawMarks(this.cx, this.marks, this.factor);
   }
-
-  private cx: CanvasRenderingContext2D | null | undefined;
 
   public ngAfterViewInit() {
     const canvasEl: HTMLCanvasElement = this.canvas?.nativeElement;
@@ -92,10 +87,6 @@ export class CanvasDrawerComponent implements AfterViewInit {
     if (!this.cx) throw 'Cannot get context';
 
     this.onResize();
-
-    this.cx.lineWidth = 3;
-    this.cx.lineCap = 'round';
-    this.cx.strokeStyle = '#000';
 
     this.captureEvents(canvasEl);
   }
@@ -206,38 +197,13 @@ export class CanvasDrawerComponent implements AfterViewInit {
       );
     }
   }
-
   
   addImageMarkPart(x1: number, y1: number, x2: number, y2: number) {
-    this.marks.push({ x1, y1, x2, y2 });
-    this.marksChange.emit(this.marks);
-  }
-
-  drawMarks(crc: CanvasRenderingContext2D, marks: ImageMarkPart[], factor: number) {
-    if (marks.length > 0 && factor > 0) {
-      marks.forEach(m => {
-        this.cx.moveTo(m.x1, m.y1); // from
-        this.cx.lineTo(m.x2, m.y2);
-        this.cx.stroke();
-      });
+    if (this.marks != undefined) {
+      this.marks.push({ x1, y1, x2, y2 });
+      this.marksChange.emit(this.marks);
     }
   }
-
-  clearMarks(crc: CanvasRenderingContext2D) {
-    
-    crc.save();
-
-    // Use the identity matrix while clearing the canvas
-    crc.setTransform(1, 0, 0, 1, 0, 0);
-    crc.clearRect(0, 0, crc.canvas.width, crc.canvas.height);
-
-    // Restore the transform
-    crc.restore();
-
-    var image = new Image();
-    image.onload = () => {
-      this.cx.drawImage(image, 0, 0);
-    };
-    image.src = this.reportImage.base64;
-  }
 }
+
+

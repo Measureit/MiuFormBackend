@@ -1,4 +1,4 @@
-import { ImageSize } from "../core/models"
+import { ImageMarkPart, ImageSize } from "../core/models"
 
 export const calculateCanvasSize = (maxWidth: number, maxHeight: number, imageSize: ImageSize): ImageSize => {
 
@@ -17,3 +17,46 @@ export const calculateCanvasSize = (maxWidth: number, maxHeight: number, imageSi
     }
     return imageSize;
 }
+
+export const drawMarksOnCanvas = (crc: CanvasRenderingContext2D, marks: ImageMarkPart[], factor: number) => {
+    if (crc != undefined && marks.length > 0 && factor > 0) {
+      
+  
+      marks.forEach(m => {
+        crc.beginPath();
+        var x1 = m.x1 / (crc.canvas.clientWidth / crc.canvas.width);
+        var y1 =
+          m.y1 / (crc.canvas.clientHeight / crc.canvas.height);
+        var x2 =
+          m.x2 / (crc.canvas.clientWidth / crc.canvas.width);
+        var y2 =
+          m.y2 / (crc.canvas.clientHeight / crc.canvas.height);
+  console.log(`AAA: ${x1}, ${y1}, ${x2}, ${y2}`)
+        crc.moveTo(x1, y1); // from
+        crc.lineTo(x2, y2);
+        crc.stroke();
+      });
+    }
+  }
+  
+  export const clearMarksOnCanvas = (crc: CanvasRenderingContext2D, base64: string, afterDrawImage: (crc: CanvasRenderingContext2D) => void) => {
+    if (crc) {    
+      crc.save();
+  
+      // Use the identity matrix while clearing the canvas
+      crc.setTransform(1, 0, 0, 1, 0, 0);
+      crc.clearRect(0, 0, crc.canvas.width, crc.canvas.height);
+  
+      // Restore the transform
+      crc.restore();
+  
+      if (base64 != null) {
+        var image = new Image();
+        image.onload = () => {
+          crc.drawImage(image, 0, 0);
+          afterDrawImage(crc);
+        };
+        image.src = base64;
+      }
+    }
+  }

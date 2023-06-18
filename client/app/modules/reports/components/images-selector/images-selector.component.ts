@@ -1,5 +1,5 @@
 import { Component, Input, OnInit } from '@angular/core';
-import { FormArray, FormControl, FormGroup } from '@angular/forms';
+import { FormArray, FormBuilder, FormControl, FormGroup } from '@angular/forms';
 import { MatDialog } from '@angular/material/dialog';
 import { DomSanitizer } from '@angular/platform-browser';
 import { ImageSize } from 'client/app/core/models';
@@ -21,7 +21,7 @@ export class ImagesSelectorComponent implements OnInit {
   @Input() imagesFormArrayName: string;
   @Input() imagesFormArray: FormArray;
 
-  constructor(private domSanitizer: DomSanitizer, private dialog: MatDialog) { }
+  constructor(private formBuilder: FormBuilder, private dialog: MatDialog) { }
 
   ngOnInit(): void {
     //console.log('a');
@@ -48,12 +48,15 @@ export class ImagesSelectorComponent implements OnInit {
       .pipe(
         first(),
         //tap(res => this.logger.debug(`The dialog was closed with result ${res}, action ${action}`)),
-        tap(res => {
-          if (res === true) {
-            //todo: udate this.selectedImages[0]
+      )
+      .subscribe({
+        next: (x) => {
+          if (x != undefined && Array.isArray(x)) {
+            //presed ok
+            this.selectedImages[0].setControl('marks', this.formBuilder.array(x || []));
           }
-        })
-      );
+        }
+      })
     }
   }
   deleteSelected() {
