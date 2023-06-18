@@ -46,9 +46,9 @@ export class PreviewReportComponent implements OnInit {
             return throwError(() => new Error(`Report with id ${id} does not exist.`));
           }
         }),
-        mergeMap(report => {
+        mergeMap(async report => {
           this.report = report;
-          return this.reportService.generatePdf(report);
+          return await this.reportService.generatePdf(report);
         }),
         tap(x => { this.reportBlob = x; })
       )

@@ -1,7 +1,7 @@
 //let jsPDF = require('jspdf');
 import { jsPDF } from 'jspdf';
 import { Injectable } from '@angular/core';
-import { from, map, merge, mergeMap, Observable, of, zip } from 'rxjs';
+import { firstValueFrom, from, map, merge, mergeMap, Observable, of, zip } from 'rxjs';
 import { FactoryInfoConfig, ImageSize, Report, ReportChecklistItem, ReportImageItem } from '../models';
 import { ConfigurationService } from './configuration.service';
 import { DomSanitizer } from '@angular/platform-browser';
@@ -9,6 +9,7 @@ import moment from 'moment';
 import { M } from '@angular/cdk/keycodes';
 import { addFontToDoc, fontMiu } from './AbhayaLibre-Regular-normal';
 import { InspectorInfo } from '../models/inspector-info.model';
+import { drawMarksOnCanvas } from 'client/app/shared/image.helper';
 
 interface ReportGeneratorConfig {
     maxImageHeight: number;
@@ -117,8 +118,8 @@ export class ReportGeneratorService {
         return context.yPosition + eleHeight - context.config.pageHeight - context.config.vMargin;
     }
 
-    generatePdf(report: Report): Observable<jsPDF> {
-        return zip(
+    async generatePdf(report: Report): Promise<jsPDF> {
+        var source$ = zip(
                 this.configurationService.getFactory(report.factoryInfoId),
                 this.configurationService.getInspectorInfo(),
                 this.configurationService.getMaxImageSize(),
@@ -137,16 +138,17 @@ export class ReportGeneratorService {
                         } as ReportGeneratorConfig
                     } as ReportGeneratorContext);
                 }),
-                mergeMap(x => {
-                    this.addHeader(x, moment(new Date(report.dateOfCreation)).format('DD-MM-YYYY HH:mm:ss'));
-                    this.addFactoryInfo(x, x.factory);
-                    this.addProductInfo(x, report.productName, report.productId, report.productColor);
-                    this.addChecklist(x, report.checklist);
-                    this.addSummary(x, report.comment, report.images);
-                    this.addSign(x, x.inspectorInfo.inspectorSign);
-                    return of(x.doc);
+                mergeMap(async context => {
+                    this.addHeader(context, moment(new Date(report.dateOfCreation)).format('DD-MM-YYYY HH:mm:ss'));
+                    this.addFactoryInfo(context, context.factory);
+                    this.addProductInfo(context, report.productName, report.productId, report.productColor);
+                    await this.addChecklist(context, report.checklist);
+                    await this.addSummary(context, report.comment, report.images);
+                    this.addSign(context, context.inspectorInfo.inspectorSign);
+                    return context.doc;
                 })
             );
+        return firstValueFrom(source$);    
     }
 
 
@@ -198,14 +200,62 @@ export class ReportGeneratorService {
     private getWorkingPageWidth(config: ReportGeneratorConfig): number {
         return config.pageWidth - 2 * config.hMargin;
     }
-    private addImages(context: ReportGeneratorContext, images: ReportImageItem[]) { //} Observable<ReportGeneratorContext> {
+    loadImagePromise(base64: string): Promise<HTMLImageElement> {
+        return new Promise((resolve, reject) => {
+          const img = new Image()          
+          img.src = base64;
+          img.onload = () => {
+            resolve(img);
+          }
+          img.onerror = e => {
+            reject(e)
+          }
+        })
+      }
+
+      private async addMarksOnImage(ib: ReportImageItem): Promise<ReportImageItem> {
+        var newBase64 = ib.base64;
+        if (ib.base64 != null && ib.marks != undefined && ib.marks.length > 0) {
+            //czy tutaj nie powinien być tworzony base64 na podstawie obecnego base64 i marks
+            const myCanvas = document.createElement("canvas");                
+            const ctx = myCanvas.getContext("2d");
+            ctx.canvas.width = ib.size.width;
+            ctx.canvas.height = ib.size.height;
+            var image = await this.loadImagePromise(ib.base64);
+            ctx.drawImage(image, 0, 0);
+            drawMarksOnCanvas(ctx, ib.marks, 1);
+            var newBase64 = ctx.canvas.toDataURL("image/png").split(';base64,')[1];
+            return { base64: newBase64, size: ib.size, marks: ib.marks};
+        } 
+        return ib;
+      }
+    private async addImages(context: ReportGeneratorContext, images: ReportImageItem[]): Promise<boolean> { //} Observable<ReportGeneratorContext> {
         if (images && images.length > 0) {
             const distanceBetweenImages = 5;
             const pageHeightWithoutMargin = context.config.pageHeight - 2 * context.config.vMargin;
             let x = context.config.hMargin;
             let pdfSize: ImageSize = { width: 0, height: 0 };
-            images.forEach(ib => {
+            var markedImages = await Promise.all(images.map(x => this.addMarksOnImage(x)));
 
+            markedImages.forEach(async ib => {
+            // var i = await images.reduce(
+            //   async (_, ib) => {
+
+                // var newBase64 = ib.base64;
+                // if (ib.marks != undefined && ib.marks.length > 0) {
+                //     //czy tutaj nie powinien być tworzony base64 na podstawie obecnego base64 i marks
+                //     const myCanvas = document.createElement("canvas");                
+                //     const ctx = myCanvas.getContext("2d");
+                //     ctx.canvas.width = ib.size.width;
+                //     ctx.canvas.height = ib.size.height;
+                //     if (ib.base64 != null) {
+                //         var image = await this.loadImagePromise(ib.base64);
+                //         ctx.drawImage(image, 0, 0);
+                //         drawMarksOnCanvas(ctx, ib.marks, 1);
+                //         var newBase64 = ctx.canvas.toDataURL("image/png").split(';base64,')[1];
+                //         console.log(newBase64);
+                //     }
+                // } 
                 //moze zmieści się obok
                 if (pdfSize.width + x + context.config.hMargin > this.getWorkingPageWidth( context.config )) {
                     context.yPosition = context.yPosition + distanceBetweenImages + pdfSize.height;
@@ -223,12 +273,16 @@ export class ReportGeneratorService {
                     x = context.config.hMargin;
                 }
 
+                console.log('before addImage: ' + ib.base64)
                 context.doc.addImage(ib.base64, 'png', x, context.yPosition, pdfSize.width, pdfSize.height);
                 x = x + pdfSize.width + distanceBetweenImages;
-
-            });
+                //return _;
+            }
+            //, Promise.resolve([])
+            );
             context.yPosition = context.yPosition + distanceBetweenImages + pdfSize.height + distanceBetweenImages;
         }
+        return true;
     }
 
     private addComment(context: ReportGeneratorContext, comment: string) { //} Observable<ReportGeneratorContext> {
@@ -252,14 +306,17 @@ export class ReportGeneratorService {
         }
     }
 
-    private addChecklist(context: ReportGeneratorContext, checklist: ReportChecklistItem[]) { //}: Observable<ReportGeneratorContext> {
+    private async addChecklist(context: ReportGeneratorContext, checklist: ReportChecklistItem[]): Promise<boolean> { //}: Observable<ReportGeneratorContext> {
         const answerTextWidth = 20;
         const numberWidth = 5;
         const contentWidth = context.config.pageWidth - 2 * context.config.hMargin
             - answerTextWidth - numberWidth;
 
         this.addYSpace(context, 10);
-        checklist.forEach(x => {
+        checklist.forEach(async x => {
+        //var i = await checklist.reduce(
+           // async (_, x) => {
+          
             const arr = context.doc.splitTextToSize(x.content, contentWidth) as string[];
             const dim = context.doc.getTextDimensions(x.content);
             const arrHeight = arr.length * dim.h + (arr.length - 1) * context.config.lineDistance;
@@ -270,7 +327,9 @@ export class ReportGeneratorService {
             this.addTextLine(context, `${x.order + 1}.`, {
                 xPos: context.config.hMargin + numberWidth,
                 align: 'right', keepY: true});
-            arr.forEach((line, i) => {
+                // var ii = await arr.reduce(
+                //     async (_, line, i) => {
+            arr.forEach(async (line, i) => {
                 if (i === 0) {
                     this.addTextLine(context, x.isChecked === true ? 'TAK' : (x.isChecked === false ? 'NIE' : '-'),
                         { xPos: context.config.pageWidth - context.config.hMargin, align: 'right', keepY: true });
@@ -280,17 +339,26 @@ export class ReportGeneratorService {
 
                 this.addComment(context, x.comment);
 
-                this.addImages(context, x.pointImages);
-            });
-        });
+                await this.addImages(context, x.pointImages);
+                //return _;
+            }
+            //, Promise.resolve([])
+            );
+           // return _;
+        }
+        //, Promise.resolve([])
+        );
+        return true;
     }
 
-    addSummary(context: ReportGeneratorContext, comment: string, images: ReportImageItem[]) {
+    async addSummary(context: ReportGeneratorContext, comment: string, images: ReportImageItem[]) {
         this.addTextLine(context, 'PODSUMOWANIE', { align: 'center' });
 
         this.addComment(context, comment);
 
-        this.addImages(context, images);
+        var res = await this.addImages(context, images);
+        console.log(res);
+        return res;
     }
 
     addSign(context: ReportGeneratorContext, sign: string) {

@@ -1,5 +1,5 @@
 import { Injectable } from '@angular/core';
-import { first, map, Observable, of } from 'rxjs';
+import { first, firstValueFrom, from, map, Observable, of } from 'rxjs';
 import { ChecklistItemConfig, FactoryInfoConfig, Report } from '../models';
 import { Logger } from './console.logger.service';
 import { ReportGeneratorService } from './report-generator.service';
@@ -63,12 +63,13 @@ export class ReportService {
     return this.dbReportRepo.update(report);
   }
 
-  generatePdf(report: Report): Observable<Blob> {
-    return this.reportGeneratorService.generatePdf(report)
+  generatePdf(report: Report): Promise<Blob> {
+    var source$ = from(this.reportGeneratorService.generatePdf(report))      
       .pipe(
         map(pdf => pdf.output('blob')),
         first()
       );
+      return firstValueFrom(source$);
   }
 
   removeReport(report: Report): Observable<boolean> {
