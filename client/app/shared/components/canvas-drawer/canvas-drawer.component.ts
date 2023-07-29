@@ -11,7 +11,7 @@ import {
 import { ImageMarkPart, ReportImageItem } from 'client/app/core/models';
 import { fromEvent } from 'rxjs';
 import { switchMap, takeUntil, pairwise } from 'rxjs/operators';
-import { calculateCanvasSize, clearMarksOnCanvas, drawMarksOnCanvas } from '../../image.helper';
+import { calculateCanvasSize, calculateMarkWithFactor, clearMarksOnCanvas, drawMarksOnCanvas } from '../../image.helper';
 
 
 
@@ -34,6 +34,7 @@ export class CanvasDrawerComponent implements AfterViewInit {
     return this._marks;
   }
   @Input() set marks(value: ImageMarkPart[] | undefined) {
+    console.log('marks setter');
     this._marks = value ?? [];
     if (this.cx != undefined) {
       clearMarksOnCanvas(this.cx, this.reportImage?.base64, (crc: CanvasRenderingContext2D) => drawMarksOnCanvas(crc, this.marks, this.factor));
@@ -45,6 +46,7 @@ export class CanvasDrawerComponent implements AfterViewInit {
 
   @HostListener('window:resize')
   onResize() {
+    console.log('onResize');
     const divEl: HTMLCanvasElement = this.div?.nativeElement;
     const canvasEl: HTMLCanvasElement = this.canvas?.nativeElement;
 
@@ -52,8 +54,8 @@ export class CanvasDrawerComponent implements AfterViewInit {
     var allowWidth = divEl.clientWidth;
 
     var newSize = calculateCanvasSize(
-      allowWidth,
-      allowHeigh,
+      allowWidth - 10,
+      allowHeigh - 10,
       this.reportImage?.size
     );
 
@@ -80,6 +82,7 @@ export class CanvasDrawerComponent implements AfterViewInit {
   }
 
   public ngAfterViewInit() {
+    console.log('after View Init');
     const canvasEl: HTMLCanvasElement = this.canvas?.nativeElement;
 
     this.cx = canvasEl?.getContext('2d');
@@ -171,29 +174,28 @@ export class CanvasDrawerComponent implements AfterViewInit {
     prevPos: { x: number; y: number },
     currentPos: { x: number; y: number }
   ) {
+    console.log('drawOnCanvas');
     if (!this.cx) {
       return;
     }
-
-    this.cx.beginPath();
+    console.log('drawOnCanvas2', prevPos.x, // * this.factor,
+    prevPos.y, // * this.factor,
+    currentPos.x, // * this.factor,
+    currentPos.y);
+    //this.cx.beginPath();
 
     if (prevPos) {
-      var x1 = prevPos.x / (this.cx.canvas.clientWidth / this.cx.canvas.width);
-      var y1 =
-        prevPos.y / (this.cx.canvas.clientHeight / this.cx.canvas.height);
-      var x2 =
-        currentPos.x / (this.cx.canvas.clientWidth / this.cx.canvas.width);
-      var y2 =
-        currentPos.y / (this.cx.canvas.clientHeight / this.cx.canvas.height);
-      this.cx.moveTo(x1, y1); // from
-      this.cx.lineTo(x2, y2);
+      this.cx.beginPath();
+      var markWithFactor = calculateMarkWithFactor({x1: prevPos.x, y1: prevPos.y, x2: currentPos.x, y2: currentPos.y}, this.cx)
+      this.cx.moveTo(markWithFactor.x1, markWithFactor.y1); // from
+      this.cx.lineTo(markWithFactor.x2, markWithFactor.y2);
       this.cx.stroke();
 
       this.addImageMarkPart(
-        x1 * this.factor,
-        y1 * this.factor,
-        x2 * this.factor,
-        y2 * this.factor
+        prevPos.x, 
+        prevPos.y, 
+        currentPos.x, 
+        currentPos.y, 
       );
     }
   }
