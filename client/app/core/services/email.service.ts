@@ -12,6 +12,7 @@ export interface EmailMessage {
   reportName: string;
   report: string; //base64
   //reportData: string;
+  isPassed: boolean
 }
 @Injectable({
   providedIn: 'root',

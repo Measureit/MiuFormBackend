@@ -41,6 +41,15 @@
                             <mat-label>{{ 'ITEM.REPORT.COMMENT' | translate}}</mat-label>
                             <input matInput placeholder="{{ 'ITEM.REPORT.COMMENT' | translate}}" formControlName="comment">
                         </mat-form-field>
+
+                        <div style="display: flex; flex-direction: row; flex-grow: 1; gap: 5px; min-height: 50px;"
+                            (click)="onClickIsPassed()">
+                            <mat-icon style="flex: 0 0 40px; transform: scale(1.7);" [ngClass]="{
+                                'positive' : isPassed === true,
+                                'negative' : isPassed !== true
+                            }">check_circle</mat-icon> 
+                            <h4 style="flex: 1;">{{'ITEM.REPORT.IS_PASSED' | translate}}</h4>
+                        </div>
                     </mat-card-content>
                 </mat-card>
             </form>
