@@ -54,7 +54,6 @@ export const calculateMarkWithFactorForDisplay = (crc: CanvasRenderingContext2D,
   var y1 = m.y1 / (imageSize.height / crc.canvas.height);
   var x2 = m.x2 / (imageSize.width / crc.canvas.width);
   var y2 = m.y2 / (imageSize.height / crc.canvas.height);
-  console.log('forDisplay: ' + JSON.stringify({ x1, y1, x2, y2 }))
   return { x1, y1, x2, y2 };
 }
 
@@ -63,7 +62,6 @@ export const calculateMarkWithFactorForSave = (crc: CanvasRenderingContext2D, m:
   var y1 = m.y1 * (imageSize.height / crc.canvas.height);
   var x2 = m.x2 * (imageSize.width / crc.canvas.width);
   var y2 = m.y2 * (imageSize.height / crc.canvas.height);
-  console.log('forSave: ' + JSON.stringify({ x1, y1, x2, y2 }))
   return { x1, y1, x2, y2 };
 }
 

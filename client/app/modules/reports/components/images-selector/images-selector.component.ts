@@ -2,10 +2,11 @@ import { Component, Input, OnInit } from '@angular/core';
 import { FormArray, FormBuilder, FormControl, FormGroup } from '@angular/forms';
 import { MatDialog } from '@angular/material/dialog';
 import { DomSanitizer } from '@angular/platform-browser';
-import { ImageSize } from 'client/app/core/models';
+import { ImageMarkPart, ImageSize } from 'client/app/core/models';
 import { blobToBase64 } from 'client/app/core/services';
 import { first, tap, zip } from 'rxjs';
 import { ImageEditorComponent, ImageEditorData } from './image-editor/image-editor.component';
+import { calculateCanvasSize, clearMarksOnCanvas, drawMarksOnCanvas } from 'client/app/shared/image.helper';
 
 export interface ReportImageItemBeforePrepare {
   blob: Blob;
@@ -97,7 +98,24 @@ export class ImagesSelectorComponent implements OnInit {
   //   return this.domSanitizer.bypassSecurityTrustUrl(URL.createObjectURL(blob));
   // }
 
+  prepareImageWithMarks(imageAsBase64: string, marks: ImageMarkPart[], imageSize: ImageSize) : string {
+//TODO: wartość powinna być zapisana raz w formularzu, a nie generowana za kazdym razem!
+    // var canvas=document.createElement("canvas") as HTMLCanvasElement;
+    // var crc=canvas.getContext("2d");
 
+    // var newSize = calculateCanvasSize(
+    //   200,
+    //   200,
+    //   imageSize
+    // );
+    
+    // clearMarksOnCanvas(crc, imageAsBase64, (crc: CanvasRenderingContext2D) => drawMarksOnCanvas(crc, marks, imageSize));
+    
+    // var res = canvas.toDataURL("image/png")
+    // return res;
+
+    return imageAsBase64;
+  } 
   resizeImage(file: File, maxWidth: number, maxHeight: number): Promise<ReportImageItemBeforePrepare> {
     return new Promise((resolve, reject) => {
       const image = new Image();
