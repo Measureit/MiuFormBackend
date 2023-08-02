@@ -9,7 +9,7 @@ import moment from 'moment';
 import { M } from '@angular/cdk/keycodes';
 import { addFontToDoc, fontMiu } from './AbhayaLibre-Regular-normal';
 import { InspectorInfo } from '../models/inspector-info.model';
-import { drawMarksOnCanvas } from 'client/app/shared/image.helper';
+import { drawImageOnCanvas, drawMarksOnCanvas } from 'client/app/shared/image.helper';
 
 interface ReportGeneratorConfig {
     maxImageHeight: number;
@@ -222,8 +222,9 @@ export class ReportGeneratorService {
             ctx.canvas.width = ib.size.width;
             ctx.canvas.height = ib.size.height;
             var image = await this.loadImagePromise(ib.base64);
-            ctx.drawImage(image, 0, 0);
-            drawMarksOnCanvas(ctx, ib.marks, 1);
+            //ctx.drawImage(image, 0, 0);
+            drawImageOnCanvas(ctx, image);
+            drawMarksOnCanvas(ctx, ib.marks, ib.size);
             var newBase64 = ctx.canvas.toDataURL("image/png").split(';base64,')[1];
             return { base64: newBase64, size: ib.size, marks: ib.marks};
         } 

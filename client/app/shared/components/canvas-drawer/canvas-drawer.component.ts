@@ -11,7 +11,7 @@ import {
 import { ImageMarkPart, ReportImageItem } from 'client/app/core/models';
 import { fromEvent } from 'rxjs';
 import { switchMap, takeUntil, pairwise } from 'rxjs/operators';
-import { calculateCanvasSize, calculateMarkWithFactor, clearMarksOnCanvas, drawMarksOnCanvas } from '../../image.helper';
+import { calculateCanvasSize,  calculateMarkWithFactorForDisplay,  calculateMarkWithFactorForDisplayAfterDraw,  calculateMarkWithFactorForSave,  clearMarksOnCanvas, drawMarksOnCanvas } from '../../image.helper';
 
 
 
@@ -24,12 +24,9 @@ export class CanvasDrawerComponent implements AfterViewInit {
   @ViewChild('canvas') public canvas: ElementRef | undefined;
   @ViewChild('div') public div: ElementRef | undefined;
 
-    
-  private factor: number | undefined;
   private cx: CanvasRenderingContext2D | null | undefined;
 
   private _marks: ImageMarkPart[] = []
-  
   get marks(): ImageMarkPart[] {
     return this._marks;
   }
@@ -37,10 +34,11 @@ export class CanvasDrawerComponent implements AfterViewInit {
     console.log('marks setter');
     this._marks = value ?? [];
     if (this.cx != undefined) {
-      clearMarksOnCanvas(this.cx, this.reportImage?.base64, (crc: CanvasRenderingContext2D) => drawMarksOnCanvas(crc, this.marks, this.factor));
+      clearMarksOnCanvas(this.cx, this.reportImage?.base64, (crc: CanvasRenderingContext2D) => drawMarksOnCanvas(crc, this.marks, this.reportImage.size));
     }
     console.log('set marks')
   } 
+
   @Input() reportImage: ReportImageItem | undefined;
   @Output() marksChange= new EventEmitter<ImageMarkPart[]>();
 
@@ -59,7 +57,6 @@ export class CanvasDrawerComponent implements AfterViewInit {
       this.reportImage?.size
     );
 
-    this.factor = undefined;
 
     canvasEl.width = newSize.width;
     canvasEl.height = newSize.height;
@@ -71,13 +68,12 @@ export class CanvasDrawerComponent implements AfterViewInit {
       this.reportImage.size.height > 0 &&
       this.reportImage.size.width > 0
     ) {
-      this.factor = newSize.height / this.reportImage.size.height;
 
       this.cx.lineWidth = 3;
       this.cx.lineCap = 'round';
       this.cx.strokeStyle = '#000';
 
-      clearMarksOnCanvas(this.cx, this.reportImage?.base64, (crc: CanvasRenderingContext2D) => drawMarksOnCanvas(crc, this.marks, this.factor));
+      clearMarksOnCanvas(this.cx, this.reportImage?.base64, (crc: CanvasRenderingContext2D) => drawMarksOnCanvas(crc, this.marks, this.reportImage.size));
     }
   }
 
@@ -178,24 +174,25 @@ export class CanvasDrawerComponent implements AfterViewInit {
     if (!this.cx) {
       return;
     }
-    console.log('drawOnCanvas2', prevPos.x, // * this.factor,
-    prevPos.y, // * this.factor,
-    currentPos.x, // * this.factor,
-    currentPos.y);
+    // console.log('drawOnCanvas2', prevPos.x, // * this.factor,
+    // prevPos.y, // * this.factor,
+    // currentPos.x, // * this.factor,
+    // currentPos.y);
     //this.cx.beginPath();
 
     if (prevPos) {
       this.cx.beginPath();
-      var markWithFactor = calculateMarkWithFactor({x1: prevPos.x, y1: prevPos.y, x2: currentPos.x, y2: currentPos.y}, this.cx)
-      this.cx.moveTo(markWithFactor.x1, markWithFactor.y1); // from
-      this.cx.lineTo(markWithFactor.x2, markWithFactor.y2);
+      var markWithFactorForDisplayAfterDraw = calculateMarkWithFactorForDisplayAfterDraw(this.cx, {x1: prevPos.x, y1: prevPos.y, x2: currentPos.x, y2: currentPos.y});
+      this.cx.moveTo(markWithFactorForDisplayAfterDraw.x1, markWithFactorForDisplayAfterDraw.y1); // from
+      this.cx.lineTo(markWithFactorForDisplayAfterDraw.x2, markWithFactorForDisplayAfterDraw.y2);
       this.cx.stroke();
 
+      var markWithFactorForSave = calculateMarkWithFactorForSave(this.cx, markWithFactorForDisplayAfterDraw, this.reportImage.size);
       this.addImageMarkPart(
-        prevPos.x, 
-        prevPos.y, 
-        currentPos.x, 
-        currentPos.y, 
+        markWithFactorForSave.x1, 
+        markWithFactorForSave.y1, 
+        markWithFactorForSave.x2, 
+        markWithFactorForSave.y2, 
       );
     }
   }
