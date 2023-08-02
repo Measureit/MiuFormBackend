@@ -52,7 +52,8 @@
 			"PRODUCT_COLOR": "Kolor Produktu",
 			"PRODUCT_ID": "Id Produktu",
 			"FACTORY": "Fabryka",
-			"COMMENT": "Komentarz"
+			"COMMENT": "Komentarz",
+			"IS_PASSED": "Czy zaakceptować produkt?"
 		},		
 		"DELIVERY": {
 			"FROM_USER": "Nadawca",
