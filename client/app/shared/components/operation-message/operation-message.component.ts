@@ -7,8 +7,7 @@ import { MAT_SNACK_BAR_DATA } from '@angular/material/snack-bar';
   styleUrls: ['./operation-message.component.scss'],
   encapsulation: ViewEncapsulation.None,
 })
-export class OperationMessageComponent implements OnInit {
+export class OperationMessageComponent  {
   constructor(@Inject(MAT_SNACK_BAR_DATA) public data: string) {}
 
-  ngOnInit(): void {}
 }

@@ -17,16 +17,12 @@ export interface ReportImageItemBeforePrepare {
   templateUrl: './images-selector.component.html',
   styleUrls: ['./images-selector.component.scss']
 })
-export class ImagesSelectorComponent implements OnInit {
+export class ImagesSelectorComponent  {
   @Input() parentImagesFormGroup: FormGroup;
   @Input() imagesFormArrayName: string;
   @Input() imagesFormArray: FormArray;
 
   constructor(private formBuilder: FormBuilder, private dialog: MatDialog) { }
-
-  ngOnInit(): void {
-    //console.log('a');
-  }
 
   get selectedImages(): FormGroup[] {
     return (this.imagesFormArray.controls ?? []).map(x => x as FormGroup).filter(x => x && x.get('selected').value as boolean === true);

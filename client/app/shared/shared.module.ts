@@ -51,7 +51,6 @@ import { TranslateLoader, TranslateModule, TranslateService } from '@ngx-transla
 import { TranslateHttpLoader } from '@ngx-translate/http-loader';
 import { OperationMessageComponent } from './components/operation-message/operation-message.component';
 import { ReloadButtonComponent } from './components/reload-button/reload-button.component';
-import { LetDirective } from './directives';
 import { HideNoActivesPipe } from './pipes';
 import { WithLoadingPipe } from './pipes/with-loading.pipe';
 import {CdkAccordionModule} from '@angular/cdk/accordion';
@@ -133,8 +132,6 @@ export const httpLoaderFactory = (httpClient: HttpClient) => new TranslateHttpLo
     FormsModule,
     ReactiveFormsModule,
     HttpClientModule,
-    //FlexLayoutModule,
-    LetDirective,
     TranslateModule,
     WithLoadingPipe,
     HideNoActivesPipe,
@@ -144,7 +141,6 @@ export const httpLoaderFactory = (httpClient: HttpClient) => new TranslateHttpLo
   ],
   declarations: [
     OperationMessageComponent,
-    LetDirective,
     WithLoadingPipe,
     HideNoActivesPipe,
     ReloadButtonComponent,

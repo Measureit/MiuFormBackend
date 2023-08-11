@@ -13,7 +13,7 @@ export interface ImageEditorData {
   templateUrl: './image-editor.component.html',
   styleUrls: ['./image-editor.component.scss']
 })
-export class ImageEditorComponent implements OnInit {
+export class ImageEditorComponent  {
   reportImage: ReportImageItem;
   marks: ImageMarkPart[] = [];
 
@@ -24,10 +24,6 @@ export class ImageEditorComponent implements OnInit {
     @Inject(MAT_DIALOG_DATA) public data: ImageEditorData) { 
       this.reportImage = data.reportImage;
       this.marks = data.reportImage?.marks ?? [];
-  }
-
-  ngOnInit(): void {
-    //console.log('a');
   }
 
   cancel(): void {
