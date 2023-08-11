@@ -148,7 +148,7 @@ export class PreviewReportComponent implements OnInit {
                     from: delivery.fromUser,
                     to,
                     subject: `Raport pokontrolny -> ${this.report.productName} (${this.report.productId}) ${this.report.productColor}`,
-                    plainContent: `<html><body>${this.report.isPassed ? '' : '<h1 style="color:red">&#128545;NEGATYWNY RAPORT</h1>'}<h2>Dzień dobry,</h2><p>w załączniku znajduje się raport pokontrolny produktu ${this.report.productName} (${this.report.productId}) ${this.report.productColor}</p></br></body></html>`
+                    plainContent: `<html><body>${this.report.isPassed ? '' : '<h1 style="color:red">&#128533;MEBEL DO POPRAWY!</h1>'}<h2>Dzień dobry,</h2><p>w załączniku znajduje się raport pokontrolny produktu ${this.report.productName} (${this.report.productId}) ${this.report.productColor}</p></br></body></html>`
                   } as EmailMessage
                 };
               }),
