@@ -61,7 +61,7 @@
     "sib-api-v3-typescript": "^2.2.2",
     "tslib": "^2.6.2",
     "uuid": "^9.0.1",
-    "zone.js": "~0.14.0"
+    "zone.js": "~0.13.3"
   },
   "devDependencies": {
     "@angular-devkit/build-angular": "^16.2.4",
