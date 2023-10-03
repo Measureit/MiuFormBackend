@@ -19,8 +19,6 @@
       },
       "extends": [
         "plugin:@angular-eslint/recommended",
-        "plugin:@angular-eslint/ng-cli-compat",
-        "plugin:@angular-eslint/ng-cli-compat--formatting-add-on",
         "plugin:@angular-eslint/template/process-inline-templates"
       ],
       "rules": {
@@ -40,38 +38,38 @@
             "style": "camelCase"
           }
         ],
-        "@typescript-eslint/naming-convention": [
-          "error",
-          {
-            "selector": "default",
-            "format": ["camelCase"],
-            "leadingUnderscore": "allow",
-            "trailingUnderscore": "allow"
-          },
-          {
-            "selector": "variable",
-            "format": ["camelCase", "UPPER_CASE"],
-            "leadingUnderscore": "allow",
-            "trailingUnderscore": "allow"
-          },
-          {
-            "selector": "typeLike",
-            "format": ["PascalCase"]
-          },
-          {
-            "selector": [
-              "classProperty",
-              "objectLiteralProperty",
-              "typeProperty"
-            ],
-            "format": null
-          },
-          {
-            "selector": "variable",
-            "modifiers": ["destructured"],
-            "format": null
-          }
-        ],
+        // "@typescript-eslint/naming-convention": [
+        //   "error",
+        //   {
+        //     "selector": "default",
+        //     "format": ["camelCase"],
+        //     "leadingUnderscore": "allow",
+        //     "trailingUnderscore": "allow"
+        //   },
+        //   {
+        //     "selector": "variable",
+        //     "format": ["camelCase", "UPPER_CASE"],
+        //     "leadingUnderscore": "allow",
+        //     "trailingUnderscore": "allow"
+        //   },
+        //   {
+        //     "selector": "typeLike",
+        //     "format": ["PascalCase"]
+        //   },
+        //   {
+        //     "selector": [
+        //       "classProperty",
+        //       "objectLiteralProperty",
+        //       "typeProperty"
+        //     ],
+        //     "format": null
+        //   },
+        //   {
+        //     "selector": "variable",
+        //     "modifiers": ["destructured"],
+        //     "format": null
+        //   }
+        // ],
         "no-underscore-dangle": "off"
       }
     },

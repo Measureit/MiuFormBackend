@@ -130,6 +130,7 @@ export class PrepareReportComponent implements OnInit {
               img => this.formBuilder.group({ selected: false, marks: this.formBuilder.array(img.marks ?? []), base64: img.base64, size: img.size })
             )),
             comment: [this.item.comment],
+            isPassed: [this.item.isPassed ?? true],
             dateOfDelivery: [this.item.dateOfDelivery]
 
           });
@@ -265,5 +266,20 @@ export class PrepareReportComponent implements OnInit {
           this.userNotificationService.notifyError('MESSAGE.SAVE.FAILED');
         }
       });
+  }
+
+  get isPassed(): boolean | null {
+    return this.itemForm.get('isPassed').value;
+  }
+  set isPassed(value: boolean | null)  {
+    this.itemForm.get('isPassed').setValue(value);
+  }
+
+  onClickIsPassed() {
+    if (this.isPassed == null || this.isPassed === false) {
+      this.isPassed = true;
+    } else if (this.isPassed === true) {
+      this.isPassed = false;
+    }
   }
 }

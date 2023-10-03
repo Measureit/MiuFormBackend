@@ -9,7 +9,7 @@ import moment from 'moment';
 import { M } from '@angular/cdk/keycodes';
 import { addFontToDoc, fontMiu } from './AbhayaLibre-Regular-normal';
 import { InspectorInfo } from '../models/inspector-info.model';
-import { drawMarksOnCanvas } from 'client/app/shared/image.helper';
+import { drawImageOnCanvas, drawMarksOnCanvas } from 'client/app/shared/image.helper';
 
 interface ReportGeneratorConfig {
     maxImageHeight: number;
@@ -139,7 +139,7 @@ export class ReportGeneratorService {
                     } as ReportGeneratorContext);
                 }),
                 mergeMap(async context => {
-                    this.addHeader(context, moment(new Date(report.dateOfCreation)).format('DD-MM-YYYY HH:mm:ss'));
+                    this.addHeader(context, report.isPassed ?? true, moment(new Date(report.dateOfCreation)).format('DD-MM-YYYY HH:mm:ss'));
                     this.addFactoryInfo(context, context.factory);
                     this.addProductInfo(context, report.productName, report.productId, report.productColor);
                     await this.addChecklist(context, report.checklist);
@@ -153,13 +153,16 @@ export class ReportGeneratorService {
 
 
 
-    private addHeader(context: ReportGeneratorContext, dateOfCreation: string) { //}: Observable<ReportGeneratorContext> {
+    private addHeader(context: ReportGeneratorContext, isPassed: boolean, dateOfCreation: string) { //}: Observable<ReportGeneratorContext> {
         this.addTextLine(context, dateOfCreation, { fontSize: 10, align: 'right', makeBottomMargin: false, keepY: true});
         this.addTextLine(context, context.inspectorInfo.companyName, { fontSize: 16 });
         this.addTextLine(context, context.inspectorInfo.companyAddress, { fontSize: 16 });
         this.addYSpace(context, 10);
         this.addTextLine(context, 'Raport pokontrolny produkcji mebla', { fontSize: 20, align: 'center'});
-
+        if (!isPassed) {
+            this.addTextLine(context, 'NEGATYWNY', { fontSize: 11, align: 'center', color: 'red'});
+        }
+        
     }
 //ĄĆŻŃÓŁĘ ąćżńół
     private addFactoryInfo(context: ReportGeneratorContext, factoryInfo: FactoryInfoConfig) { //}: Observable<ReportGeneratorContext> {
@@ -222,8 +225,9 @@ export class ReportGeneratorService {
             ctx.canvas.width = ib.size.width;
             ctx.canvas.height = ib.size.height;
             var image = await this.loadImagePromise(ib.base64);
-            ctx.drawImage(image, 0, 0);
-            drawMarksOnCanvas(ctx, ib.marks, 1);
+            //ctx.drawImage(image, 0, 0);
+            drawImageOnCanvas(ctx, image);
+            drawMarksOnCanvas(ctx, ib.marks, ib.size);
             var newBase64 = ctx.canvas.toDataURL("image/png").split(';base64,')[1];
             return { base64: newBase64, size: ib.size, marks: ib.marks};
         } 

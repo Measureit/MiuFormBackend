@@ -104,7 +104,8 @@ export class PreviewReportComponent implements OnInit {
         this.configurationService.getDelivery(),
         this.configurationService.getFactory(this.report.factoryInfoId),
         this.translateService.get('PREVIEW_REPORT.SEND_EMAIL_QUESTION_TITLE'),
-        this.translateService.get('PREVIEW_REPORT.SEND_EMAIL_QUESTION')
+        this.translateService.get('PREVIEW_REPORT.SEND_EMAIL_QUESTION'),
+        of(this.report.isPassed ?? true)
       )
         .pipe(
           mergeMap(deliveryInfo => {
@@ -119,7 +120,7 @@ export class PreviewReportComponent implements OnInit {
               data: dialogData
             });
 
-            return zip(dialogRef.afterClosed(), of(delivery), of(to));
+            return zip(dialogRef.afterClosed(), of(delivery), of(to), of(deliveryInfo[4]));
           }),
           mergeMap(zipR => {
             const dialogRes = zipR[0];
@@ -129,7 +130,8 @@ export class PreviewReportComponent implements OnInit {
             return zip(
               of(zipR[1]),
               of(zipR[2]),
-              from(blobToBase64(this.reportBlob))
+              from(blobToBase64(this.reportBlob)),
+              of(zipR[3]),
             ).pipe(
               map(zipRes => {
                 const delivery = zipRes[0];
@@ -139,13 +141,14 @@ export class PreviewReportComponent implements OnInit {
                   emailServerUrl: delivery.emailServerUrl,
                   options: { serverSecureCode: delivery.emailServerSecretCode },
                   email: {
+                    isPassed: zipRes[3],
                     report: reportBase64,
                     reportName: `${this.report.productId}_${sufix}.pdf`,
                     //reportData: JSON.stringify(this.report),
                     from: delivery.fromUser,
                     to,
                     subject: `Raport pokontrolny -> ${this.report.productName} (${this.report.productId}) ${this.report.productColor}`,
-                    plainContent: `Dzień dobry,\n w załączniku znajduje się raport pokontrolny produktu ${this.report.productName} (${this.report.productId}) ${this.report.productColor}\n\n\n`
+                    plainContent: `<html><body>${this.report.isPassed ? '' : '<h1 style="color:red">&#128533;MEBEL DO POPRAWY!</h1>'}<h2>Dzień dobry,</h2><p>w załączniku znajduje się raport pokontrolny produktu ${this.report.productName} (${this.report.productId}) ${this.report.productColor}</p></br></body></html>`
                   } as EmailMessage
                 };
               }),

@@ -60,5 +60,6 @@ export interface Report extends DbModel {
     checklist: ReportChecklistItem[];
     images: ReportImageItem[];
 
+    isPassed?: boolean;
     dateOfDelivery?: number;
 }

@@ -11,7 +11,7 @@ import {
 import { ImageMarkPart, ReportImageItem } from 'client/app/core/models';
 import { fromEvent } from 'rxjs';
 import { switchMap, takeUntil, pairwise } from 'rxjs/operators';
-import { calculateCanvasSize, clearMarksOnCanvas, drawMarksOnCanvas } from '../../image.helper';
+import { calculateCanvasSize,  calculateMarkWithFactorForDisplay,  calculateMarkWithFactorForDisplayAfterDraw,  calculateMarkWithFactorForSave,  clearMarksOnCanvas, drawMarksOnCanvas } from '../../image.helper';
 
 
 
@@ -24,27 +24,27 @@ export class CanvasDrawerComponent implements AfterViewInit {
   @ViewChild('canvas') public canvas: ElementRef | undefined;
   @ViewChild('div') public div: ElementRef | undefined;
 
-    
-  private factor: number | undefined;
   private cx: CanvasRenderingContext2D | null | undefined;
 
   private _marks: ImageMarkPart[] = []
-  
   get marks(): ImageMarkPart[] {
     return this._marks;
   }
   @Input() set marks(value: ImageMarkPart[] | undefined) {
+    console.log('marks setter');
     this._marks = value ?? [];
     if (this.cx != undefined) {
-      clearMarksOnCanvas(this.cx, this.reportImage?.base64, (crc: CanvasRenderingContext2D) => drawMarksOnCanvas(crc, this.marks, this.factor));
+      clearMarksOnCanvas(this.cx, this.reportImage?.base64, (crc: CanvasRenderingContext2D) => drawMarksOnCanvas(crc, this.marks, this.reportImage.size));
     }
     console.log('set marks')
   } 
+
   @Input() reportImage: ReportImageItem | undefined;
   @Output() marksChange= new EventEmitter<ImageMarkPart[]>();
 
   @HostListener('window:resize')
   onResize() {
+    console.log('onResize');
     const divEl: HTMLCanvasElement = this.div?.nativeElement;
     const canvasEl: HTMLCanvasElement = this.canvas?.nativeElement;
 
@@ -52,12 +52,11 @@ export class CanvasDrawerComponent implements AfterViewInit {
     var allowWidth = divEl.clientWidth;
 
     var newSize = calculateCanvasSize(
-      allowWidth,
-      allowHeigh,
+      allowWidth - 10,
+      allowHeigh - 10,
       this.reportImage?.size
     );
 
-    this.factor = undefined;
 
     canvasEl.width = newSize.width;
     canvasEl.height = newSize.height;
@@ -69,17 +68,17 @@ export class CanvasDrawerComponent implements AfterViewInit {
       this.reportImage.size.height > 0 &&
       this.reportImage.size.width > 0
     ) {
-      this.factor = newSize.height / this.reportImage.size.height;
 
       this.cx.lineWidth = 3;
       this.cx.lineCap = 'round';
       this.cx.strokeStyle = '#000';
 
-      clearMarksOnCanvas(this.cx, this.reportImage?.base64, (crc: CanvasRenderingContext2D) => drawMarksOnCanvas(crc, this.marks, this.factor));
+      clearMarksOnCanvas(this.cx, this.reportImage?.base64, (crc: CanvasRenderingContext2D) => drawMarksOnCanvas(crc, this.marks, this.reportImage.size));
     }
   }
 
   public ngAfterViewInit() {
+    console.log('after View Init');
     const canvasEl: HTMLCanvasElement = this.canvas?.nativeElement;
 
     this.cx = canvasEl?.getContext('2d');
@@ -171,29 +170,29 @@ export class CanvasDrawerComponent implements AfterViewInit {
     prevPos: { x: number; y: number },
     currentPos: { x: number; y: number }
   ) {
+    console.log('drawOnCanvas');
     if (!this.cx) {
       return;
     }
-
-    this.cx.beginPath();
+    // console.log('drawOnCanvas2', prevPos.x, // * this.factor,
+    // prevPos.y, // * this.factor,
+    // currentPos.x, // * this.factor,
+    // currentPos.y);
+    //this.cx.beginPath();
 
     if (prevPos) {
-      var x1 = prevPos.x / (this.cx.canvas.clientWidth / this.cx.canvas.width);
-      var y1 =
-        prevPos.y / (this.cx.canvas.clientHeight / this.cx.canvas.height);
-      var x2 =
-        currentPos.x / (this.cx.canvas.clientWidth / this.cx.canvas.width);
-      var y2 =
-        currentPos.y / (this.cx.canvas.clientHeight / this.cx.canvas.height);
-      this.cx.moveTo(x1, y1); // from
-      this.cx.lineTo(x2, y2);
+      this.cx.beginPath();
+      var markWithFactorForDisplayAfterDraw = calculateMarkWithFactorForDisplayAfterDraw(this.cx, {x1: prevPos.x, y1: prevPos.y, x2: currentPos.x, y2: currentPos.y});
+      this.cx.moveTo(markWithFactorForDisplayAfterDraw.x1, markWithFactorForDisplayAfterDraw.y1); // from
+      this.cx.lineTo(markWithFactorForDisplayAfterDraw.x2, markWithFactorForDisplayAfterDraw.y2);
       this.cx.stroke();
 
+      var markWithFactorForSave = calculateMarkWithFactorForSave(this.cx, markWithFactorForDisplayAfterDraw, this.reportImage.size);
       this.addImageMarkPart(
-        x1 * this.factor,
-        y1 * this.factor,
-        x2 * this.factor,
-        y2 * this.factor
+        markWithFactorForSave.x1, 
+        markWithFactorForSave.y1, 
+        markWithFactorForSave.x2, 
+        markWithFactorForSave.y2, 
       );
     }
   }
