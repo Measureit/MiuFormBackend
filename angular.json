@@ -47,7 +47,18 @@
               "node_modules/bootstrap/dist/js/bootstrap.bundle.min.js"
             ],
             "serviceWorker": true,
-            "ngswConfigPath": "client/ngsw-config.json"
+            "ngswConfigPath": "client/ngsw-config.json",
+            "allowedCommonJsDependencies": [
+              "jszip",
+              "moment",
+              "@babel/runtime-corejs3/regenerator",
+              "raf",
+              "rgbcolor",
+              "immediate",
+              "spark-md5",
+              "vuvuzela",
+              "events"
+            ]  
           },
           "configurations": {
             "production": {
@@ -86,10 +97,10 @@
           "builder": "@angular-devkit/build-angular:dev-server",
           "configurations": {
             "production": {
-              "browserTarget": "miucheck:build:production"
+              "buildTarget": "miucheck:build:production"
             },
             "development": {
-              "browserTarget": "miucheck:build:development",
+              "buildTarget": "miucheck:build:development",
               "proxyConfig": "proxy.conf.json"
             }
           },
@@ -98,7 +109,7 @@
         "extract-i18n": {
           "builder": "@angular-devkit/build-angular:extract-i18n",
           "options": {
-            "browserTarget": "miucheck:build"
+            "buildTarget": "miucheck:build"
           }
         },
         "test": {

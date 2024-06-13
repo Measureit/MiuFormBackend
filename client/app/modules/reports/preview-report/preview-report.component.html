@@ -8,13 +8,15 @@
     <ngx-extended-pdf-viewer *ngIf="!genereting"
         [src]="reportBlob"
         (currentZoomFactor)="updateZoomFactor($event)"
-        [height]="'80vh'"
-        [useBrowserLocale]="true"
+        [height]="'80vh'"        
         [(zoom)]="zoomSetting"
         [showZoomButtons]="true"
         [minZoom]="minZoom"
         [maxZoom]="maxZoom"
         [zoomLevels]="zoomLevels">
-        <!-- [enablePinchOnMobile]="enablePinchOnMobile"> -->
+        <!-- 
+            [enablePinchOnMobile]="enablePinchOnMobile"
+            [useBrowserLocale]="true"> 
+        -->
     </ngx-extended-pdf-viewer>
 </div>
