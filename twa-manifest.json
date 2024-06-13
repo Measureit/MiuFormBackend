@@ -5,6 +5,7 @@
   "launcherName": "MiuCheck",
   "display": "standalone",
   "themeColor": "#1976D2",
+  "themeColorDark": "#000000",
   "navigationColor": "#000000",
   "navigationColorDark": "#000000",
   "navigationDividerColor": "#000000",
@@ -18,8 +19,8 @@
     "path": "/media/an/Dane/projects/miucheck/android.keystore",
     "alias": "android"
   },
-  "appVersionName": "11",
-  "appVersionCode": 11,
+  "appVersionName": "13",
+  "appVersionCode": 13,
   "shortcuts": [],
   "generatorApp": "bubblewrap-cli",
   "webManifestUrl": "https://miuform-backend-codicraft-433fc100.koyeb.app/manifest.webmanifest",
@@ -32,10 +33,10 @@
   "isChromeOSOnly": false,
   "isMetaQuest": false,
   "fullScopeUrl": "https://miuform-backend-codicraft-433fc100.koyeb.app/",
-  "minSdkVersion": 19,
+  "minSdkVersion": 33,
   "orientation": "default",
   "fingerprints": [],
   "additionalTrustedOrigins": [],
   "retainedBundles": [],
-  "appVersion": "11"
+  "appVersion": "13"
 }
