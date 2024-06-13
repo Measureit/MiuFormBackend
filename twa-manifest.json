@@ -1,6 +1,6 @@
 {
   "packageId": "io.github.measureit.miuform",
-  "host": "miucheck.cyclic.app",
+  "host": "miuform-backend-codicraft-433fc100.koyeb.app",
   "name": "MiuCheck",
   "launcherName": "MiuCheck",
   "display": "standalone",
@@ -12,17 +12,17 @@
   "backgroundColor": "#FAFAFA",
   "enableNotifications": true,
   "startUrl": "/",
-  "iconUrl": "https://miucheck.cyclic.app/assets/icons/icon-512x512.png",
+  "iconUrl": "https://miuform-backend-codicraft-433fc100.koyeb.app/assets/icons/icon-512x512.png",
   "splashScreenFadeOutDuration": 300,
   "signingKey": {
-    "path": "C:\\projects\\miucheck\\android.keystore",
+    "path": "/media/an/Dane/projects/miucheck/android.keystore",
     "alias": "android"
   },
   "appVersionName": "11",
   "appVersionCode": 11,
   "shortcuts": [],
   "generatorApp": "bubblewrap-cli",
-  "webManifestUrl": "https://miucheck.cyclic.app/manifest.webmanifest",
+  "webManifestUrl": "https://miuform-backend-codicraft-433fc100.koyeb.app/manifest.webmanifest",
   "fallbackType": "customtabs",
   "features": {},
   "alphaDependencies": {
@@ -31,7 +31,7 @@
   "enableSiteSettingsShortcut": true,
   "isChromeOSOnly": false,
   "isMetaQuest": false,
-  "fullScopeUrl": "https://miucheck.cyclic.app/",
+  "fullScopeUrl": "https://miuform-backend-codicraft-433fc100.koyeb.app/",
   "minSdkVersion": 19,
   "orientation": "default",
   "fingerprints": [],
